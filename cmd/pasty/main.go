@@ -1,5 +1,8 @@
 package main
 
+import "github.com/Lukaesebrot/pasty/internal/env"
+
 func main() {
-	// TODO: Implement startup logic
+	// Load the optional .env file
+	env.Load()
 }
