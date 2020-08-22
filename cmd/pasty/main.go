@@ -20,6 +20,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer storage.Current.Terminate()
 
 	// Wait for the program to exit
 	// TODO: Replace this through blocking API server
