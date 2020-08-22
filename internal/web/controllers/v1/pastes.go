@@ -105,7 +105,7 @@ func v1DeletePaste(ctx *fasthttp.RequestCtx) {
 
 	// Unmarshal the body
 	values := make(map[string]string)
-	err := json.Unmarshal(ctx.PostBody(), &values)
+	err = json.Unmarshal(ctx.PostBody(), &values)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
 		ctx.SetBodyString("invalid request body")
