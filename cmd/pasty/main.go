@@ -3,10 +3,8 @@ package main
 import (
 	"github.com/Lukaesebrot/pasty/internal/env"
 	"github.com/Lukaesebrot/pasty/internal/storage"
+	"github.com/Lukaesebrot/pasty/internal/web"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func main() {
@@ -22,9 +20,6 @@ func main() {
 	}
 	defer storage.Current.Terminate()
 
-	// Wait for the program to exit
-	// TODO: Replace this through blocking API server
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
-	<-sc
+	// Serve the web server
+	panic(web.Serve())
 }

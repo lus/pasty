@@ -31,6 +31,9 @@ func (driver *FileDriver) Get(id snowflake.ID) (*pastes.Paste, error) {
 	// Read the file
 	data, err := ioutil.ReadFile(filepath.Join(driver.FilePath, id.String()+".json"))
 	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, nil
+		}
 		return nil, err
 	}
 
