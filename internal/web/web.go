@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/Lukaesebrot/pasty/internal/env"
 	"github.com/Lukaesebrot/pasty/internal/pastes"
+	"github.com/Lukaesebrot/pasty/internal/static"
 	"github.com/Lukaesebrot/pasty/internal/storage"
 	v1 "github.com/Lukaesebrot/pasty/internal/web/controllers/v1"
 	routing "github.com/fasthttp/router"
@@ -39,6 +40,12 @@ func Serve() error {
 	{
 		v1Route := apiRoute.Group("/v1")
 		{
+			v1Route.GET("/info", func(ctx *fasthttp.RequestCtx) {
+				jsonData, _ := json.Marshal(map[string]string{
+					"version": static.Version,
+				})
+				ctx.SetBody(jsonData)
+			})
 			v1.InitializePastesController(v1Route.Group("/pastes"))
 		}
 	}
