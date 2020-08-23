@@ -58,8 +58,15 @@ func Serve() error {
 	// Serve the web resources
 	address := env.Get("WEB_ADDRESS", ":8080")
 	return (&fasthttp.Server{
-		Handler: router.Handler,
-		Logger:  new(nilLogger),
+		Handler: func(ctx *fasthttp.RequestCtx) {
+			// Add the CORS headers
+			ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS")
+			ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
+
+			// Call the router handler
+			router.Handler(ctx)
+		},
+		Logger: new(nilLogger),
 	}).ListenAndServe(address)
 }
 
