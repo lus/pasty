@@ -9,4 +9,5 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.10.11 // indirect
 	github.com/valyala/fasthttp v1.16.0
+	github.com/zekroTJA/seiteki v0.0.0-20200704144115-4da98a9f806b
 )
