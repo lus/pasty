@@ -75,6 +75,15 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
+	// Hash the deletion token
+	pasteCopy := *paste
+	err = paste.HashDeletionToken()
+	if err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString(err.Error())
+		return
+	}
+
 	// Save the paste
 	err = storage.Current.Save(paste)
 	if err != nil {
@@ -84,7 +93,7 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Respond with the paste
-	jsonData, err := json.Marshal(paste)
+	jsonData, err := json.Marshal(pasteCopy)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 		ctx.SetBodyString(err.Error())
