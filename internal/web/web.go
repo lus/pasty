@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-// Serve serves the web server
+// Serve serves the web resources
 func Serve() error {
 	// Create the router
 	router := routing.New()
@@ -55,7 +55,7 @@ func Serve() error {
 		router.POST("/documents", hastebinSupportHandler)
 	}
 
-	// Serve the web server
+	// Serve the web resources
 	address := env.Get("WEB_ADDRESS", ":8080")
 	return (&fasthttp.Server{
 		Handler: router.Handler,

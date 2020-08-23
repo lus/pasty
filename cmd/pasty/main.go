@@ -20,6 +20,7 @@ func main() {
 	}
 	defer storage.Current.Terminate()
 
-	// Serve the web server
+	// Serve the web resources
+	log.Println("Serving the web resources...")
 	panic(web.Serve())
 }
