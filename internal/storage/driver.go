@@ -22,17 +22,25 @@ type Driver interface {
 
 // Load loads the current storage driver
 func Load() error {
+	// Define the driver to use
+	var driver Driver
 	storageType := strings.ToLower(env.Get("STORAGE_TYPE", "file"))
 	switch storageType {
 	case "file":
-		driver := new(FileDriver)
-		err := driver.Initialize()
-		if err != nil {
-			return err
-		}
-		Current = driver
-		return nil
+		driver = new(FileDriver)
+		break
+	case "s3":
+		driver = new(S3Driver)
+		break
 	default:
 		return fmt.Errorf("invalid storage type '%s'", storageType)
 	}
+
+	// Initialize the driver
+	err := driver.Initialize()
+	if err != nil {
+		return err
+	}
+	Current = driver
+	return nil
 }

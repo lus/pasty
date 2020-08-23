@@ -26,7 +26,7 @@ func (driver *FileDriver) Terminate() error {
 	return nil
 }
 
-// Get loads a paste out of a file
+// Get loads a paste
 func (driver *FileDriver) Get(id snowflake.ID) (*pastes.Paste, error) {
 	// Read the file
 	data, err := ioutil.ReadFile(filepath.Join(driver.FilePath, id.String()+".json"))
@@ -46,7 +46,7 @@ func (driver *FileDriver) Get(id snowflake.ID) (*pastes.Paste, error) {
 	return paste, nil
 }
 
-// Save saves a paste into a file
+// Save saves a paste
 func (driver *FileDriver) Save(paste *pastes.Paste) error {
 	// Marshal the paste
 	jsonBytes, err := json.Marshal(paste)

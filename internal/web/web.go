@@ -60,7 +60,7 @@ func Serve() error {
 	}
 
 	// Route the hastebin documents route if hastebin support is enabled
-	if env.Get("HASTEBIN_SUPPORT", "false") == "true" {
+	if env.Bool("HASTEBIN_SUPPORT", false) {
 		router.POST("/documents", rateLimiterMiddleware.Handle(v1.HastebinSupportHandler))
 	}
 

@@ -4,6 +4,7 @@ import (
 	"github.com/Lukaesebrot/pasty/internal/static"
 	"github.com/joho/godotenv"
 	"os"
+	"strconv"
 )
 
 // Load loads an optional .env file
@@ -18,4 +19,10 @@ func Get(key, fallback string) string {
 		return fallback
 	}
 	return found
+}
+
+// Bool uses Get and parses it into a boolean
+func Bool(key string, fallback bool) bool {
+	parsed, _ := strconv.ParseBool(Get(key, strconv.FormatBool(fallback)))
+	return parsed
 }

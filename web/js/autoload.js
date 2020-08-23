@@ -24,8 +24,8 @@ function loadPaste() {
 
         // Set the paste content to the DOM and display the line numbers
         document.getElementById("code").innerHTML = language
-            ? hljs.highlight(language, data.content).value.replace("\n", "<br />")
-            : hljs.highlightAuto(data.content).value.replace("\n", "<br />");
+            ? hljs.highlight(language, data.content).value
+            : hljs.highlightAuto(data.content).value;
         for (i = 1; i <= data.content.split(/\n/).length; i++) {
             document.getElementById("linenos").innerHTML += "<span>" + i + "</span>";
         }
