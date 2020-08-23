@@ -1,0 +1,172 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap");
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Source Code Pro', monospace;
+}
+
+.hidden {
+  display: none;
+}
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: translate3d(-50%, -50%, 0) rotate(0deg);
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate3d(-50%, -50%, 0) rotate(360deg);
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+
+@keyframes spinner {
+  0% {
+    -webkit-transform: translate3d(-50%, -50%, 0) rotate(0deg);
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate3d(-50%, -50%, 0) rotate(360deg);
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+
+#spinner {
+  -webkit-animation: .75s linear infinite spinner;
+  animation: .75s linear infinite spinner;
+  -webkit-animation-play-state: inherit;
+  animation-play-state: inherit;
+  border: solid 5px #ffffff;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  position: fixed;
+  top: 130px;
+  right: 20px;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+}
+
+.navigation {
+  position: fixed;
+  top: 0;
+  width: calc(100vw - 80px);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 0 40px;
+  background-color: #222222;
+}
+
+.navigation .button {
+  padding: 10px 20px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.navigation .button svg {
+  -webkit-transition: all 250ms;
+  transition: all 250ms;
+}
+
+.navigation .button:hover {
+  cursor: pointer;
+}
+
+.navigation .button:hover svg {
+  stroke: #2daa57;
+}
+
+.navigation .button:disabled svg {
+  stroke: #5a5a5a;
+}
+
+.navigation .button:disabled:hover {
+  cursor: initial;
+  color: initial;
+}
+
+.navigation .meta {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.navigation .meta #version {
+  margin-right: 40px;
+  padding: 5px 10px;
+  background-color: #000000;
+  border-radius: 10px;
+}
+
+.container {
+  margin-top: 60px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.container #linenos {
+  padding: 20px 0;
+  width: 50px;
+  min-height: calc(100vh - 100px);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #111111;
+  color: #bebebe;
+}
+
+.container #content {
+  padding: 20px;
+  width: calc(100vw - 50px);
+}
+
+.container #content #code {
+  white-space: pre;
+}
+
+.container #content #input {
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  resize: none;
+  font-size: 16px;
+}
+/*# sourceMappingURL=style.css.map */

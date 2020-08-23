@@ -53,5 +53,5 @@ func (paste *Paste) HashDeletionToken() error {
 // CheckDeletionToken checks whether or not the given deletion token is correct
 func (paste *Paste) CheckDeletionToken(deletionToken string) bool {
 	match, err := argon2id.ComparePasswordAndHash(deletionToken, paste.DeletionToken)
-	return err != nil && match
+	return err == nil && match
 }
