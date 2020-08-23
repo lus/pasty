@@ -128,3 +128,20 @@ html, body {
         }
     }
 }
+
+@media only screen and (max-width: 650px) {
+    .navigation {
+        padding: 0 20px;
+        width: calc(100vw - 40px);
+        & .button {
+            padding: 15px 10px;
+            & svg {
+                width: 30px;
+                height: 30px;
+            }
+        }
+        & .meta #version {
+            display: none;
+        }
+    }
+}

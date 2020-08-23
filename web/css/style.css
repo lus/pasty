@@ -169,4 +169,21 @@ html, body {
   resize: none;
   font-size: 16px;
 }
+
+@media only screen and (max-width: 650px) {
+  .navigation {
+    padding: 0 20px;
+    width: calc(100vw - 40px);
+  }
+  .navigation .button {
+    padding: 15px 10px;
+  }
+  .navigation .button svg {
+    width: 30px;
+    height: 30px;
+  }
+  .navigation .meta #version {
+    display: none;
+  }
+}
 /*# sourceMappingURL=style.css.map */
