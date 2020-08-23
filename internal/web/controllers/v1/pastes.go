@@ -12,7 +12,7 @@ import (
 // InitializePastesController initializes the '/v1/pastes/*' controller
 func InitializePastesController(group *router.Group) {
 	group.GET("/{id}", v1GetPaste)
-	group.POST("/", v1PostPaste)
+	group.POST("", v1PostPaste)
 	group.DELETE("/{id}", v1DeletePaste)
 }
 
