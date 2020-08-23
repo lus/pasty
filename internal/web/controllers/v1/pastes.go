@@ -6,14 +6,15 @@ import (
 	"github.com/Lukaesebrot/pasty/internal/storage"
 	"github.com/bwmarrin/snowflake"
 	"github.com/fasthttp/router"
+	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
 	"github.com/valyala/fasthttp"
 )
 
 // InitializePastesController initializes the '/v1/pastes/*' controller
-func InitializePastesController(group *router.Group) {
-	group.GET("/{id}", v1GetPaste)
-	group.POST("", v1PostPaste)
-	group.DELETE("/{id}", v1DeletePaste)
+func InitializePastesController(group *router.Group, rateLimiterMiddleware *limitFasthttp.Middleware) {
+	group.GET("/{id}", rateLimiterMiddleware.Handle(v1GetPaste))
+	group.POST("", rateLimiterMiddleware.Handle(v1PostPaste))
+	group.DELETE("/{id}", rateLimiterMiddleware.Handle(v1DeletePaste))
 }
 
 // v1GetPaste handles the 'GET /v1/pastes/{id}' endpoint
