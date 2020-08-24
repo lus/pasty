@@ -29,7 +29,7 @@ func Serve() error {
 	frontend := frontendHandler()
 	router.GET("/{path:*}", func(ctx *fasthttp.RequestCtx) {
 		path := string(ctx.Path())
-		if !strings.HasPrefix(path, "/api") {
+		if !strings.HasPrefix(path, "/api") && (strings.Count(path, "/") == 1 || strings.HasPrefix(path, "/assets")) {
 			frontend(ctx)
 			return
 		}
@@ -88,6 +88,11 @@ func frontendHandler() fasthttp.RequestHandler {
 		CacheDuration: 0,
 	}
 	fs.PathNotFound = func(ctx *fasthttp.RequestCtx) {
+		if strings.HasPrefix(string(ctx.Path()), "/assets") {
+			ctx.SetStatusCode(fasthttp.StatusNotFound)
+			ctx.SetBodyString("not found")
+			return
+		}
 		ctx.SendFile(filepath.Join(fs.Root, "index.html"))
 	}
 	return fs.NewRequestHandler()
