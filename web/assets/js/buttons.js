@@ -5,7 +5,7 @@ import * as spinner from "./spinner.js";
 
 // setupKeybinds initializes the keybinds for the buttons
 export function setupKeybinds() {
-    window.onkeydown = function(event) {
+    window.addEventListener("keydown", function(event) {
         // Return if the CTRL key was not pressed
         if (!event.ctrlKey) return;
     
@@ -36,7 +36,7 @@ export function setupKeybinds() {
             event.preventDefault();
             element.click();
         }
-    }
+    });
 }
 
 // setupButtons configures the click listeners of the buttons

@@ -56,6 +56,11 @@ async function loadPaste() {
         const input = document.getElementById("input");
         input.classList.remove("hidden");
         input.focus();
+        window.addEventListener("keydown", function(event) {
+            if (event.keyCode != 9) return;
+            event.preventDefault();
+            input.value += "    ";
+        });
     }
 }
 spinner.surround(loadPaste);
