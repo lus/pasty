@@ -18,7 +18,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer storage.Current.Terminate()
+	defer func() {
+		log.Println("Terminating the storage driver...")
+		err := storage.Current.Terminate()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}()
 
 	// Serve the web resources
 	log.Println("Serving the web resources...")

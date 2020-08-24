@@ -33,7 +33,7 @@ func (driver *S3Driver) Initialize() error {
 	return nil
 }
 
-// Terminate terminates the AWS S3 storage driver
+// Terminate terminates the AWS S3 storage driver (does nothing, because the AWS S3 storage driver does not need any termination)
 func (driver *S3Driver) Terminate() error {
 	return nil
 }
