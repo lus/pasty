@@ -20,7 +20,7 @@ loadAPIInformation();
 // Try to load a paste if one exists
 export let PASTE_ID;
 async function loadPaste() {
-    if (location.pathname != "/") {
+    if (location.pathname !== "/") {
         // Define the paste ID and language
         const split = location.pathname.replace("/", "").split(".");
         const pasteID = split[0];
@@ -45,10 +45,7 @@ async function loadPaste() {
             : hljs.highlightAuto(data.content).value;
         
         // Display the line numbers
-        const lineNumbersElement = document.getElementById("linenos");
-        data.content.split(/\n/).forEach(function(_currentValue, index) {
-            lineNumbersElement.innerHTML += "<span>" + (index + 1) + "</span>";
-        });
+        document.getElementById("linenos").innerHTML = data.content.split(/\n/).map((_, index) => `<span>${index + 1}</span>`).join('');
     
         // Set the PASTE_ID variable
         PASTE_ID = pasteID;

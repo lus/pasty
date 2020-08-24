@@ -1,16 +1,19 @@
+// apiBase defines the base URL of the API
+const apiBase = location.protocol + "//" + location.host + "/api/v1";
+
 // getAPIInformation returns the API information
 export async function getAPIInformation() {
-    return await fetch(location.protocol + "//" + location.host + "/api/v1/info");
+    return fetch(apiBase + "/info");
 }
 
 // getPaste retrieves a paste
 export async function getPaste(id) {
-    return await fetch(location.protocol + "//" + location.host + "/api/v1/pastes/" + id);
+    return fetch(apiBase + "/pastes/" + id);
 }
 
 // createPaste creates a new paste
 export async function createPaste(content) {
-    return await fetch(location.protocol + "//" + location.host + "/api/v1/pastes", {
+    return await fetch(apiBase + "/pastes", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -23,7 +26,7 @@ export async function createPaste(content) {
 
 // deletePaste deletes a paste
 export async function deletePaste(id, deletionToken) {
-    return await fetch(location.protocol + "//" + location.host + "/api/v1/pastes/" + id, {
+    return await fetch(apiBase + "/pastes/" + id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
