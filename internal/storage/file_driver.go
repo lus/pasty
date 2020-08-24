@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/Lukaesebrot/pasty/internal/env"
 	"github.com/Lukaesebrot/pasty/internal/pastes"
-	"github.com/bwmarrin/snowflake"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -27,9 +26,9 @@ func (driver *FileDriver) Terminate() error {
 }
 
 // Get loads a paste
-func (driver *FileDriver) Get(id snowflake.ID) (*pastes.Paste, error) {
+func (driver *FileDriver) Get(id string) (*pastes.Paste, error) {
 	// Read the file
-	data, err := ioutil.ReadFile(filepath.Join(driver.filePath, id.String()+".json"))
+	data, err := ioutil.ReadFile(filepath.Join(driver.filePath, id+".json"))
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil, nil
@@ -55,7 +54,7 @@ func (driver *FileDriver) Save(paste *pastes.Paste) error {
 	}
 
 	// Create the file to save the paste to
-	file, err := os.Create(filepath.Join(driver.filePath, paste.ID.String()+".json"))
+	file, err := os.Create(filepath.Join(driver.filePath, paste.ID+".json"))
 	if err != nil {
 		return err
 	}
@@ -67,6 +66,6 @@ func (driver *FileDriver) Save(paste *pastes.Paste) error {
 }
 
 // Delete deletes a paste
-func (driver *FileDriver) Delete(id snowflake.ID) error {
-	return os.Remove(filepath.Join(driver.filePath, id.String()+".json"))
+func (driver *FileDriver) Delete(id string) error {
+	return os.Remove(filepath.Join(driver.filePath, id+".json"))
 }

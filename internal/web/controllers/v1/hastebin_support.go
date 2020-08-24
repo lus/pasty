@@ -24,8 +24,16 @@ func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
+	// Acquire the paste ID
+	id, err := storage.AcquireID()
+	if err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString(err.Error())
+		return
+	}
+
 	// Create the paste object
-	paste, err := pastes.Create(content)
+	paste, err := pastes.Create(id, content)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 		ctx.SetBodyString(err.Error())
@@ -50,7 +58,7 @@ func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
 
 	// Respond with the paste key
 	jsonData, _ := json.Marshal(map[string]string{
-		"key": paste.ID.String(),
+		"key": paste.ID,
 	})
 	ctx.SetBody(jsonData)
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/Lukaesebrot/pasty/internal/env"
 	"github.com/Lukaesebrot/pasty/internal/pastes"
-	"github.com/bwmarrin/snowflake"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -50,7 +49,7 @@ func (driver *MongoDBDriver) Terminate() error {
 }
 
 // Get loads a paste
-func (driver *MongoDBDriver) Get(id snowflake.ID) (*pastes.Paste, error) {
+func (driver *MongoDBDriver) Get(id string) (*pastes.Paste, error) {
 	// Define the collection to use for this database operation
 	collection := driver.client.Database(driver.database).Collection(driver.collection)
 
@@ -59,7 +58,7 @@ func (driver *MongoDBDriver) Get(id snowflake.ID) (*pastes.Paste, error) {
 	defer cancel()
 
 	// Try to retrieve the corresponding paste document
-	filter := bson.M{"_id": id.String()}
+	filter := bson.M{"_id": id}
 	result := collection.FindOne(ctx, filter)
 	err := result.Err()
 	if err != nil {
@@ -90,7 +89,7 @@ func (driver *MongoDBDriver) Save(paste *pastes.Paste) error {
 }
 
 // Delete deletes a paste
-func (driver *MongoDBDriver) Delete(id snowflake.ID) error {
+func (driver *MongoDBDriver) Delete(id string) error {
 	// Define the collection to use for this database operation
 	collection := driver.client.Database(driver.database).Collection(driver.collection)
 
@@ -99,7 +98,7 @@ func (driver *MongoDBDriver) Delete(id snowflake.ID) error {
 	defer cancel()
 
 	// Delete the document
-	filter := bson.M{"_id": id.String()}
+	filter := bson.M{"_id": id}
 	_, err := collection.DeleteOne(ctx, filter)
 	return err
 }

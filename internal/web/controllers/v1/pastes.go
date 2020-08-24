@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/Lukaesebrot/pasty/internal/pastes"
 	"github.com/Lukaesebrot/pasty/internal/storage"
-	"github.com/bwmarrin/snowflake"
 	"github.com/fasthttp/router"
 	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
 	"github.com/valyala/fasthttp"
@@ -19,13 +18,8 @@ func InitializePastesController(group *router.Group, rateLimiterMiddleware *limi
 
 // v1GetPaste handles the 'GET /v1/pastes/{id}' endpoint
 func v1GetPaste(ctx *fasthttp.RequestCtx) {
-	// Parse the ID
-	id, err := snowflake.ParseString(ctx.UserValue("id").(string))
-	if err != nil {
-		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBodyString("invalid ID format")
-		return
-	}
+	// Read the ID
+	id := ctx.UserValue("id").(string)
 
 	// Retrieve the paste
 	paste, err := storage.Current.Get(id)
@@ -68,8 +62,16 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
+	// Acquire the paste ID
+	id, err := storage.AcquireID()
+	if err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString(err.Error())
+		return
+	}
+
 	// Create the paste object
-	paste, err := pastes.Create(values["content"])
+	paste, err := pastes.Create(id, values["content"])
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 		ctx.SetBodyString(err.Error())
@@ -105,17 +107,12 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 
 // v1DeletePaste handles the 'DELETE /v1/pastes/{id}'
 func v1DeletePaste(ctx *fasthttp.RequestCtx) {
-	// Parse the ID
-	id, err := snowflake.ParseString(ctx.UserValue("id").(string))
-	if err != nil {
-		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBodyString("invalid ID format")
-		return
-	}
+	// Read the ID
+	id := ctx.UserValue("id").(string)
 
 	// Unmarshal the body
 	values := make(map[string]string)
-	err = json.Unmarshal(ctx.PostBody(), &values)
+	err := json.Unmarshal(ctx.PostBody(), &values)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
 		ctx.SetBodyString("invalid request body")

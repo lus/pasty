@@ -2,12 +2,9 @@ package pastes
 
 import (
 	"github.com/Lukaesebrot/pasty/internal/env"
-	"math/rand"
+	"github.com/Lukaesebrot/pasty/internal/utils"
 	"strconv"
 )
-
-// deletionTokenContents represents the characters a deletion token may contain
-const deletionTokenContents = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#+-.,"
 
 // generateDeletionToken generates a new deletion token
 func generateDeletionToken() (string, error) {
@@ -19,9 +16,5 @@ func generateDeletionToken() (string, error) {
 	}
 
 	// Generate the deletion token
-	bytes := make([]byte, length)
-	for i := range bytes {
-		bytes[i] = deletionTokenContents[rand.Int63()%int64(len(deletionTokenContents))]
-	}
-	return string(bytes), nil
+	return utils.RandomString(length), nil
 }

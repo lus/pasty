@@ -7,6 +7,7 @@ Pasty is a fast and lightweight code pasting server
 | `PASTY_WEB_ADDRESS`           | `:8080`       | `string` | Defines the address the web server listens to                                                               |
 | `PASTY_STORAGE_TYPE`          | `file`        | `string` | Defines the storage type the pastes are saved to                                                            |
 | `PASTY_HASTEBIN_SUPPORT`      | `false`       | `bool`   | Defines whether or not the `POST /documents` endpoint should be enabled, as known from the hastebin servers |
+| `PASTY_ID_LENGTH`             | `6`           | `number` | Defines the length of the ID of a paste                                                                     |
 | `PASTY_DELETION_TOKEN_LENGTH` | `12`          | `number` | Defines the length of the deletion token of a paste                                                         |
 | `PASTY_RATE_LIMIT`            | `30-M`        | `string` | Defines the rate limit of the API (see https://github.com/ulule/limiter#usage)                              |
 
@@ -19,6 +20,8 @@ Every single one of them has its own configuration variables:
 |---------------------------|---------------|----------|-----------------------------------------------------------|
 | `PASTY_STORAGE_FILE_PATH` | `./data`      | `string` | Defines the file path the paste files are being saved to  |
 
+---
+
 ### S3 (`s3`)
 | Environment Variable           | Default Value | Type     | Description                                                                               |
 |--------------------------------|---------------|----------|-------------------------------------------------------------------------------------------|
@@ -29,6 +32,8 @@ Every single one of them has its own configuration variables:
 | `STORAGE_S3_SECURE`            | `true`        | `bool`   | Defines whether or not SSL should be used for the S3 connection                           |
 | `STORAGE_S3_REGION`            | `<empty>`     | `string` | Defines the region of the S3 storage                                                      |
 | `STORAGE_S3_BUCKET`            | `pasty`       | `string` | Defines the name of the S3 bucket (has to be created before setup)                        |
+
+---
 
 ### MongoDB (`mongodb`)
 | Environment Variable                | Default Value                              | Type     | Description                                                     |

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/Lukaesebrot/pasty/internal/env"
 	"github.com/Lukaesebrot/pasty/internal/pastes"
-	"github.com/bwmarrin/snowflake"
 	"strings"
 )
 
@@ -15,9 +14,9 @@ var Current Driver
 type Driver interface {
 	Initialize() error
 	Terminate() error
-	Get(id snowflake.ID) (*pastes.Paste, error)
+	Get(id string) (*pastes.Paste, error)
 	Save(paste *pastes.Paste) error
-	Delete(id snowflake.ID) error
+	Delete(id string) error
 }
 
 // Load loads the current storage driver

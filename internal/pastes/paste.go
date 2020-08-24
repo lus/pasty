@@ -2,26 +2,18 @@ package pastes
 
 import (
 	"github.com/alexedwards/argon2id"
-	"github.com/bwmarrin/snowflake"
 )
-
-func init() {
-	snowflakeNode, _ = snowflake.NewNode(1)
-}
-
-// snowflakeNode holds the current snowflake node
-var snowflakeNode *snowflake.Node
 
 // Paste represents a saved paste
 type Paste struct {
-	ID                  snowflake.ID `json:"id" bson:"_id"`
-	Content             string       `json:"content" bson:"content"`
-	SuggestedSyntaxType string       `json:"suggestedSyntaxType" bson:"suggestedSyntaxType"`
-	DeletionToken       string       `json:"deletionToken" bson:"deletionToken"`
+	ID                  string `json:"id" bson:"_id"`
+	Content             string `json:"content" bson:"content"`
+	SuggestedSyntaxType string `json:"suggestedSyntaxType" bson:"suggestedSyntaxType"`
+	DeletionToken       string `json:"deletionToken" bson:"deletionToken"`
 }
 
 // Create creates a new paste object using the given content
-func Create(content string) (*Paste, error) {
+func Create(id, content string) (*Paste, error) {
 	// TODO: Generate the suggested syntax type
 	suggestedSyntaxType := ""
 
@@ -33,7 +25,7 @@ func Create(content string) (*Paste, error) {
 
 	// Return the paste object
 	return &Paste{
-		ID:                  snowflakeNode.Generate(),
+		ID:                  id,
 		Content:             content,
 		SuggestedSyntaxType: suggestedSyntaxType,
 		DeletionToken:       deletionToken,

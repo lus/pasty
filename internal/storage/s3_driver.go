@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"github.com/Lukaesebrot/pasty/internal/env"
 	"github.com/Lukaesebrot/pasty/internal/pastes"
-	"github.com/bwmarrin/snowflake"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"io/ioutil"
@@ -39,9 +38,9 @@ func (driver *S3Driver) Terminate() error {
 }
 
 // Get loads a paste
-func (driver *S3Driver) Get(id snowflake.ID) (*pastes.Paste, error) {
+func (driver *S3Driver) Get(id string) (*pastes.Paste, error) {
 	// Read the object
-	object, err := driver.client.GetObject(context.Background(), driver.bucket, id.String()+".json", minio.GetObjectOptions{})
+	object, err := driver.client.GetObject(context.Background(), driver.bucket, id+".json", minio.GetObjectOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -69,13 +68,13 @@ func (driver *S3Driver) Save(paste *pastes.Paste) error {
 
 	// Put the object
 	reader := bytes.NewReader(jsonBytes)
-	_, err = driver.client.PutObject(context.Background(), driver.bucket, paste.ID.String()+".json", reader, reader.Size(), minio.PutObjectOptions{
+	_, err = driver.client.PutObject(context.Background(), driver.bucket, paste.ID+".json", reader, reader.Size(), minio.PutObjectOptions{
 		ContentType: "application/json",
 	})
 	return err
 }
 
 // Delete deletes a paste
-func (driver *S3Driver) Delete(id snowflake.ID) error {
-	return driver.client.RemoveObject(context.Background(), driver.bucket, id.String()+".json", minio.RemoveObjectOptions{})
+func (driver *S3Driver) Delete(id string) error {
+	return driver.client.RemoveObject(context.Background(), driver.bucket, id+".json", minio.RemoveObjectOptions{})
 }
