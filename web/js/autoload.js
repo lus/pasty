@@ -1,6 +1,7 @@
 // Import the used modules
 import * as api from "./api.js";
 import * as buttons from "./buttons.js";
+import * as spinner from "./spinner.js";
 
 // Set up the buttons
 buttons.setupButtons();
@@ -57,4 +58,4 @@ async function loadPaste() {
         input.focus();
     }
 }
-loadPaste();
+spinner.surround(loadPaste);

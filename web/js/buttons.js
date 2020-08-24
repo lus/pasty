@@ -1,6 +1,7 @@
 // Import the used modules
 import * as api from "./api.js";
 import * as autoload from "./autoload.js";
+import * as spinner from "./spinner.js";
 
 // setupKeybinds initializes the keybinds for the buttons
 export function setupKeybinds() {
@@ -46,52 +47,58 @@ export function setupButtons() {
     });
 
     // Define the behavior of the 'save' button
-    document.getElementById("btn_save").addEventListener("click", async function() {
-        // Return if the text area is empty
-        const input = document.getElementById("input");
-        if (!input.value) return;
+    document.getElementById("btn_save").addEventListener("click", function() {
+        spinner.surround(async function() {
+            // Return if the text area is empty
+            const input = document.getElementById("input");
+            if (!input.value) return;
 
-        // Create the paste
-        const response = await api.createPaste(input.value);
-        if (!response.ok) {
-            alert("Error:\n\n" + data);
-            return;
-        }
-        const data = await response.json();
+            // Create the paste
+            const response = await api.createPaste(input.value);
+            if (!response.ok) {
+                alert("Error:\n\n" + data);
+                return;
+            }
+            const data = await response.json();
 
-        // Redirect the user to the paste page
-        let address = location.protocol + "//" + location.host + "/" + data.id;
-        if (data.suggestedSyntaxType) address += "." + data.suggestedSyntaxType;
-        location.replace(address);
+            // Redirect the user to the paste page
+            let address = location.protocol + "//" + location.host + "/" + data.id;
+            if (data.suggestedSyntaxType) address += "." + data.suggestedSyntaxType;
+            location.replace(address);
 
-        // TODO: Find a solution to display the deletion token
+            // TODO: Find a solution to display the deletion token
+        });
     });
 
     // Define the behavior of the 'delete' button
-    document.getElementById("btn_delete").addEventListener("click", async function() {
-        // Ask the user for the deletion token
-        const deletionToken = window.prompt("Deletion Token:");
-        if (!deletionToken) return;
+    document.getElementById("btn_delete").addEventListener("click", function() {
+        spinner.surround(async function() {
+            // Ask the user for the deletion token
+            const deletionToken = window.prompt("Deletion Token:");
+            if (!deletionToken) return;
 
-        // Delete the paste
-        const response = await api.deletePaste(autoload.PASTE_ID, deletionToken);
-        const data = await response.text();
-        if (!response.ok) {
-            alert("Error:\n\n" + data);
-            return;
-        }
+            // Delete the paste
+            const response = await api.deletePaste(autoload.PASTE_ID, deletionToken);
+            const data = await response.text();
+            if (!response.ok) {
+                alert("Error:\n\n" + data);
+                return;
+            }
 
-        // Redirect the user to the main page
-        location.replace(location.protocol + "//" + location.host);
+            // Redirect the user to the main page
+            location.replace(location.protocol + "//" + location.host);
+        });
     });
 
     // Define the behavior of the 'copy' button
-    document.getElementById("btn_copy").addEventListener("click", async function() {
-        // Ask for the clipboard permissions
-        askClipboardPermissions();
-        
-        // Copy the code
-        await navigator.clipboard.writeText(document.getElementById("code").innerText);
+    document.getElementById("btn_copy").addEventListener("click", function() {
+        spinner.surround(async function() {
+            // Ask for the clipboard permissions
+            askClipboardPermissions();
+            
+            // Copy the code
+            await navigator.clipboard.writeText(document.getElementById("code").innerText);
+        });
     });
 }
 
