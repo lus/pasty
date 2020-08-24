@@ -1,8 +1,14 @@
-// setupKeybinds initializes the keybinds for the buttons
-function setupKeybinds() {
-    window.onkeydown = function(event) {
-        if (!event.ctrlKey) return;
+// Import the used modules
+import * as api from "./api.js";
+import * as autoload from "./autoload.js";
 
+// setupKeybinds initializes the keybinds for the buttons
+export function setupKeybinds() {
+    window.onkeydown = function(event) {
+        // Return if the CTRL key was not pressed
+        if (!event.ctrlKey) return;
+    
+        // Define the DOM element of the pressed button
         let element = null;
         switch (event.keyCode) {
             case 81: {
@@ -22,61 +28,81 @@ function setupKeybinds() {
                 break;
             }
         }
-
+    
+        // Call the onClick function of the button
         if (element) {
             if (element.hasAttribute("disabled")) return;
             event.preventDefault();
-            element.onclick();
+            element.click();
         }
     }
 }
 
-// Define the behavior of the 'new' button
-document.getElementById("btn_new").onclick = function() {
-    location.replace(location.protocol + "//" + location.host);
-}
+// setupButtons configures the click listeners of the buttons
+export function setupButtons() {
+    // Define the behavior of the 'new' button
+    document.getElementById("btn_new").addEventListener("click", function() {
+        location.replace(location.protocol + "//" + location.host);
+    });
 
-// Define the behavior of the 'save' button
-document.getElementById("btn_save").onclick = function() {
-    // Return if the text area is empty
-    if (!document.getElementById("input").value) return;
+    // Define the behavior of the 'save' button
+    document.getElementById("btn_save").addEventListener("click", async function() {
+        // Return if the text area is empty
+        const input = document.getElementById("input");
+        if (!input.value) return;
 
-    // Create the paste
-    createPaste(document.getElementById("input").value, function(success, data) {
-        // Notify the user about an error if one occurs
-        if (!success) {
+        // Create the paste
+        const response = await api.createPaste(input.value);
+        if (!response.ok) {
             alert("Error:\n\n" + data);
             return;
         }
+        const data = await response.json();
 
         // Redirect the user to the paste page
         let address = location.protocol + "//" + location.host + "/" + data.id;
         if (data.suggestedSyntaxType) address += "." + data.suggestedSyntaxType;
-        copyToClipboard(data.deletionToken);
         location.replace(address);
+
+        // TODO: Find a solution to display the deletion token
     });
-}
 
-// Define the behavior of the 'delete' button
-document.getElementById("btn_delete").onclick = function() {
-    // Ask the user for the deletion token
-    let deletionToken = window.prompt("Deletion Token:");
-    if (!deletionToken) return;
+    // Define the behavior of the 'delete' button
+    document.getElementById("btn_delete").addEventListener("click", async function() {
+        // Ask the user for the deletion token
+        const deletionToken = window.prompt("Deletion Token:");
+        if (!deletionToken) return;
 
-    // Delete the paste
-    deletePaste(PASTE_ID, deletionToken, function(success, data) {
-        // Notify the user about an error if one occurs
-        if (!success) {
+        // Delete the paste
+        const response = await api.deletePaste(autoload.PASTE_ID, deletionToken);
+        const data = await response.text();
+        if (!response.ok) {
             alert("Error:\n\n" + data);
             return;
         }
 
-        // Redirect the user to the default page
+        // Redirect the user to the main page
         location.replace(location.protocol + "//" + location.host);
+    });
+
+    // Define the behavior of the 'copy' button
+    document.getElementById("btn_copy").addEventListener("click", async function() {
+        // Ask for the clipboard permissions
+        askClipboardPermissions();
+        
+        // Copy the code
+        await navigator.clipboard.writeText(document.getElementById("code").innerText);
     });
 }
 
-// Define the behavior of the 'copy' button
-document.getElementById("btn_copy").onclick = function() {
-    copyToClipboard(document.getElementById("code").innerText);
+// askClipboardPermissions asks the user for the clipboard permissions
+async function askClipboardPermissions() {
+    try {
+        const state = await navigator.permissions.query({
+            name: "clipbaord-write"
+        });
+        return state === "granted";
+    } catch (error) {
+        return false;
+    }
 }
