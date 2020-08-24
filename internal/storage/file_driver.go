@@ -12,13 +12,13 @@ import (
 
 // FileDriver represents the file storage driver
 type FileDriver struct {
-	FilePath string
+	filePath string
 }
 
 // Initialize initializes the file storage driver
 func (driver *FileDriver) Initialize() error {
-	driver.FilePath = env.Get("STORAGE_FILE_PATH", "./data")
-	return os.MkdirAll(driver.FilePath, os.ModePerm)
+	driver.filePath = env.Get("STORAGE_FILE_PATH", "./data")
+	return os.MkdirAll(driver.filePath, os.ModePerm)
 }
 
 // Terminate terminates the file storage driver (does nothing, because the file storage driver does not need any termination)
@@ -29,7 +29,7 @@ func (driver *FileDriver) Terminate() error {
 // Get loads a paste
 func (driver *FileDriver) Get(id snowflake.ID) (*pastes.Paste, error) {
 	// Read the file
-	data, err := ioutil.ReadFile(filepath.Join(driver.FilePath, id.String()+".json"))
+	data, err := ioutil.ReadFile(filepath.Join(driver.filePath, id.String()+".json"))
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil, nil
@@ -55,7 +55,7 @@ func (driver *FileDriver) Save(paste *pastes.Paste) error {
 	}
 
 	// Create the file to save the paste to
-	file, err := os.Create(filepath.Join(driver.FilePath, paste.ID.String()+".json"))
+	file, err := os.Create(filepath.Join(driver.filePath, paste.ID.String()+".json"))
 	if err != nil {
 		return err
 	}
@@ -68,5 +68,5 @@ func (driver *FileDriver) Save(paste *pastes.Paste) error {
 
 // Delete deletes a paste
 func (driver *FileDriver) Delete(id snowflake.ID) error {
-	return os.Remove(filepath.Join(driver.FilePath, id.String()+".json"))
+	return os.Remove(filepath.Join(driver.filePath, id.String()+".json"))
 }

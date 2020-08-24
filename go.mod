@@ -11,4 +11,5 @@ require (
 	github.com/minio/minio-go/v7 v7.0.5
 	github.com/ulule/limiter/v3 v3.5.0
 	github.com/valyala/fasthttp v1.16.0
+	go.mongodb.org/mongo-driver v1.4.0
 )

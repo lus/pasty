@@ -32,6 +32,9 @@ func Load() error {
 	case "s3":
 		driver = new(S3Driver)
 		break
+	case "mongodb":
+		driver = new(MongoDBDriver)
+		break
 	default:
 		return fmt.Errorf("invalid storage type '%s'", storageType)
 	}

@@ -14,8 +14,8 @@ import (
 
 // S3Driver represents the AWS S3 storage driver
 type S3Driver struct {
-	Client *minio.Client
-	Bucket string
+	client *minio.Client
+	bucket string
 }
 
 // Initialize initializes the AWS S3 storage driver
@@ -28,8 +28,8 @@ func (driver *S3Driver) Initialize() error {
 	if err != nil {
 		return err
 	}
-	driver.Client = client
-	driver.Bucket = env.Get("STORAGE_S3_BUCKET", "pasty")
+	driver.client = client
+	driver.bucket = env.Get("STORAGE_S3_BUCKET", "pasty")
 	return nil
 }
 
@@ -41,7 +41,7 @@ func (driver *S3Driver) Terminate() error {
 // Get loads a paste
 func (driver *S3Driver) Get(id snowflake.ID) (*pastes.Paste, error) {
 	// Read the object
-	object, err := driver.Client.GetObject(context.Background(), driver.Bucket, id.String()+".json", minio.GetObjectOptions{})
+	object, err := driver.client.GetObject(context.Background(), driver.bucket, id.String()+".json", minio.GetObjectOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (driver *S3Driver) Save(paste *pastes.Paste) error {
 
 	// Put the object
 	reader := bytes.NewReader(jsonBytes)
-	_, err = driver.Client.PutObject(context.Background(), driver.Bucket, paste.ID.String()+".json", reader, reader.Size(), minio.PutObjectOptions{
+	_, err = driver.client.PutObject(context.Background(), driver.bucket, paste.ID.String()+".json", reader, reader.Size(), minio.PutObjectOptions{
 		ContentType: "application/json",
 	})
 	return err
@@ -77,5 +77,5 @@ func (driver *S3Driver) Save(paste *pastes.Paste) error {
 
 // Delete deletes a paste
 func (driver *S3Driver) Delete(id snowflake.ID) error {
-	return driver.Client.RemoveObject(context.Background(), driver.Bucket, id.String()+".json", minio.RemoveObjectOptions{})
+	return driver.client.RemoveObject(context.Background(), driver.bucket, id.String()+".json", minio.RemoveObjectOptions{})
 }
