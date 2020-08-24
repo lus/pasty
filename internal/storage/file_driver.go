@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"github.com/Lukaesebrot/pasty/internal/env"
 	"github.com/Lukaesebrot/pasty/internal/pastes"
@@ -28,6 +29,7 @@ func (driver *FileDriver) Terminate() error {
 // Get loads a paste
 func (driver *FileDriver) Get(id string) (*pastes.Paste, error) {
 	// Read the file
+	id = base64.StdEncoding.EncodeToString([]byte(id))
 	data, err := ioutil.ReadFile(filepath.Join(driver.filePath, id+".json"))
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -54,7 +56,8 @@ func (driver *FileDriver) Save(paste *pastes.Paste) error {
 	}
 
 	// Create the file to save the paste to
-	file, err := os.Create(filepath.Join(driver.filePath, paste.ID+".json"))
+	id := base64.StdEncoding.EncodeToString([]byte(paste.ID))
+	file, err := os.Create(filepath.Join(driver.filePath, id+".json"))
 	if err != nil {
 		return err
 	}
@@ -67,5 +70,6 @@ func (driver *FileDriver) Save(paste *pastes.Paste) error {
 
 // Delete deletes a paste
 func (driver *FileDriver) Delete(id string) error {
+	id = base64.StdEncoding.EncodeToString([]byte(id))
 	return os.Remove(filepath.Join(driver.filePath, id+".json"))
 }
