@@ -170,7 +170,25 @@ html, body {
   font-size: 16px;
 }
 
-@media only screen and (max-width: 750px) {
+.container #notifications {
+  position: fixed;
+  bottom: 0;
+}
+
+.container #notifications div {
+  width: 100vw;
+  padding: 10px 20px;
+}
+
+.container #notifications div.error {
+  background-color: #ff3d3d;
+}
+
+.container #notifications div.success {
+  background-color: #389b38;
+}
+
+@media only screen and (max-width: 650px) {
   .navigation {
     padding: 0 20px;
     width: calc(100vw - 40px);

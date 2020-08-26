@@ -2,6 +2,7 @@
 import * as api from "./api.js";
 import * as autoload from "./autoload.js";
 import * as spinner from "./spinner.js";
+import * as notifications from "./notifications.js";
 
 // setupKeybinds initializes the keybinds for the buttons
 export function setupKeybinds() {
@@ -56,7 +57,7 @@ export function setupButtons() {
             // Create the paste
             const response = await api.createPaste(input.value);
             if (!response.ok) {
-                alert("Error:\n\n" + data);
+                notifications.error("Failed creating the paste: <b>" + data + "</b>");
                 return;
             }
             const data = await response.json();
@@ -81,7 +82,7 @@ export function setupButtons() {
             const response = await api.deletePaste(autoload.PASTE_ID, deletionToken);
             const data = await response.text();
             if (!response.ok) {
-                alert("Error:\n\n" + data);
+                notifications.error("Failed deleting the paste: <b>" + data + "</b>");
                 return;
             }
 
@@ -98,6 +99,7 @@ export function setupButtons() {
             
             // Copy the code
             await navigator.clipboard.writeText(document.getElementById("code").innerText);
+            notifications.success("Copied the code!");
         });
     });
 }
@@ -106,7 +108,7 @@ export function setupButtons() {
 async function askClipboardPermissions() {
     try {
         const state = await navigator.permissions.query({
-            name: "clipbaord-write"
+            name: "clipboard-write"
         });
         return state === "granted";
     } catch (error) {

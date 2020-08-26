@@ -127,6 +127,20 @@ html, body {
             font-size: 16px;
         }
     }
+    & #notifications {
+        position: fixed;
+        bottom: 0;
+        & div {
+            width: 100vw;
+            padding: 10px 20px;
+            &.error {
+                background-color: #ff3d3d;
+            }
+            &.success {
+                background-color: #389b38;
+            }
+        }
+    }
 }
 
 @media only screen and (max-width: 650px) {

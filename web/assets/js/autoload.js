@@ -2,6 +2,7 @@
 import * as api from "./api.js";
 import * as buttons from "./buttons.js";
 import * as spinner from "./spinner.js";
+import * as notifications from "./notifications.js";
 
 // Set up the buttons
 buttons.setupButtons();
@@ -10,10 +11,13 @@ buttons.setupKeybinds();
 // Load the API information
 async function loadAPIInformation() {
     const response = await api.getAPIInformation();
-    if (response.ok) {
-        const data = await response.json();
-        document.getElementById("version").innerText = data.version;
+    if (!response.ok) {
+        const data = await response.text();
+        notifications.error("Failed fetching the API information: <b>" + data + "</b>");
+        return;
     }
+    const data = await response.json();
+    document.getElementById("version").innerText = data.version;
 }
 loadAPIInformation();
 
