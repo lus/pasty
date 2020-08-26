@@ -23,27 +23,31 @@ type Driver interface {
 // Load loads the current storage driver
 func Load() error {
 	// Define the driver to use
-	var driver Driver
-	storageType := strings.ToLower(env.Get("STORAGE_TYPE", "file"))
-	switch storageType {
-	case "file":
-		driver = new(FileDriver)
-		break
-	case "s3":
-		driver = new(S3Driver)
-		break
-	case "mongodb":
-		driver = new(MongoDBDriver)
-		break
-	default:
-		return fmt.Errorf("invalid storage type '%s'", storageType)
+	storageType := env.Get("STORAGE_TYPE", "file")
+	driver, err := GetDriver(storageType)
+	if err != nil {
+		return err
 	}
 
 	// Initialize the driver
-	err := driver.Initialize()
+	err = driver.Initialize()
 	if err != nil {
 		return err
 	}
 	Current = driver
 	return nil
+}
+
+// GetDriver returns the driver with the given type string if it exists
+func GetDriver(storageType string) (Driver, error) {
+	switch strings.ToLower(storageType) {
+	case "file":
+		return new(FileDriver), nil
+	case "s3":
+		return new(S3Driver), nil
+	case "mongodb":
+		return new(MongoDBDriver), nil
+	default:
+		return nil, fmt.Errorf("invalid storage type '%s'", storageType)
+	}
 }
