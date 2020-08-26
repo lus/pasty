@@ -14,6 +14,7 @@ var Current Driver
 type Driver interface {
 	Initialize() error
 	Terminate() error
+	ListIDs() ([]string, error)
 	Get(id string) (*pastes.Paste, error)
 	Save(paste *pastes.Paste) error
 	Delete(id string) error

@@ -9,6 +9,7 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"io/ioutil"
+	"strings"
 )
 
 // S3Driver represents the AWS S3 storage driver
@@ -35,6 +36,24 @@ func (driver *S3Driver) Initialize() error {
 // Terminate terminates the AWS S3 storage driver (does nothing, because the AWS S3 storage driver does not need any termination)
 func (driver *S3Driver) Terminate() error {
 	return nil
+}
+
+// ListIDs returns a list of all existing paste IDs
+func (driver *S3Driver) ListIDs() ([]string, error) {
+	// Define the IDs slice
+	var ids []string
+
+	// Fill the IDs slice
+	channel := driver.client.ListObjects(context.Background(), driver.bucket, minio.ListObjectsOptions{})
+	for object := range channel {
+		if object.Err != nil {
+			return nil, object.Err
+		}
+		ids = append(ids, strings.TrimSuffix(object.Key, ".json"))
+	}
+
+	// Return the IDs slice
+	return ids, nil
 }
 
 // Get loads a paste

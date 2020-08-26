@@ -48,6 +48,36 @@ func (driver *MongoDBDriver) Terminate() error {
 	return driver.client.Disconnect(context.TODO())
 }
 
+// ListIDs returns a list of all existing paste IDs
+func (driver *MongoDBDriver) ListIDs() ([]string, error) {
+	// Define the collection to use for this database operation
+	collection := driver.client.Database(driver.database).Collection(driver.collection)
+
+	// Define the context for the following database operation
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Retrieve all paste documents
+	result, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+
+	// Decode all paste documents
+	var pasteSlice []pastes.Paste
+	err = result.All(ctx, &pasteSlice)
+	if err != nil {
+		return nil, err
+	}
+
+	// Read and return the IDs of all paste objects
+	var ids []string
+	for _, paste := range pasteSlice {
+		ids = append(ids, paste.ID)
+	}
+	return ids, nil
+}
+
 // Get loads a paste
 func (driver *MongoDBDriver) Get(id string) (*pastes.Paste, error) {
 	// Define the collection to use for this database operation

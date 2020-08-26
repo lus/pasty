@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // FileDriver represents the file storage driver
@@ -24,6 +25,36 @@ func (driver *FileDriver) Initialize() error {
 // Terminate terminates the file storage driver (does nothing, because the file storage driver does not need any termination)
 func (driver *FileDriver) Terminate() error {
 	return nil
+}
+
+// ListIDs returns a list of all existing paste IDs
+func (driver *FileDriver) ListIDs() ([]string, error) {
+	// Define the IDs slice
+	var ids []string
+
+	// Fill the IDs slice
+	err := filepath.Walk(driver.filePath, func(path string, info os.FileInfo, err error) error {
+		// Check if a walking error occurred
+		if err != nil {
+			return err
+		}
+
+		// Decode the file name
+		decoded, err := base64.StdEncoding.DecodeString(strings.TrimSuffix(info.Name(), ".json"))
+		if err != nil {
+			return err
+		}
+
+		// Append the ID to the IDs slice
+		ids = append(ids, string(decoded))
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// Return the IDs slice
+	return ids, nil
 }
 
 // Get loads a paste
