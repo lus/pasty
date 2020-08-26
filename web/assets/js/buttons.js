@@ -62,6 +62,9 @@ export function setupButtons() {
             }
             const data = await response.json();
 
+            // Give the user the chance to copy the deletion token
+            prompt("The deletion token for your paste is:", data.deletionToken);
+
             // Redirect the user to the paste page
             let address = location.protocol + "//" + location.host + "/" + data.id;
             if (data.suggestedSyntaxType) address += "." + data.suggestedSyntaxType;
@@ -75,7 +78,7 @@ export function setupButtons() {
     document.getElementById("btn_delete").addEventListener("click", function() {
         spinner.surround(async function() {
             // Ask the user for the deletion token
-            const deletionToken = window.prompt("Deletion Token:");
+            const deletionToken = prompt("Deletion Token:");
             if (!deletionToken) return;
 
             // Delete the paste
