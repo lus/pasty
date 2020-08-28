@@ -41,3 +41,12 @@ Every single one of them has its own configuration variables:
 | `STORAGE_MONGODB_CONNECTION_STRING` | `mongodb://pasty:pasty@example.host/pasty` | `string` | Defines the connection string to use for the MongoDB connection |
 | `STORAGE_MONGODB_DATABASE`          | `pasty`                                    | `string` | Defines the name of the database to use                         |
 | `STORAGE_MONGODB_COLLECTION`        | `pastes`                                   | `string` | Defines the name of the collection to use                       |
+
+---
+
+### SQL (`sql`)
+| Environment Variable | Default Value | Type     | Description                                                                         |
+|----------------------|---------------|----------|-------------------------------------------------------------------------------------|
+| `STORAGE_SQL_DRIVER` | `sqlite3`     | `string` | Defines the driver to use for the SQL connection (`sqlite3`, `postgres` or `mysql`) |
+| `STORAGE_SQL_DSN`    | `./db`        | `string` | Defines the DSN to use for the SQL connection                                       |
+| `STORAGE_SQL_TABLE`  | `pasty`       | `string` | Defines the table name to use for the SQL connection                                |

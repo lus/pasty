@@ -47,6 +47,8 @@ func GetDriver(storageType string) (Driver, error) {
 		return new(S3Driver), nil
 	case "mongodb":
 		return new(MongoDBDriver), nil
+	case "sql":
+		return new(SQLDriver), nil
 	default:
 		return nil, fmt.Errorf("invalid storage type '%s'", storageType)
 	}
