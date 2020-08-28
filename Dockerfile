@@ -1,7 +1,7 @@
 # Build the application
 FROM golang:1.15-alpine AS build
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+    apk add --no-cache bash git openssh build-base
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
