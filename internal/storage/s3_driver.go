@@ -63,11 +63,11 @@ func (driver *S3Driver) Get(id string) (*pastes.Paste, error) {
 	if err != nil {
 		return nil, err
 	}
-	if object == nil {
-		return nil, nil
-	}
 	data, err := ioutil.ReadAll(object)
 	if err != nil {
+		if minio.ToErrorResponse(err).Code == "NoSuchKey" {
+			return nil, nil
+		}
 		return nil, err
 	}
 

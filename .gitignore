@@ -116,3 +116,4 @@ modules.xml
 
 web/*.gz
 data/
+.env
