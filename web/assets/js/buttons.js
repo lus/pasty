@@ -69,8 +69,6 @@ export function setupButtons() {
             let address = location.protocol + "//" + location.host + "/" + data.id;
             if (data.suggestedSyntaxType) address += "." + data.suggestedSyntaxType;
             location.replace(address);
-
-            // TODO: Find a solution to display the deletion token
         });
     });
 
