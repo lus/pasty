@@ -25,7 +25,7 @@ export function setupKeybinds() {
                 element = document.getElementById("btn_delete");
                 break;
             }
-            case 67: {
+            case 66: {
                 element = document.getElementById("btn_copy");
                 break;
             }
