@@ -44,13 +44,49 @@ async function loadPaste() {
         document.getElementById("btn_copy").removeAttribute("disabled");
     
         // Set the paste content to the DOM
-        document.getElementById("code").innerHTML = language
+        const code = document.getElementById("code");
+        code.innerHTML = language
             ? hljs.highlight(language, data.content).value
             : hljs.highlightAuto(data.content).value;
         
         // Display the line numbers
-        document.getElementById("linenos").innerHTML = data.content.split(/\n/).map((_, index) => `<span>${index + 1}</span>`).join('');
-    
+        const lineNOs = document.getElementById("linenos");
+        lineNOs.innerHTML = data.content.split(/\n/).map((_, index) => `<span>${index + 1}</span>`).join('');
+
+        const sharedLine = parseInt(window.location.hash.toLowerCase().replace("#l", ""), 10);
+        if (sharedLine) {
+            lineNOs.innerHTML = data.content.split(/\n/).map((_, index) => {
+                return index + 1 === sharedLine
+                    ? `<span class="highlight">${index + 1}</span>`
+                    : `<span>${index + 1}</span>`;
+            }).join('');
+
+            let html = code.innerHTML.split(/\n/);
+            html[sharedLine-1] = `<span class="highlight">${html[sharedLine-1]}</span>`;
+            code.innerHTML = html.join("\n");
+        }
+
+        // TODO: Update this shitty construct
+        lineNOs.childNodes.forEach(node => {
+            node.addEventListener("click", function(_) {
+                const address = location.protocol + "//" + location.host + location.pathname + "#L" + node.innerText;
+                location.replace(address);
+                location.reload();
+            });
+            node.addEventListener("mouseover", function(_) {
+                let html = code.innerHTML.split(/\n/);
+                const index = parseInt(node.innerText, 10) - 1;
+                html[index] = `<span class="highlight">${html[index]}</span>`;
+                code.innerHTML = html.join("\n");
+            });
+            node.addEventListener("mouseout", function(_) {
+                let html = code.innerHTML.split(/\n/);
+                const index = parseInt(node.innerText, 10) - 1;
+                html[index] = html[index].substring(24, html[index].length - 7);
+                code.innerHTML = html.join("\n");
+            });
+        });
+        
         // Set the PASTE_ID variable
         PASTE_ID = pasteID;
     } else {

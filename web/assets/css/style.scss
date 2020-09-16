@@ -104,17 +104,29 @@ html, body {
         padding: 20px 0;
         width: 50px;
         min-height: calc(100vh - 100px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         background-color: #111111;
         color: #bebebe;
+        & span {
+            display: block;
+            width: 100%;
+            text-align: center;
+            &:hover, &.highlight {
+                background-color: #92b300;
+                color: #ffffff;
+                cursor: pointer;
+            }
+        }
     }
     & #content {
         padding: 20px;
         width: calc(100vw - 50px);
         & #code {
             white-space: pre;
+            & .highlight {
+                background-color: #92b30071;
+                display: inline-block;
+                min-width: 100%;
+            }
         }
         & #input {
             height: 100%;

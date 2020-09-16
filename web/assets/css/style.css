@@ -136,18 +136,20 @@ html, body {
   padding: 20px 0;
   width: 50px;
   min-height: calc(100vh - 100px);
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   background-color: #111111;
   color: #bebebe;
+}
+
+.container #linenos span {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.container #linenos span:hover, .container #linenos span.highlight {
+  background-color: #92b300;
+  color: #ffffff;
+  cursor: pointer;
 }
 
 .container #content {
@@ -157,6 +159,12 @@ html, body {
 
 .container #content #code {
   white-space: pre;
+}
+
+.container #content #code .highlight {
+  background-color: #92b30071;
+  display: inline-block;
+  min-width: 100%;
 }
 
 .container #content #input {
