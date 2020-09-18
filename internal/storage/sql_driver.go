@@ -7,6 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
+	"time"
 )
 
 // SQLDriver represents the SQL storage driver
@@ -36,7 +37,9 @@ func (driver *SQLDriver) Initialize() error {
 			id varchar NOT NULL PRIMARY KEY,
 			content varchar NOT NULL,
 			suggestedSyntaxType varchar NOT NULL,
-			deletionToken varchar NOT NULL
+			deletionToken varchar NOT NULL,
+			created bigint NOT NULL,
+			autoDelete bool NOT NULL
 		);
     `, table)
 	if err != nil {
@@ -96,7 +99,7 @@ func (driver *SQLDriver) Get(id string) (*pastes.Paste, error) {
 // Save saves a paste
 func (driver *SQLDriver) Save(paste *pastes.Paste) error {
 	// Execute an INSERT statement to create the paste
-	_, err := driver.database.Exec("INSERT INTO ? (?, ?, ?, ?)", driver.table, paste.ID, paste.Content, paste.SuggestedSyntaxType, paste.DeletionToken)
+	_, err := driver.database.Exec("INSERT INTO ? (?, ?, ?, ?, ?, ?)", driver.table, paste.ID, paste.Content, paste.SuggestedSyntaxType, paste.DeletionToken, paste.Created, paste.AutoDelete)
 	return err
 }
 
@@ -105,4 +108,36 @@ func (driver *SQLDriver) Delete(id string) error {
 	// Execute a DELETE statement to delete the paste
 	_, err := driver.database.Exec("DELETE FROM ? WHERE id = ?", driver.table, id)
 	return err
+}
+
+// Cleanup cleans up the expired pastes
+func (driver *SQLDriver) Cleanup() (int, error) {
+	// Retrieve all paste IDs
+	ids, err := driver.ListIDs()
+	if err != nil {
+		return 0, err
+	}
+
+	// Define the amount of deleted items
+	deleted := 0
+
+	// Loop through all pastes
+	for _, id := range ids {
+		// Retrieve the paste object
+		paste, err := driver.Get(id)
+		if err != nil {
+			return 0, err
+		}
+
+		// Delete the paste if it is expired
+		lifetime := env.Duration("AUTODELETE_LIFETIME", 30*24*time.Hour)
+		if paste.AutoDelete && paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
+			err = driver.Delete(id)
+			if err != nil {
+				return 0, err
+			}
+			deleted++
+		}
+	}
+	return deleted, nil
 }

@@ -18,6 +18,7 @@ type Driver interface {
 	Get(id string) (*pastes.Paste, error)
 	Save(paste *pastes.Paste) error
 	Delete(id string) error
+	Cleanup() (int, error)
 }
 
 // Load loads the current storage driver

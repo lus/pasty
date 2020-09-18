@@ -10,6 +10,7 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"io/ioutil"
 	"strings"
+	"time"
 )
 
 // S3Driver represents the AWS S3 storage driver
@@ -99,4 +100,36 @@ func (driver *S3Driver) Save(paste *pastes.Paste) error {
 // Delete deletes a paste
 func (driver *S3Driver) Delete(id string) error {
 	return driver.client.RemoveObject(context.Background(), driver.bucket, id+".json", minio.RemoveObjectOptions{})
+}
+
+// Cleanup cleans up the expired pastes
+func (driver *S3Driver) Cleanup() (int, error) {
+	// Retrieve all paste IDs
+	ids, err := driver.ListIDs()
+	if err != nil {
+		return 0, err
+	}
+
+	// Define the amount of deleted items
+	deleted := 0
+
+	// Loop through all pastes
+	for _, id := range ids {
+		// Retrieve the paste object
+		paste, err := driver.Get(id)
+		if err != nil {
+			return 0, err
+		}
+
+		// Delete the paste if it is expired
+		lifetime := env.Duration("AUTODELETE_LIFETIME", 30*24*time.Hour)
+		if paste.AutoDelete && paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
+			err = driver.Delete(id)
+			if err != nil {
+				return 0, err
+			}
+			deleted++
+		}
+	}
+	return deleted, nil
 }

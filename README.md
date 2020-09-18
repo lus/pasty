@@ -11,9 +11,17 @@ Pasty is a fast and lightweight code pasting server
 | `PASTY_DELETION_TOKEN_LENGTH` | `12`          | `number` | Defines the length of the deletion token of a paste                                                         |
 | `PASTY_RATE_LIMIT`            | `30-M`        | `string` | Defines the rate limit of the API (see https://github.com/ulule/limiter#usage)                              |
 
+## AutoDelete
+Pasty provides an intuitive system to automatically delete pastes after a specific amount of time. You can configure it with the following variables:
+
 ## Storage types
 Pasty supports multiple storage types, defined using the `PASTY_STORAGE_TYPE` environment variable (use the value behind the corresponding title in this README).
 Every single one of them has its own configuration variables: 
+| Environment Variable             | Default Value | Type     | Description                                                                    |
+|----------------------------------|---------------|----------|--------------------------------------------------------------------------------|
+| `PASTY_AUTODELETE`               | `false`       | `bool`   | Defines whether or not the AutoDelete system should be enabled                 |
+| `PASTY_AUTODELETE_LIFETIME`      | `720h`        | `string` | Defines the duration a paste should live until it gets deleted                 |
+| `PASTY_AUTODELETE_TASK_INTERVAL` | `5m`          | `string` | Defines the interval in which the AutoDelete task should clean up the database |
 
 ### File (`file`)
 | Environment Variable      | Default Value | Type     | Description                                               |

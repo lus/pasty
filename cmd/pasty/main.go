@@ -5,6 +5,7 @@ import (
 	"github.com/Lukaesebrot/pasty/internal/storage"
 	"github.com/Lukaesebrot/pasty/internal/web"
 	"log"
+	"time"
 )
 
 func main() {
@@ -25,6 +26,24 @@ func main() {
 			log.Fatalln(err)
 		}
 	}()
+
+	// Schedule the AutoDelete task
+	if env.Bool("AUTODELETE", false) {
+		log.Println("Scheduling the AutoDelete task...")
+		go func() {
+			for {
+				// Run the cleanup sequence
+				deleted, err := storage.Current.Cleanup()
+				if err != nil {
+					log.Fatalln(err)
+				}
+				log.Printf("AutoDelete: Deleted %d expired pastes", deleted)
+
+				// Wait until the process should repeat
+				time.Sleep(env.Duration("AUTODELETE_TASK_INTERVAL", 5*time.Minute))
+			}
+		}()
+	}
 
 	// Serve the web resources
 	log.Println("Serving the web resources...")

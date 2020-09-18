@@ -101,7 +101,10 @@ func (driver *MongoDBDriver) Get(id string) (*pastes.Paste, error) {
 	// Return the retrieved paste object
 	paste := new(pastes.Paste)
 	err = result.Decode(paste)
-	return paste, err
+	if err != nil {
+		return nil, err
+	}
+	return paste, nil
 }
 
 // Save saves a paste
@@ -131,4 +134,36 @@ func (driver *MongoDBDriver) Delete(id string) error {
 	filter := bson.M{"_id": id}
 	_, err := collection.DeleteOne(ctx, filter)
 	return err
+}
+
+// Cleanup cleans up the expired pastes
+func (driver *MongoDBDriver) Cleanup() (int, error) {
+	// Retrieve all paste IDs
+	ids, err := driver.ListIDs()
+	if err != nil {
+		return 0, err
+	}
+
+	// Define the amount of deleted items
+	deleted := 0
+
+	// Loop through all pastes
+	for _, id := range ids {
+		// Retrieve the paste object
+		paste, err := driver.Get(id)
+		if err != nil {
+			return 0, err
+		}
+
+		// Delete the paste if it is expired
+		lifetime := env.Duration("AUTODELETE_LIFETIME", 30*24*time.Hour)
+		if paste.AutoDelete && paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
+			err = driver.Delete(id)
+			if err != nil {
+				return 0, err
+			}
+			deleted++
+		}
+	}
+	return deleted, nil
 }

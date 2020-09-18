@@ -1,7 +1,9 @@
 package pastes
 
 import (
+	"github.com/Lukaesebrot/pasty/internal/env"
 	"github.com/alexedwards/argon2id"
+	"time"
 )
 
 // Paste represents a saved paste
@@ -10,6 +12,8 @@ type Paste struct {
 	Content             string `json:"content" bson:"content"`
 	SuggestedSyntaxType string `json:"suggestedSyntaxType" bson:"suggestedSyntaxType"`
 	DeletionToken       string `json:"deletionToken" bson:"deletionToken"`
+	Created             int64  `json:"created" bson:"created"`
+	AutoDelete          bool   `json:"autoDelete" bson:"autoDelete"`
 }
 
 // Create creates a new paste object using the given content
@@ -29,6 +33,8 @@ func Create(id, content string) (*Paste, error) {
 		Content:             content,
 		SuggestedSyntaxType: suggestedSyntaxType,
 		DeletionToken:       deletionToken,
+		Created:             time.Now().Unix(),
+		AutoDelete:          env.Bool("AUTODELETE", false),
 	}, nil
 }
 

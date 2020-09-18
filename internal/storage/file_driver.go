@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 // FileDriver represents the file storage driver
@@ -103,4 +104,36 @@ func (driver *FileDriver) Save(paste *pastes.Paste) error {
 func (driver *FileDriver) Delete(id string) error {
 	id = base64.StdEncoding.EncodeToString([]byte(id))
 	return os.Remove(filepath.Join(driver.filePath, id+".json"))
+}
+
+// Cleanup cleans up the expired pastes
+func (driver *FileDriver) Cleanup() (int, error) {
+	// Retrieve all paste IDs
+	ids, err := driver.ListIDs()
+	if err != nil {
+		return 0, err
+	}
+
+	// Define the amount of deleted items
+	deleted := 0
+
+	// Loop through all pastes
+	for _, id := range ids {
+		// Retrieve the paste object
+		paste, err := driver.Get(id)
+		if err != nil {
+			return 0, err
+		}
+
+		// Delete the paste if it is expired
+		lifetime := env.Duration("AUTODELETE_LIFETIME", 30*24*time.Hour)
+		if paste.AutoDelete && paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
+			err = driver.Delete(id)
+			if err != nil {
+				return 0, err
+			}
+			deleted++
+		}
+	}
+	return deleted, nil
 }
