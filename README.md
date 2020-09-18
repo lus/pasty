@@ -23,30 +23,30 @@ Every single one of them has its own configuration variables:
 ---
 
 ### S3 (`s3`)
-| Environment Variable           | Default Value | Type     | Description                                                                               |
-|--------------------------------|---------------|----------|-------------------------------------------------------------------------------------------|
-| `STORAGE_S3_ENDPOINT`          | `<empty>`     | `string` | Defines the S3 endpoint to connect to                                                     |
-| `STORAGE_S3_ACCESS_KEY_ID`     | `<empty>`     | `string` | Defines the access key ID to use for the S3 storage                                       |
-| `STORAGE_S3_SECRET_ACCESS_KEY` | `<empty>`     | `string` | Defines the secret acces key to use for the S3 storage                                    |
-| `STORAGE_S3_SECRET_TOKEN`      | `<empty>`     | `string` | Defines the session token to use for the S3 storage (may be left empty in the most cases) |
-| `STORAGE_S3_SECURE`            | `true`        | `bool`   | Defines whether or not SSL should be used for the S3 connection                           |
-| `STORAGE_S3_REGION`            | `<empty>`     | `string` | Defines the region of the S3 storage                                                      |
-| `STORAGE_S3_BUCKET`            | `pasty`       | `string` | Defines the name of the S3 bucket (has to be created before setup)                        |
+| Environment Variable                 | Default Value | Type     | Description                                                                               |
+|--------------------------------------|---------------|----------|-------------------------------------------------------------------------------------------|
+| `PASTY_STORAGE_S3_ENDPOINT`          | `<empty>`     | `string` | Defines the S3 endpoint to connect to                                                     |
+| `PASTY_STORAGE_S3_ACCESS_KEY_ID`     | `<empty>`     | `string` | Defines the access key ID to use for the S3 storage                                       |
+| `PASTY_STORAGE_S3_SECRET_ACCESS_KEY` | `<empty>`     | `string` | Defines the secret acces key to use for the S3 storage                                    |
+| `PASTY_STORAGE_S3_SECRET_TOKEN`      | `<empty>`     | `string` | Defines the session token to use for the S3 storage (may be left empty in the most cases) |
+| `PASTY_STORAGE_S3_SECURE`            | `true`        | `bool`   | Defines whether or not SSL should be used for the S3 connection                           |
+| `PASTY_STORAGE_S3_REGION`            | `<empty>`     | `string` | Defines the region of the S3 storage                                                      |
+| `PASTY_STORAGE_S3_BUCKET`            | `pasty`       | `string` | Defines the name of the S3 bucket (has to be created before setup)                        |
 
 ---
 
 ### MongoDB (`mongodb`)
-| Environment Variable                | Default Value                              | Type     | Description                                                     |
-|-------------------------------------|--------------------------------------------|----------|-----------------------------------------------------------------|
-| `STORAGE_MONGODB_CONNECTION_STRING` | `mongodb://pasty:pasty@example.host/pasty` | `string` | Defines the connection string to use for the MongoDB connection |
-| `STORAGE_MONGODB_DATABASE`          | `pasty`                                    | `string` | Defines the name of the database to use                         |
-| `STORAGE_MONGODB_COLLECTION`        | `pastes`                                   | `string` | Defines the name of the collection to use                       |
+| Environment Variable                      | Default Value                              | Type     | Description                                                     |
+|-------------------------------------------|--------------------------------------------|----------|-----------------------------------------------------------------|
+| `PASTY_STORAGE_MONGODB_CONNECTION_STRING` | `mongodb://pasty:pasty@example.host/pasty` | `string` | Defines the connection string to use for the MongoDB connection |
+| `PASTY_STORAGE_MONGODB_DATABASE`          | `pasty`                                    | `string` | Defines the name of the database to use                         |
+| `PASTY_STORAGE_MONGODB_COLLECTION`        | `pastes`                                   | `string` | Defines the name of the collection to use                       |
 
 ---
 
 ### SQL (`sql`)
-| Environment Variable | Default Value | Type     | Description                                                                         |
-|----------------------|---------------|----------|-------------------------------------------------------------------------------------|
-| `STORAGE_SQL_DRIVER` | `sqlite3`     | `string` | Defines the driver to use for the SQL connection (`sqlite3`, `postgres` or `mysql`) |
-| `STORAGE_SQL_DSN`    | `./db`        | `string` | Defines the DSN to use for the SQL connection                                       |
-| `STORAGE_SQL_TABLE`  | `pasty`       | `string` | Defines the table name to use for the SQL connection                                |
+| Environment Variable       | Default Value | Type     | Description                                                                         |
+|----------------------------|---------------|----------|-------------------------------------------------------------------------------------|
+| `PASTY_STORAGE_SQL_DRIVER` | `sqlite3`     | `string` | Defines the driver to use for the SQL connection (`sqlite3`, `postgres` or `mysql`) |
+| `PASTY_STORAGE_SQL_DSN`    | `./db`        | `string` | Defines the DSN to use for the SQL connection                                       |
+| `PASTY_STORAGE_SQL_TABLE`  | `pasty`       | `string` | Defines the table name to use for the SQL connection                                |
