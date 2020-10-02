@@ -33,6 +33,7 @@ func v1GetPaste(ctx *fasthttp.RequestCtx) {
 		ctx.SetBodyString("paste not found")
 		return
 	}
+	paste.DeletionToken = ""
 
 	// Respond with the paste
 	jsonData, err := json.Marshal(paste)

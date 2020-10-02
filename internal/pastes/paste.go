@@ -11,7 +11,7 @@ type Paste struct {
 	ID                  string `json:"id" bson:"_id"`
 	Content             string `json:"content" bson:"content"`
 	SuggestedSyntaxType string `json:"suggestedSyntaxType" bson:"suggestedSyntaxType"`
-	DeletionToken       string `json:"deletionToken" bson:"deletionToken"`
+	DeletionToken       string `json:"deletionToken" bson:"deletionToken,omitempty"`
 	Created             int64  `json:"created" bson:"created"`
 	AutoDelete          bool   `json:"autoDelete" bson:"autoDelete"`
 }
