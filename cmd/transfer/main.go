@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/shared"
 	"github.com/lus/pasty/internal/storage"
 )
@@ -15,9 +15,9 @@ func main() {
 		panic("Invalid command line arguments")
 	}
 
-	// Load the optional .env file
-	log.Println("Loading the optional .env file...")
-	env.Load()
+	// Load the configuration
+	log.Println("Loading the application configuration...")
+	config.Load()
 
 	// Create and initialize the first (from) driver
 	from, err := storage.GetDriver(shared.StorageType(os.Args[1]))

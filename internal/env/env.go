@@ -16,11 +16,11 @@ func Load() {
 
 // MustString returns the content of the environment variable with the given key or the given fallback
 func MustString(key, fallback string) string {
-	found := os.Getenv(static.EnvironmentVariablePrefix + key)
-	if found == "" {
+	value, found := os.LookupEnv(static.EnvironmentVariablePrefix + key)
+	if !found {
 		return fallback
 	}
-	return found
+	return value
 }
 
 // MustBool uses MustString and parses it into a boolean
