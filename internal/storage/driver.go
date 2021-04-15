@@ -1,13 +1,13 @@
 package storage
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/shared"
 	"github.com/lus/pasty/internal/storage/file"
 	"github.com/lus/pasty/internal/storage/mongodb"
+	"github.com/lus/pasty/internal/storage/postgres"
 	"github.com/lus/pasty/internal/storage/s3"
 )
 
@@ -48,8 +48,7 @@ func GetDriver(storageType shared.StorageType) (Driver, error) {
 	case shared.StorageTypeFile:
 		return new(file.FileDriver), nil
 	case shared.StorageTypePostgres:
-		// TODO: Implement Postgres driver
-		return nil, errors.New("TODO")
+		return new(postgres.PostgresDriver), nil
 	case shared.StorageTypeMongoDB:
 		return new(mongodb.MongoDBDriver), nil
 	case shared.StorageTypeS3:
