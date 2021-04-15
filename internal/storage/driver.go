@@ -6,6 +6,9 @@ import (
 
 	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/shared"
+	"github.com/lus/pasty/internal/storage/file"
+	"github.com/lus/pasty/internal/storage/mongodb"
+	"github.com/lus/pasty/internal/storage/s3"
 )
 
 // Current holds the current storage driver
@@ -43,14 +46,14 @@ func Load() error {
 func GetDriver(storageType shared.StorageType) (Driver, error) {
 	switch storageType {
 	case shared.StorageTypeFile:
-		return new(FileDriver), nil
+		return new(file.FileDriver), nil
 	case shared.StorageTypePostgres:
 		// TODO: Implement Postgres driver
 		return nil, errors.New("TODO")
 	case shared.StorageTypeMongoDB:
-		return new(MongoDBDriver), nil
+		return new(mongodb.MongoDBDriver), nil
 	case shared.StorageTypeS3:
-		return new(S3Driver), nil
+		return new(s3.S3Driver), nil
 	default:
 		return nil, fmt.Errorf("invalid storage type '%s'", storageType)
 	}
