@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lus/pasty/internal/env"
-	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/shared"
 )
 
 // FileDriver represents the file storage driver
@@ -20,7 +20,7 @@ type FileDriver struct {
 
 // Initialize initializes the file storage driver
 func (driver *FileDriver) Initialize() error {
-	driver.filePath = env.Get("STORAGE_FILE_PATH", "./data")
+	driver.filePath = config.Current.File.Path
 	return os.MkdirAll(driver.filePath, os.ModePerm)
 }
 
@@ -60,7 +60,7 @@ func (driver *FileDriver) ListIDs() ([]string, error) {
 }
 
 // Get loads a paste
-func (driver *FileDriver) Get(id string) (*pastes.Paste, error) {
+func (driver *FileDriver) Get(id string) (*shared.Paste, error) {
 	// Read the file
 	id = base64.StdEncoding.EncodeToString([]byte(id))
 	data, err := ioutil.ReadFile(filepath.Join(driver.filePath, id+".json"))
@@ -72,7 +72,7 @@ func (driver *FileDriver) Get(id string) (*pastes.Paste, error) {
 	}
 
 	// Unmarshal the file into a paste
-	paste := new(pastes.Paste)
+	paste := new(shared.Paste)
 	err = json.Unmarshal(data, &paste)
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ func (driver *FileDriver) Get(id string) (*pastes.Paste, error) {
 }
 
 // Save saves a paste
-func (driver *FileDriver) Save(paste *pastes.Paste) error {
+func (driver *FileDriver) Save(paste *shared.Paste) error {
 	// Marshal the paste
 	jsonBytes, err := json.Marshal(paste)
 	if err != nil {
@@ -123,15 +123,15 @@ func (driver *FileDriver) Cleanup() (int, error) {
 		// Retrieve the paste object
 		paste, err := driver.Get(id)
 		if err != nil {
-			return 0, err
+			return deleted, err
 		}
 
 		// Delete the paste if it is expired
-		lifetime := env.Duration("AUTODELETE_LIFETIME", 30*24*time.Hour)
+		lifetime := config.Current.AutoDelete.Lifetime
 		if paste.AutoDelete && paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
 			err = driver.Delete(id)
 			if err != nil {
-				return 0, err
+				return deleted, err
 			}
 			deleted++
 		}

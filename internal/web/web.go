@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	routing "github.com/fasthttp/router"
-	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/static"
 	v1 "github.com/lus/pasty/internal/web/controllers/v1"
 	"github.com/ulule/limiter/v3"
@@ -38,7 +38,7 @@ func Serve() error {
 	})
 
 	// Set up the rate limiter
-	rate, err := limiter.NewRateFromFormatted(env.Get("RATE_LIMIT", "30-M"))
+	rate, err := limiter.NewRateFromFormatted(config.Current.RateLimit)
 	if err != nil {
 		return err
 	}
@@ -61,12 +61,11 @@ func Serve() error {
 	}
 
 	// Route the hastebin documents route if hastebin support is enabled
-	if env.Bool("HASTEBIN_SUPPORT", false) {
+	if config.Current.HastebinSupport {
 		router.POST("/documents", rateLimiterMiddleware.Handle(v1.HastebinSupportHandler))
 	}
 
 	// Serve the web resources
-	address := env.Get("WEB_ADDRESS", ":8080")
 	return (&fasthttp.Server{
 		Handler: func(ctx *fasthttp.RequestCtx) {
 			// Add the CORS headers
@@ -77,7 +76,7 @@ func Serve() error {
 			router.Handler(ctx)
 		},
 		Logger: new(nilLogger),
-	}).ListenAndServe(address)
+	}).ListenAndServe(config.Current.WebAddress)
 }
 
 // frontendHandler handles the frontend routing

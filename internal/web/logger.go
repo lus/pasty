@@ -6,5 +6,4 @@ type nilLogger struct {
 
 // Printf prints nothing
 func (logger *nilLogger) Printf(string, ...interface{}) {
-	return
 }

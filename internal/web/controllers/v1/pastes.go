@@ -2,10 +2,13 @@ package v1
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/fasthttp/router"
-	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/shared"
 	"github.com/lus/pasty/internal/storage"
+	"github.com/lus/pasty/internal/utils"
 	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
 	"github.com/valyala/fasthttp"
 )
@@ -73,11 +76,12 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Create the paste object
-	paste, err := pastes.Create(id, values["content"])
-	if err != nil {
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		ctx.SetBodyString(err.Error())
-		return
+	paste := &shared.Paste{
+		ID:            id,
+		Content:       values["content"],
+		DeletionToken: utils.RandomString(config.Current.DeletionTokenLength),
+		Created:       time.Now().Unix(),
+		AutoDelete:    config.Current.AutoDelete.Enabled,
 	}
 
 	// Hash the deletion token

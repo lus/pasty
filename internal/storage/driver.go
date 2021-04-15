@@ -1,11 +1,11 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
-	"strings"
 
-	"github.com/lus/pasty/internal/env"
-	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/shared"
 )
 
 // Current holds the current storage driver
@@ -16,8 +16,8 @@ type Driver interface {
 	Initialize() error
 	Terminate() error
 	ListIDs() ([]string, error)
-	Get(id string) (*pastes.Paste, error)
-	Save(paste *pastes.Paste) error
+	Get(id string) (*shared.Paste, error)
+	Save(paste *shared.Paste) error
 	Delete(id string) error
 	Cleanup() (int, error)
 }
@@ -25,8 +25,7 @@ type Driver interface {
 // Load loads the current storage driver
 func Load() error {
 	// Define the driver to use
-	storageType := env.Get("STORAGE_TYPE", "file")
-	driver, err := GetDriver(storageType)
+	driver, err := GetDriver(config.Current.StorageType)
 	if err != nil {
 		return err
 	}
@@ -40,17 +39,18 @@ func Load() error {
 	return nil
 }
 
-// GetDriver returns the driver with the given type string if it exists
-func GetDriver(storageType string) (Driver, error) {
-	switch strings.ToLower(storageType) {
-	case "file":
+// GetDriver returns the driver with the given type if it exists
+func GetDriver(storageType shared.StorageType) (Driver, error) {
+	switch storageType {
+	case shared.StorageTypeFile:
 		return new(FileDriver), nil
-	case "s3":
-		return new(S3Driver), nil
-	case "mongodb":
+	case shared.StorageTypePostgres:
+		// TODO: Implement Postgres driver
+		return nil, errors.New("TODO")
+	case shared.StorageTypeMongoDB:
 		return new(MongoDBDriver), nil
-	case "sql":
-		return new(SQLDriver), nil
+	case shared.StorageTypeS3:
+		return new(S3Driver), nil
 	default:
 		return nil, fmt.Errorf("invalid storage type '%s'", storageType)
 	}

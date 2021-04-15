@@ -1,24 +1,14 @@
 package storage
 
 import (
-	"strconv"
-
-	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/utils"
 )
 
 // AcquireID generates a new unique ID
 func AcquireID() (string, error) {
-	// Read the ID length
-	rawLength := env.Get("ID_LENGTH", "6")
-	length, err := strconv.Atoi(rawLength)
-	if err != nil {
-		return "", err
-	}
-
-	// Generate the unique ID
 	for {
-		id := utils.RandomString(length)
+		id := utils.RandomString(config.Current.IDLength)
 		paste, err := Current.Get(id)
 		if err != nil {
 			return "", err

@@ -4,15 +4,15 @@ import (
 	"log"
 	"time"
 
-	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/storage"
 	"github.com/lus/pasty/internal/web"
 )
 
 func main() {
-	// Load the optional .env file
-	log.Println("Loading the optional .env file...")
-	env.Load()
+	// Load the configuration
+	log.Println("Loading the application configuration...")
+	config.Load()
 
 	// Load the configured storage driver
 	log.Println("Loading the configured storage driver...")
@@ -29,7 +29,7 @@ func main() {
 	}()
 
 	// Schedule the AutoDelete task
-	if env.Bool("AUTODELETE", false) {
+	if config.Current.AutoDelete.Enabled {
 		log.Println("Scheduling the AutoDelete task...")
 		go func() {
 			for {
@@ -41,7 +41,7 @@ func main() {
 				log.Printf("AutoDelete: Deleted %d expired pastes", deleted)
 
 				// Wait until the process should repeat
-				time.Sleep(env.Duration("AUTODELETE_TASK_INTERVAL", 5*time.Minute))
+				time.Sleep(config.Current.AutoDelete.TaskInterval)
 			}
 		}()
 	}

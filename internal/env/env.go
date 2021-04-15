@@ -14,8 +14,8 @@ func Load() {
 	godotenv.Load()
 }
 
-// Get returns the content of the environment variable with the given key or the given fallback
-func Get(key, fallback string) string {
+// MustString returns the content of the environment variable with the given key or the given fallback
+func MustString(key, fallback string) string {
 	found := os.Getenv(static.EnvironmentVariablePrefix + key)
 	if found == "" {
 		return fallback
@@ -23,14 +23,20 @@ func Get(key, fallback string) string {
 	return found
 }
 
-// Bool uses Get and parses it into a boolean
-func Bool(key string, fallback bool) bool {
-	parsed, _ := strconv.ParseBool(Get(key, strconv.FormatBool(fallback)))
+// MustBool uses MustString and parses it into a boolean
+func MustBool(key string, fallback bool) bool {
+	parsed, _ := strconv.ParseBool(MustString(key, strconv.FormatBool(fallback)))
 	return parsed
 }
 
-// Duration uses Get and parses it into a duration
-func Duration(key string, fallback time.Duration) time.Duration {
-	parsed, _ := time.ParseDuration(Get(key, fallback.String()))
+// MustInt uses MustString and parses it into an integer
+func MustInt(key string, fallback int) int {
+	parsed, _ := strconv.Atoi(MustString(key, strconv.Itoa(fallback)))
+	return parsed
+}
+
+// MustDuration uses MustString and parses it into a duration
+func MustDuration(key string, fallback time.Duration) time.Duration {
+	parsed, _ := time.ParseDuration(MustString(key, fallback.String()))
 	return parsed
 }

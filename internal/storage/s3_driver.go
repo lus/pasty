@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lus/pasty/internal/env"
-	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/shared"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
@@ -22,16 +22,16 @@ type S3Driver struct {
 
 // Initialize initializes the AWS S3 storage driver
 func (driver *S3Driver) Initialize() error {
-	client, err := minio.New(env.Get("STORAGE_S3_ENDPOINT", ""), &minio.Options{
-		Creds:  credentials.NewStaticV4(env.Get("STORAGE_S3_ACCESS_KEY_ID", ""), env.Get("STORAGE_S3_SECRET_ACCESS_KEY", ""), env.Get("STORAGE_S3_SECRET_TOKEN", "")),
-		Secure: env.Bool("STORAGE_S3_SECURE", true),
-		Region: env.Get("STORAGE_S3_REGION", ""),
+	client, err := minio.New(config.Current.S3.Endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(config.Current.S3.AccessKeyID, config.Current.S3.SecretAccessKey, config.Current.S3.SecretToken),
+		Secure: config.Current.S3.Secure,
+		Region: config.Current.S3.Region,
 	})
 	if err != nil {
 		return err
 	}
 	driver.client = client
-	driver.bucket = env.Get("STORAGE_S3_BUCKET", "pasty")
+	driver.bucket = config.Current.S3.Bucket
 	return nil
 }
 
@@ -59,7 +59,7 @@ func (driver *S3Driver) ListIDs() ([]string, error) {
 }
 
 // Get loads a paste
-func (driver *S3Driver) Get(id string) (*pastes.Paste, error) {
+func (driver *S3Driver) Get(id string) (*shared.Paste, error) {
 	// Read the object
 	object, err := driver.client.GetObject(context.Background(), driver.bucket, id+".json", minio.GetObjectOptions{})
 	if err != nil {
@@ -74,7 +74,7 @@ func (driver *S3Driver) Get(id string) (*pastes.Paste, error) {
 	}
 
 	// Unmarshal the object into a paste
-	paste := new(pastes.Paste)
+	paste := new(shared.Paste)
 	err = json.Unmarshal(data, &paste)
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (driver *S3Driver) Get(id string) (*pastes.Paste, error) {
 }
 
 // Save saves a paste
-func (driver *S3Driver) Save(paste *pastes.Paste) error {
+func (driver *S3Driver) Save(paste *shared.Paste) error {
 	// Marshal the paste
 	jsonBytes, err := json.Marshal(paste)
 	if err != nil {
@@ -123,7 +123,7 @@ func (driver *S3Driver) Cleanup() (int, error) {
 		}
 
 		// Delete the paste if it is expired
-		lifetime := env.Duration("AUTODELETE_LIFETIME", 30*24*time.Hour)
+		lifetime := config.Current.AutoDelete.Lifetime
 		if paste.AutoDelete && paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
 			err = driver.Delete(id)
 			if err != nil {

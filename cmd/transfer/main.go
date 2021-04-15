@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/shared"
 	"github.com/lus/pasty/internal/storage"
 )
 
@@ -12,7 +13,6 @@ func main() {
 	// Validate the command line arguments
 	if len(os.Args) != 3 {
 		panic("Invalid command line arguments")
-		return
 	}
 
 	// Load the optional .env file
@@ -20,7 +20,7 @@ func main() {
 	env.Load()
 
 	// Create and initialize the first (from) driver
-	from, err := storage.GetDriver(os.Args[1])
+	from, err := storage.GetDriver(shared.StorageType(os.Args[1]))
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +30,7 @@ func main() {
 	}
 
 	// Create and initialize the second (to) driver
-	to, err := storage.GetDriver(os.Args[2])
+	to, err := storage.GetDriver(shared.StorageType(os.Args[2]))
 	if err != nil {
 		panic(err)
 	}

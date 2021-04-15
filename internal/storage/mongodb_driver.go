@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/lus/pasty/internal/env"
-	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/shared"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -26,7 +26,7 @@ func (driver *MongoDBDriver) Initialize() error {
 	defer cancel()
 
 	// Connect to the MongoDB host
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(env.Get("STORAGE_MONGODB_CONNECTION_STRING", "mongodb://pasty:pasty@example.host/pasty")))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(config.Current.MongoDB.DSN))
 	if err != nil {
 		return err
 	}
@@ -39,8 +39,8 @@ func (driver *MongoDBDriver) Initialize() error {
 
 	// Set the driver attributes
 	driver.client = client
-	driver.database = env.Get("STORAGE_MONGODB_DATABASE", "pasty")
-	driver.collection = env.Get("STORAGE_MONGODB_COLLECTION", "pastes")
+	driver.database = config.Current.MongoDB.Database
+	driver.collection = config.Current.MongoDB.Collection
 	return nil
 }
 
@@ -65,7 +65,7 @@ func (driver *MongoDBDriver) ListIDs() ([]string, error) {
 	}
 
 	// Decode all paste documents
-	var pasteSlice []pastes.Paste
+	var pasteSlice []shared.Paste
 	err = result.All(ctx, &pasteSlice)
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (driver *MongoDBDriver) ListIDs() ([]string, error) {
 }
 
 // Get loads a paste
-func (driver *MongoDBDriver) Get(id string) (*pastes.Paste, error) {
+func (driver *MongoDBDriver) Get(id string) (*shared.Paste, error) {
 	// Define the collection to use for this database operation
 	collection := driver.client.Database(driver.database).Collection(driver.collection)
 
@@ -100,7 +100,7 @@ func (driver *MongoDBDriver) Get(id string) (*pastes.Paste, error) {
 	}
 
 	// Return the retrieved paste object
-	paste := new(pastes.Paste)
+	paste := new(shared.Paste)
 	err = result.Decode(paste)
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func (driver *MongoDBDriver) Get(id string) (*pastes.Paste, error) {
 }
 
 // Save saves a paste
-func (driver *MongoDBDriver) Save(paste *pastes.Paste) error {
+func (driver *MongoDBDriver) Save(paste *shared.Paste) error {
 	// Define the collection to use for this database operation
 	collection := driver.client.Database(driver.database).Collection(driver.collection)
 
@@ -157,7 +157,7 @@ func (driver *MongoDBDriver) Cleanup() (int, error) {
 		}
 
 		// Delete the paste if it is expired
-		lifetime := env.Duration("AUTODELETE_LIFETIME", 30*24*time.Hour)
+		lifetime := config.Current.AutoDelete.Lifetime
 		if paste.AutoDelete && paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
 			err = driver.Delete(id)
 			if err != nil {

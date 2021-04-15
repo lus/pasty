@@ -2,9 +2,12 @@ package v1
 
 import (
 	"encoding/json"
+	"time"
 
-	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/shared"
 	"github.com/lus/pasty/internal/storage"
+	"github.com/lus/pasty/internal/utils"
 	"github.com/valyala/fasthttp"
 )
 
@@ -15,10 +18,8 @@ func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
 	switch string(ctx.Request.Header.ContentType()) {
 	case "text/plain":
 		content = string(ctx.PostBody())
-		break
 	case "multipart/form-data":
 		content = string(ctx.FormValue("data"))
-		break
 	default:
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
 		ctx.SetBodyString("invalid content type")
@@ -34,11 +35,12 @@ func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Create the paste object
-	paste, err := pastes.Create(id, content)
-	if err != nil {
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		ctx.SetBodyString(err.Error())
-		return
+	paste := &shared.Paste{
+		ID:            id,
+		Content:       content,
+		DeletionToken: utils.RandomString(config.Current.DeletionTokenLength),
+		Created:       time.Now().Unix(),
+		AutoDelete:    config.Current.AutoDelete.Enabled,
 	}
 
 	// Hash the deletion token
