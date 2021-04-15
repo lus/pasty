@@ -2,9 +2,10 @@ package v1
 
 import (
 	"encoding/json"
-	"github.com/Lukaesebrot/pasty/internal/pastes"
-	"github.com/Lukaesebrot/pasty/internal/storage"
+
 	"github.com/fasthttp/router"
+	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/storage"
 	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
 	"github.com/valyala/fasthttp"
 )

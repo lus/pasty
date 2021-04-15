@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/Lukaesebrot/pasty/internal/pastes"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/credentials"
 	"io/ioutil"
 	"strings"
 	"time"
+
+	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/pastes"
+	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
 // S3Driver represents the AWS S3 storage driver

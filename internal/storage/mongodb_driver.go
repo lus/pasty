@@ -2,13 +2,14 @@ package storage
 
 import (
 	"context"
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/Lukaesebrot/pasty/internal/pastes"
+	"time"
+
+	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/pastes"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"time"
 )
 
 // MongoDBDriver represents the MongoDB storage driver

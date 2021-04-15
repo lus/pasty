@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/Lukaesebrot/pasty/internal/storage"
 	"log"
 	"os"
+
+	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/storage"
 )
 
 func main() {

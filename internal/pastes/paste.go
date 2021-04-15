@@ -1,9 +1,10 @@
 package pastes
 
 import (
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/alexedwards/argon2id"
 	"time"
+
+	"github.com/alexedwards/argon2id"
+	"github.com/lus/pasty/internal/env"
 )
 
 // Paste represents a saved paste

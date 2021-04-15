@@ -2,12 +2,13 @@ package storage
 
 import (
 	"database/sql"
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/Lukaesebrot/pasty/internal/pastes"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/pastes"
 	_ "github.com/mattn/go-sqlite3"
-	"time"
 )
 
 // SQLDriver represents the SQL storage driver

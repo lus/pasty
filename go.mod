@@ -1,6 +1,6 @@
-module github.com/Lukaesebrot/pasty
+module github.com/lus/pasty
 
-go 1.15
+go 1.16
 
 require (
 	github.com/alexedwards/argon2id v0.0.0-20200802152012-2464efd3196b

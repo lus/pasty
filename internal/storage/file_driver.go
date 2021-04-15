@@ -3,13 +3,14 @@ package storage
 import (
 	"encoding/base64"
 	"encoding/json"
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/Lukaesebrot/pasty/internal/pastes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/pastes"
 )
 
 // FileDriver represents the file storage driver

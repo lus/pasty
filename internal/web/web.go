@@ -2,16 +2,17 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/Lukaesebrot/pasty/internal/static"
-	v1 "github.com/Lukaesebrot/pasty/internal/web/controllers/v1"
+	"path/filepath"
+	"strings"
+
 	routing "github.com/fasthttp/router"
+	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/static"
+	v1 "github.com/lus/pasty/internal/web/controllers/v1"
 	"github.com/ulule/limiter/v3"
 	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
 	"github.com/ulule/limiter/v3/drivers/store/memory"
 	"github.com/valyala/fasthttp"
-	"path/filepath"
-	"strings"
 )
 
 // Serve serves the web resources

@@ -1,9 +1,10 @@
 package pastes
 
 import (
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/Lukaesebrot/pasty/internal/utils"
 	"strconv"
+
+	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/utils"
 )
 
 // generateDeletionToken generates a new deletion token

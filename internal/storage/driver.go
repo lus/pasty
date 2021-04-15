@@ -2,9 +2,10 @@ package storage
 
 import (
 	"fmt"
-	"github.com/Lukaesebrot/pasty/internal/env"
-	"github.com/Lukaesebrot/pasty/internal/pastes"
 	"strings"
+
+	"github.com/lus/pasty/internal/env"
+	"github.com/lus/pasty/internal/pastes"
 )
 
 // Current holds the current storage driver

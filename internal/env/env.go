@@ -1,11 +1,12 @@
 package env
 
 import (
-	"github.com/Lukaesebrot/pasty/internal/static"
-	"github.com/joho/godotenv"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/joho/godotenv"
+	"github.com/lus/pasty/internal/static"
 )
 
 // Load loads an optional .env file

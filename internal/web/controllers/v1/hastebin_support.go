@@ -2,8 +2,9 @@ package v1
 
 import (
 	"encoding/json"
-	"github.com/Lukaesebrot/pasty/internal/pastes"
-	"github.com/Lukaesebrot/pasty/internal/storage"
+
+	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/storage"
 	"github.com/valyala/fasthttp"
 )
 
