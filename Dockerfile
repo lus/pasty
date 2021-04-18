@@ -1,15 +1,20 @@
-# Build the application
+# Choose the golang image as the build base image
 FROM golang:1.16-alpine AS build
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh build-base
+
+# Define the directory we should work in
 WORKDIR /app
+
+# Download the necessary go modules
 COPY go.mod go.sum ./
 RUN go mod download
+
+# Build the application
+ARG PASTY_VERSION=unset-debug
 COPY . .
 RUN go build \
         -o pasty \
         -ldflags "\
-            -X github.com/lus/pasty/internal/static.Version=$(git rev-parse --abbrev-ref HEAD)-$(git describe --tags --abbrev=0)-$(git log --pretty=format:'%h' -n 1)" \
+            -X github.com/lus/pasty/internal/static.Version=$PASTY_VERSION" \
         ./cmd/pasty/main.go
 
 # Run the application in an empty alpine environment
