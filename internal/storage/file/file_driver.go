@@ -41,6 +41,11 @@ func (driver *FileDriver) ListIDs() ([]string, error) {
 			return err
 		}
 
+		// Only count JSON files
+		if !strings.HasSuffix(info.Name(), ".json") {
+			return nil
+		}
+
 		// Decode the file name
 		decoded, err := base64.StdEncoding.DecodeString(strings.TrimSuffix(info.Name(), ".json"))
 		if err != nil {
