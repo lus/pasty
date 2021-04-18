@@ -22,7 +22,7 @@ jobs:
         if: env.BRANCH == 'develop'
         run: echo "TAG=staging" >> $GITHUB_ENV
       - name: define latest tag
-        if: env.BRANCH == 'main'
+        if: env.BRANCH == 'master'
         run: echo "TAG=latest" >> $GITHUB_ENV
       - name: set up qemu
         uses: docker/setup-qemu-action@v1
