@@ -1,6 +1,48 @@
 # pasty
 Pasty is a fast and lightweight code pasting server
 
+## Installation
+
+You may set up pasty in multiple different ways. However, I won't cover all of them as I want to keep this documentation as clean as possible.
+
+### 1.) Building from source
+To build pasty from source make sure you have [Go](https://go.dev) installed.
+
+1. Clone the repository:
+```sh
+git clone https://github.com/lus/pasty
+```
+
+2. Switch directory:
+```sh
+cd pasty/
+```
+
+3. Run `go build`:
+```sh
+go build -o pasty ./cmd/pasty/main.go
+```
+
+To configure pasty, simply create a `.env` file in the same directory as the binary is placed in.
+
+To run pasty, simply execute the binary.
+
+### 2.) Docker (recommended)
+To run pasty with Docker, you should have basic understanding of it.
+
+An example `docker run` command may look like this:
+```sh
+docker run -d \
+    -p 8080:8080 \
+    --name pasty \
+    -e PASTY_AUTODELETE="true" \
+    ghcr.io/lus/pasty:latest
+```
+
+Pasty will be available at http://localhost:8080.
+
+---
+
 ## General environment variables
 | Environment Variable          | Default Value | Type     | Description                                                                                                 |
 |-------------------------------|---------------|----------|-------------------------------------------------------------------------------------------------------------|
@@ -30,6 +72,22 @@ Every single one of them has its own configuration variables:
 
 ---
 
+### PostgreSQL (`postgres`)
+| Environment Variable         | Default Value                            | Type     | Description                                                                         |
+|------------------------------|------------------------------------------|----------|-------------------------------------------------------------------------------------|
+| `PASTY_STORAGE_POSTGRES_DSN` | `postgres://pasty:pasty@localhost/pasty` | `string` | Defines the PostgreSQL connection string (you might have to add `?sslmode=disable`) |
+
+---
+
+### MongoDB (`mongodb`)
+| Environment Variable                      | Default Value                           | Type     | Description                                                     |
+|-------------------------------------------|-----------------------------------------|----------|-----------------------------------------------------------------|
+| `PASTY_STORAGE_MONGODB_CONNECTION_STRING` | `mongodb://pasty:pasty@localhost/pasty` | `string` | Defines the connection string to use for the MongoDB connection |
+| `PASTY_STORAGE_MONGODB_DATABASE`          | `pasty`                                 | `string` | Defines the name of the database to use                         |
+| `PASTY_STORAGE_MONGODB_COLLECTION`        | `pastes`                                | `string` | Defines the name of the collection to use                       |
+
+---
+
 ### S3 (`s3`)
 | Environment Variable                 | Default Value | Type     | Description                                                                               |
 |--------------------------------------|---------------|----------|-------------------------------------------------------------------------------------------|
@@ -40,21 +98,3 @@ Every single one of them has its own configuration variables:
 | `PASTY_STORAGE_S3_SECURE`            | `true`        | `bool`   | Defines whether or not SSL should be used for the S3 connection                           |
 | `PASTY_STORAGE_S3_REGION`            | `<empty>`     | `string` | Defines the region of the S3 storage                                                      |
 | `PASTY_STORAGE_S3_BUCKET`            | `pasty`       | `string` | Defines the name of the S3 bucket (has to be created before setup)                        |
-
----
-
-### MongoDB (`mongodb`)
-| Environment Variable                      | Default Value                              | Type     | Description                                                     |
-|-------------------------------------------|--------------------------------------------|----------|-----------------------------------------------------------------|
-| `PASTY_STORAGE_MONGODB_CONNECTION_STRING` | `mongodb://pasty:pasty@example.host/pasty` | `string` | Defines the connection string to use for the MongoDB connection |
-| `PASTY_STORAGE_MONGODB_DATABASE`          | `pasty`                                    | `string` | Defines the name of the database to use                         |
-| `PASTY_STORAGE_MONGODB_COLLECTION`        | `pastes`                                   | `string` | Defines the name of the collection to use                       |
-
----
-
-### SQL (`sql`)
-| Environment Variable       | Default Value | Type     | Description                                                                         |
-|----------------------------|---------------|----------|-------------------------------------------------------------------------------------|
-| `PASTY_STORAGE_SQL_DRIVER` | `sqlite3`     | `string` | Defines the driver to use for the SQL connection (`sqlite3`, `postgres` or `mysql`) |
-| `PASTY_STORAGE_SQL_DSN`    | `./db`        | `string` | Defines the DSN to use for the SQL connection                                       |
-| `PASTY_STORAGE_SQL_TABLE`  | `pasty`       | `string` | Defines the table name to use for the SQL connection                                |
