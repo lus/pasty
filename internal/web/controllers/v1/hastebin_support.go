@@ -36,19 +36,22 @@ func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
 
 	// Create the paste object
 	paste := &shared.Paste{
-		ID:            id,
-		Content:       content,
-		DeletionToken: utils.RandomString(config.Current.DeletionTokenLength),
-		Created:       time.Now().Unix(),
-		AutoDelete:    config.Current.AutoDelete.Enabled,
+		ID:         id,
+		Content:    content,
+		Created:    time.Now().Unix(),
+		AutoDelete: config.Current.AutoDelete.Enabled,
 	}
 
-	// Hash the deletion token
-	err = paste.HashDeletionToken()
-	if err != nil {
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		ctx.SetBodyString(err.Error())
-		return
+	// Set a deletion token
+	if config.Current.DeletionTokens {
+		paste.DeletionToken = utils.RandomString(config.Current.DeletionTokenLength)
+
+		err = paste.HashDeletionToken()
+		if err != nil {
+			ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+			ctx.SetBodyString(err.Error())
+			return
+		}
 	}
 
 	// Save the paste

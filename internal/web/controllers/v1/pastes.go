@@ -77,20 +77,24 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 
 	// Create the paste object
 	paste := &shared.Paste{
-		ID:            id,
-		Content:       values["content"],
-		DeletionToken: utils.RandomString(config.Current.DeletionTokenLength),
-		Created:       time.Now().Unix(),
-		AutoDelete:    config.Current.AutoDelete.Enabled,
+		ID:         id,
+		Content:    values["content"],
+		Created:    time.Now().Unix(),
+		AutoDelete: config.Current.AutoDelete.Enabled,
 	}
 
-	// Hash the deletion token
-	pasteCopy := *paste
-	err = paste.HashDeletionToken()
-	if err != nil {
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		ctx.SetBodyString(err.Error())
-		return
+	// Set a deletion token
+	deletionToken := ""
+	if config.Current.DeletionTokens {
+		deletionToken = utils.RandomString(config.Current.DeletionTokenLength)
+		paste.DeletionToken = deletionToken
+
+		err = paste.HashDeletionToken()
+		if err != nil {
+			ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+			ctx.SetBodyString(err.Error())
+			return
+		}
 	}
 
 	// Save the paste
@@ -102,6 +106,8 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Respond with the paste
+	pasteCopy := *paste
+	pasteCopy.DeletionToken = deletionToken
 	jsonData, err := json.Marshal(pasteCopy)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
@@ -126,7 +132,8 @@ func v1DeletePaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Validate the deletion token of the paste
-	if values["deletionToken"] == "" {
+	deletionToken := values["deletionToken"]
+	if deletionToken == "" {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
 		ctx.SetBodyString("missing 'deletionToken' field")
 		return
@@ -146,7 +153,7 @@ func v1DeletePaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Check if the deletion token is correct
-	if !paste.CheckDeletionToken(values["deletionToken"]) {
+	if (config.Current.DeletionTokenMaster == "" || deletionToken != config.Current.DeletionTokenMaster) && !paste.CheckDeletionToken(deletionToken) {
 		ctx.SetStatusCode(fasthttp.StatusForbidden)
 		ctx.SetBodyString("invalid deletion token")
 		return

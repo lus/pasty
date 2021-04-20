@@ -63,7 +63,9 @@ export function setupButtons() {
             const data = await response.json();
 
             // Give the user the chance to copy the deletion token
-            prompt("The deletion token for your paste is:", data.deletionToken);
+            if (data.deletionToken) {
+                prompt("The deletion token for your paste is:", data.deletionToken);
+            }
 
             // Redirect the user to the paste page
             let address = location.protocol + "//" + location.host + "/" + data.id;

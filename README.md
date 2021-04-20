@@ -44,14 +44,16 @@ Pasty will be available at http://localhost:8080.
 ---
 
 ## General environment variables
-| Environment Variable          | Default Value | Type     | Description                                                                                                 |
-|-------------------------------|---------------|----------|-------------------------------------------------------------------------------------------------------------|
-| `PASTY_WEB_ADDRESS`           | `:8080`       | `string` | Defines the address the web server listens to                                                               |
-| `PASTY_STORAGE_TYPE`          | `file`        | `string` | Defines the storage type the pastes are saved to                                                            |
-| `PASTY_HASTEBIN_SUPPORT`      | `false`       | `bool`   | Defines whether or not the `POST /documents` endpoint should be enabled, as known from the hastebin servers |
-| `PASTY_ID_LENGTH`             | `6`           | `number` | Defines the length of the ID of a paste                                                                     |
-| `PASTY_DELETION_TOKEN_LENGTH` | `12`          | `number` | Defines the length of the deletion token of a paste                                                         |
-| `PASTY_RATE_LIMIT`            | `30-M`        | `string` | Defines the rate limit of the API (see https://github.com/ulule/limiter#usage)                              |
+| Environment Variable          | Default Value | Type     | Description                                                                                                        |
+|-------------------------------|---------------|----------|--------------------------------------------------------------------------------------------------------------------|
+| `PASTY_WEB_ADDRESS`           | `:8080`       | `string` | Defines the address the web server listens to                                                                      |
+| `PASTY_STORAGE_TYPE`          | `file`        | `string` | Defines the storage type the pastes are saved to                                                                   |
+| `PASTY_HASTEBIN_SUPPORT`      | `false`       | `bool`   | Defines whether or not the `POST /documents` endpoint should be enabled, as known from the hastebin servers        |
+| `PASTY_ID_LENGTH`             | `6`           | `number` | Defines the length of the ID of a paste                                                                            |
+| `PASTY_DELETION_TOKENS`       | `true`        | `bool`   | Defines whether or not deletion tokens should be generated                                                         |
+| `PASTY_DELETION_TOKEN_MASTER` | `<empty>`     | `string` | Defines the master deletion token which is authorized to delete every paste (even if deletion tokens are disabled) |
+| `PASTY_DELETION_TOKEN_LENGTH` | `12`          | `number` | Defines the length of the deletion token of a paste                                                                |
+| `PASTY_RATE_LIMIT`            | `30-M`        | `string` | Defines the rate limit of the API (see https://github.com/ulule/limiter#usage)                                     |
 
 ## AutoDelete
 Pasty provides an intuitive system to automatically delete pastes after a specific amount of time. You can configure it with the following variables:

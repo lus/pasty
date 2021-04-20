@@ -14,6 +14,8 @@ type Config struct {
 	StorageType         shared.StorageType
 	HastebinSupport     bool
 	IDLength            int
+	DeletionTokens      bool
+	DeletionTokenMaster string
 	DeletionTokenLength int
 	RateLimit           string
 	AutoDelete          *AutoDeleteConfig
@@ -70,6 +72,8 @@ func Load() {
 		StorageType:         shared.StorageType(strings.ToLower(env.MustString("STORAGE_TYPE", "file"))),
 		HastebinSupport:     env.MustBool("HASTEBIN_SUPPORT", false),
 		IDLength:            env.MustInt("ID_LENGTH", 6),
+		DeletionTokens:      env.MustBool("DELETION_TOKENS", true),
+		DeletionTokenMaster: env.MustString("DELETION_TOKEN_MASTER", ""),
 		DeletionTokenLength: env.MustInt("DELETION_TOKEN_LENGTH", 12),
 		RateLimit:           env.MustString("RATE_LIMIT", "30-M"),
 		AutoDelete: &AutoDeleteConfig{
