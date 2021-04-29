@@ -31,6 +31,9 @@ func Serve() error {
 	router.GET("/{path:*}", func(ctx *fasthttp.RequestCtx) {
 		path := string(ctx.Path())
 		if !strings.HasPrefix(path, "/api") && (strings.Count(path, "/") == 1 || strings.HasPrefix(path, "/assets")) {
+			if strings.HasPrefix(path, "/assets/js/") {
+				ctx.SetContentType("text/javascript")
+			}
 			frontend(ctx)
 			return
 		}
