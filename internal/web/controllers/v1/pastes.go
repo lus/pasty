@@ -51,6 +51,14 @@ func v1GetPaste(ctx *fasthttp.RequestCtx) {
 
 // v1PostPaste handles the 'POST /v1/pastes' endpoint
 func v1PostPaste(ctx *fasthttp.RequestCtx) {
+	// Check content length before reading body into memory
+	if config.Current.LengthCap > 0 &&
+		ctx.Request.Header.ContentLength() > config.Current.LengthCap {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetBodyString("request body length overflow")
+		return
+	}
+
 	// Unmarshal the body
 	values := make(map[string]string)
 	err := json.Unmarshal(ctx.PostBody(), &values)
