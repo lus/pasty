@@ -1,0 +1,16 @@
+version: "3"
+
+volumes:
+  postgres:
+
+services:
+  postgres:
+    image: "postgres:12-alpine"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_PASSWORD: "dev"
+      POSTGRES_USER: "dev"
+      POSTGRES_DB: "pasty"

@@ -18,6 +18,7 @@ type Config struct {
 	DeletionTokenMaster string
 	DeletionTokenLength int
 	RateLimit           string
+	LengthCap           int
 	AutoDelete          *AutoDeleteConfig
 	File                *FileConfig
 	Postgres            *PostgresConfig
@@ -76,6 +77,7 @@ func Load() {
 		DeletionTokenMaster: env.MustString("DELETION_TOKEN_MASTER", ""),
 		DeletionTokenLength: env.MustInt("DELETION_TOKEN_LENGTH", 12),
 		RateLimit:           env.MustString("RATE_LIMIT", "30-M"),
+		LengthCap:           env.MustInt("LENGTH_CAP", 50_000),
 		AutoDelete: &AutoDeleteConfig{
 			Enabled:      env.MustBool("AUTODELETE", false),
 			Lifetime:     env.MustDuration("AUTODELETE_LIFETIME", 720*time.Hour),

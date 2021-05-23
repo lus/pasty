@@ -54,6 +54,7 @@ Pasty will be available at http://localhost:8080.
 | `PASTY_DELETION_TOKEN_MASTER` | `<empty>`     | `string` | Defines the master deletion token which is authorized to delete every paste (even if deletion tokens are disabled) |
 | `PASTY_DELETION_TOKEN_LENGTH` | `12`          | `number` | Defines the length of the deletion token of a paste                                                                |
 | `PASTY_RATE_LIMIT`            | `30-M`        | `string` | Defines the rate limit of the API (see https://github.com/ulule/limiter#usage)                                     |
+| `PASTY_LENGTH_CAP`            | `50000`       | `number` | Defines the maximum amount of characters a paste is allowed to contain (a value `<= 0` means no limit)             |
 
 ## AutoDelete
 Pasty provides an intuitive system to automatically delete pastes after a specific amount of time. You can configure it with the following variables:

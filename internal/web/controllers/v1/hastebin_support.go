@@ -13,6 +13,14 @@ import (
 
 // HastebinSupportHandler handles the legacy hastebin requests
 func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
+	// Check content length before reading body into memory
+	if config.Current.LengthCap > 0 &&
+		ctx.Request.Header.ContentLength() > config.Current.LengthCap {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetBodyString("request body length overflow")
+		return
+	}
+
 	// Define the paste content
 	var content string
 	switch string(ctx.Request.Header.ContentType()) {
