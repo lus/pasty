@@ -57,7 +57,7 @@ export function setupButtons() {
             // Create the paste
             const response = await api.createPaste(input.value);
             if (!response.ok) {
-                notifications.error("Failed creating the paste: <b>" + data + "</b>");
+                notifications.error("Failed creating the paste: <b>" + await response.text() + "</b>");
                 return;
             }
             const data = await response.json();
