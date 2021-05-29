@@ -158,7 +158,8 @@ html, body {
 }
 
 .container #content #code {
-  white-space: pre;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 .container #content #code .highlight {

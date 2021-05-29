@@ -121,7 +121,8 @@ html, body {
         padding: 20px;
         width: calc(100vw - 50px);
         & #code {
-            white-space: pre;
+            word-break: break-all;
+            white-space: pre-wrap;
             & .highlight {
                 background-color: #92b30071;
                 display: inline-block;
