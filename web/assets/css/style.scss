@@ -110,11 +110,6 @@ html, body {
             display: block;
             width: 100%;
             text-align: center;
-            &:hover, &.highlight {
-                background-color: #92b300;
-                color: #ffffff;
-                cursor: pointer;
-            }
         }
     }
     & #content {
@@ -123,11 +118,6 @@ html, body {
         & #code {
             word-break: break-all;
             white-space: pre-wrap;
-            & .highlight {
-                background-color: #92b30071;
-                display: inline-block;
-                min-width: 100%;
-            }
         }
         & #input {
             height: 100%;

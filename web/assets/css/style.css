@@ -146,12 +146,6 @@ html, body {
   text-align: center;
 }
 
-.container #linenos span:hover, .container #linenos span.highlight {
-  background-color: #92b300;
-  color: #ffffff;
-  cursor: pointer;
-}
-
 .container #content {
   padding: 20px;
   width: calc(100vw - 50px);
@@ -160,12 +154,6 @@ html, body {
 .container #content #code {
   word-break: break-all;
   white-space: pre-wrap;
-}
-
-.container #content #code .highlight {
-  background-color: #92b30071;
-  display: inline-block;
-  min-width: 100%;
 }
 
 .container #content #input {
