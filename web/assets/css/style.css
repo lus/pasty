@@ -101,26 +101,6 @@ html, body {
   color: initial;
 }
 
-.navigation .meta {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.navigation .meta #version {
-  margin-right: 40px;
-  padding: 5px 10px;
-  background-color: #000000;
-  border-radius: 10px;
-}
-
 .container {
   margin-top: 60px;
   display: -webkit-box;
@@ -185,6 +165,57 @@ html, body {
   background-color: #389b38;
 }
 
+#footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #222222;
+}
+
+#footer #flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin: 0 80px 0 60px;
+}
+
+#footer div {
+  display: inline-block;
+}
+
+#footer a {
+  display: inline-block;
+  text-decoration: none;
+  color: #ffffff;
+  padding: 5px 20px;
+  height: 100%;
+  -webkit-transition: all 200ms;
+  transition: all 200ms;
+}
+
+#footer a:hover {
+  background-color: #333333;
+  color: #2daa57;
+}
+
+#footer #version {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 5px 30px;
+  background-color: #111111;
+}
+
 @media only screen and (max-width: 650px) {
   .navigation {
     padding: 0 20px;
@@ -198,6 +229,26 @@ html, body {
     height: 30px;
   }
   .navigation .meta #version {
+    display: none;
+  }
+  #footer #flex {
+    margin: 0 0 0 25px;
+  }
+  #footer .version-container span {
+    display: none;
+  }
+  #footer a {
+    padding: 5px 15px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  #footer #flex {
+    margin: 0;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+  }
+  #footer .version-container {
     display: none;
   }
 }
