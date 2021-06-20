@@ -99,6 +99,9 @@ html, body {
             display: block;
             width: 100%;
             text-align: center;
+            &:last-child {
+                margin-bottom: 25px;
+            }
         }
     }
     & #content {

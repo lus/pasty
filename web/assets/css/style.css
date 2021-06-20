@@ -126,6 +126,10 @@ html, body {
   text-align: center;
 }
 
+.container #linenos span:last-child {
+  margin-bottom: 25px;
+}
+
 .container #content {
   padding: 20px;
   width: calc(100vw - 50px);
