@@ -1,6 +1,17 @@
 # pasty
 Pasty is a fast and lightweight code pasting server
 
+## Support
+
+As pasty is an open source project on GitHub you can open an [issue](https://github.com/lus/pasty/issues) whenever you encounter a problem or feature request.
+However, it may be annoying to open an issue just to ask a simple question about pastys functionalities, get help with the the installation process or mention something about the hosted version.
+This is why I created a simple [Discord server](https://go.lus.pm/discord) you may want to join to get an answer to stuff like that pretty quickly.
+
+## Disclaimer
+
+The pasty web frontend comes with some service-related links in it (Discord server). Of course you are allowed to remove these references.
+However, a small reference to pasty would be nice ^^.
+
 ## Installation
 
 You may set up pasty in multiple different ways. However, I won't cover all of them as I want to keep this documentation as clean as possible.
