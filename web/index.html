@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +8,36 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/solarized-dark.min.css">
 </head>
+
 <body>
     <div id="spinner" class="hidden"></div>
     <div class="navigation">
         <div class="buttons">
             <button class="button" id="btn_new" title="Create new paste (Ctrl + Q)">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-plus" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-plus" width="40"
+                    height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" />
                     <circle cx="12" cy="12" r="9" />
                     <line x1="9" y1="12" x2="15" y2="12" />
                     <line x1="12" y1="9" x2="12" y2="15" />
                 </svg>
             </button>
             <button class="button" id="btn_save" title="Save paste (Ctrl + S)">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-floppy" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-floppy" width="40"
+                    height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" />
                     <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" />
                     <circle cx="12" cy="14" r="2" />
                     <polyline points="14 4 14 8 8 8 8 4" />
                 </svg>
             </button>
             <button class="button" id="btn_delete" title="Delete paste (Ctrl + X)" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="40"
+                    height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" />
                     <line x1="4" y1="7" x2="20" y2="7" />
                     <line x1="10" y1="11" x2="10" y2="17" />
                     <line x1="14" y1="11" x2="14" y2="17" />
@@ -38,29 +46,14 @@
                 </svg>
             </button>
             <button class="button" id="btn_copy" title="Copy paste to clipboard (Ctrl + B)" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clipboard" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clipboard" width="40"
+                    height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" />
                     <path d="M9 5H7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2V7a2 2 0 0 0 -2 -2h-2" />
                     <rect x="9" y="3" width="6" height="4" rx="2" />
                 </svg>
             </button>
-        </div>
-        <div class="meta">
-            <div id="version">loading...</div>
-            <a class="button" title="View the GitHub repository" href="https://github.com/lus/pasty" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z"/>
-                    <path d="M9 19c-4.286 1.35-4.286-2.55-6-3m12 5v-3.5c0-1 .099-1.405-.5-2 2.791-.3 5.5-1.366 5.5-6.04a4.567 4.567 0 0 0 -1.333 -3.21a4.192 4.192 0 0 0 -.08 -3.227s-1.05-.3-3.476 1.267a12.334 12.334 0 0 0 -6.222 0C6.462 2.723 5.413 3.023 5.413 3.023a4.192 4.192 0 0 0 -.08 3.227A4.566 4.566 0 0 0 4 9.486c0 4.64 2.709 5.68 5.5 6.014-.591.589-.56 1.183-.5 2V21" />
-                </svg>
-            </a>
-            <a class="button" title="View the credits" href="https://github.com/lus/pasty/blob/develop/CREDITS.md" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-award" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="#bebebe" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <circle cx="12" cy="9" r="6" />
-                    <polyline points="9 14.2 9 21 12 19 15 21 15 14.2" transform="rotate(-30 12 9)" />
-                    <polyline points="9 14.2 9 21 12 19 15 21 15 14.2" transform="rotate(30 12 9)" />
-                </svg>
-            </a>
         </div>
     </div>
     <div class="container">
@@ -71,7 +64,21 @@
             <textarea id="input" class="hidden"></textarea>
         </div>
     </div>
+    <div id="footer">
+        <div id="flex">
+            <div>
+                <a href="https://github.com/lus/pasty" target="_blank">GitHub</a>
+                <a href="https://go.lus.pm/discord" target="_blank">Discord</a>
+                <a href="https://github.com/lus/pasty/blob/develop/CREDITS.md" target="_blank">Credits</a>
+            </div>
+            <div class="version-container">
+                <span>Version:</span>
+                <div id="version">loading...</div>
+            </div>
+        </div>
+    </div>
     <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.2/build/highlight.min.js"></script>
     <script src="assets/js/autoload.js" type="module"></script>
 </body>
+
 </html>

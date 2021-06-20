@@ -6,10 +6,10 @@ import * as notifications from "./notifications.js";
 
 // setupKeybinds initializes the keybinds for the buttons
 export function setupKeybinds() {
-    window.addEventListener("keydown", function(event) {
+    window.addEventListener("keydown", function (event) {
         // Return if the CTRL key was not pressed
         if (!event.ctrlKey) return;
-    
+
         // Define the DOM element of the pressed button
         let element = null;
         switch (event.keyCode) {
@@ -30,7 +30,7 @@ export function setupKeybinds() {
                 break;
             }
         }
-    
+
         // Call the onClick function of the button
         if (element) {
             if (element.hasAttribute("disabled")) return;
@@ -43,13 +43,13 @@ export function setupKeybinds() {
 // setupButtons configures the click listeners of the buttons
 export function setupButtons() {
     // Define the behavior of the 'new' button
-    document.getElementById("btn_new").addEventListener("click", function() {
+    document.getElementById("btn_new").addEventListener("click", function () {
         location.replace(location.protocol + "//" + location.host);
     });
 
     // Define the behavior of the 'save' button
-    document.getElementById("btn_save").addEventListener("click", function() {
-        spinner.surround(async function() {
+    document.getElementById("btn_save").addEventListener("click", function () {
+        spinner.surround(async function () {
             // Return if the text area is empty
             const input = document.getElementById("input");
             if (!input.value) return;
@@ -75,8 +75,8 @@ export function setupButtons() {
     });
 
     // Define the behavior of the 'delete' button
-    document.getElementById("btn_delete").addEventListener("click", function() {
-        spinner.surround(async function() {
+    document.getElementById("btn_delete").addEventListener("click", function () {
+        spinner.surround(async function () {
             // Ask the user for the deletion token
             const deletionToken = prompt("Deletion Token:");
             if (!deletionToken) return;
@@ -95,11 +95,11 @@ export function setupButtons() {
     });
 
     // Define the behavior of the 'copy' button
-    document.getElementById("btn_copy").addEventListener("click", function() {
-        spinner.surround(async function() {
+    document.getElementById("btn_copy").addEventListener("click", function () {
+        spinner.surround(async function () {
             // Ask for the clipboard permissions
             askClipboardPermissions();
-            
+
             // Copy the code
             await navigator.clipboard.writeText(document.getElementById("code").innerText);
             notifications.success("Copied the code!");

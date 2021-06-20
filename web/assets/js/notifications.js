@@ -18,7 +18,5 @@ function create(type, message, duration) {
     node.innerHTML = message;
 
     element.appendChild(node);
-    setTimeout(function() {
-        element.removeChild(node);
-    }, duration);
+    setTimeout(() => element.removeChild(node), duration);
 }
