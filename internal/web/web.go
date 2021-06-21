@@ -8,6 +8,7 @@ import (
 	routing "github.com/fasthttp/router"
 	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/static"
+	"github.com/lus/pasty/internal/storage"
 	v1 "github.com/lus/pasty/internal/web/controllers/v1"
 	"github.com/ulule/limiter/v3"
 	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
@@ -28,6 +29,7 @@ func Serve() error {
 
 	// Route the frontend requests
 	frontend := frontendHandler()
+	raw := rawHandler()
 	router.GET("/{path:*}", func(ctx *fasthttp.RequestCtx) {
 		path := string(ctx.Path())
 		if !strings.HasPrefix(path, "/api") && (strings.Count(path, "/") == 1 || strings.HasPrefix(path, "/assets")) {
@@ -35,6 +37,9 @@ func Serve() error {
 				ctx.SetContentType("text/javascript")
 			}
 			frontend(ctx)
+			return
+		} else if strings.HasSuffix(strings.TrimSuffix(path, "/"), "/raw") {
+			raw(ctx)
 			return
 		}
 		router.NotFound(ctx)
@@ -100,4 +105,27 @@ func frontendHandler() fasthttp.RequestHandler {
 		ctx.SendFile(filepath.Join(fs.Root, "index.html"))
 	}
 	return fs.NewRequestHandler()
+}
+
+func rawHandler() fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
+		path := string(ctx.Path())
+		pathSanitized := strings.TrimPrefix(strings.TrimSuffix(path, "/"), "/")
+		pasteID := strings.TrimSuffix(pathSanitized, "/raw")
+
+		paste, err := storage.Current.Get(pasteID)
+		if err != nil {
+			ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+			ctx.SetBodyString(err.Error())
+			return
+		}
+
+		if paste == nil {
+			ctx.SetStatusCode(fasthttp.StatusNotFound)
+			ctx.SetBodyString("paste not found")
+			return
+		}
+
+		ctx.SetBodyString(paste.Content)
+	}
 }
