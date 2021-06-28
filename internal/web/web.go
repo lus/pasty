@@ -61,7 +61,7 @@ func Serve() error {
 			v1Route.GET("/info", func(ctx *fasthttp.RequestCtx) {
 				jsonData, _ := json.Marshal(map[string]interface{}{
 					"version":        static.Version,
-					"deletionTokens": config.Current.DeletionTokens,
+					"deletionTokens": config.Current.ModificationTokens,
 				})
 				ctx.SetBody(jsonData)
 			})

@@ -82,7 +82,7 @@ func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
 	row := driver.pool.QueryRow(context.Background(), query, id)
 
 	paste := new(shared.Paste)
-	if err := row.Scan(&paste.ID, &paste.Content, &paste.DeletionToken, &paste.Created, &paste.AutoDelete); err != nil {
+	if err := row.Scan(&paste.ID, &paste.Content, &paste.ModificationToken, &paste.Created, &paste.AutoDelete); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
 		}
@@ -95,7 +95,7 @@ func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
 func (driver *PostgresDriver) Save(paste *shared.Paste) error {
 	query := "INSERT INTO pastes VALUES ($1, $2, $3, $4, $5)"
 
-	_, err := driver.pool.Exec(context.Background(), query, paste.ID, paste.Content, paste.DeletionToken, paste.Created, paste.AutoDelete)
+	_, err := driver.pool.Exec(context.Background(), query, paste.ID, paste.Content, paste.ModificationToken, paste.Created, paste.AutoDelete)
 	return err
 }
 

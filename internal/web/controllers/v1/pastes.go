@@ -38,6 +38,7 @@ func v1GetPaste(ctx *fasthttp.RequestCtx) {
 		return
 	}
 	paste.DeletionToken = ""
+	paste.ModificationToken = ""
 
 	// Respond with the paste
 	jsonData, err := json.Marshal(paste)
@@ -91,13 +92,13 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 		AutoDelete: config.Current.AutoDelete.Enabled,
 	}
 
-	// Set a deletion token
-	deletionToken := ""
-	if config.Current.DeletionTokens {
-		deletionToken = utils.RandomString(config.Current.DeletionTokenLength)
-		paste.DeletionToken = deletionToken
+	// Set a modification token
+	modificationToken := ""
+	if config.Current.ModificationTokens {
+		modificationToken = utils.RandomString(config.Current.ModificationTokenLength)
+		paste.ModificationToken = modificationToken
 
-		err = paste.HashDeletionToken()
+		err = paste.HashModificationToken()
 		if err != nil {
 			ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 			ctx.SetBodyString(err.Error())
@@ -115,7 +116,8 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 
 	// Respond with the paste
 	pasteCopy := *paste
-	pasteCopy.DeletionToken = deletionToken
+	pasteCopy.DeletionToken = modificationToken
+	pasteCopy.ModificationToken = ""
 	jsonData, err := json.Marshal(pasteCopy)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
@@ -139,9 +141,9 @@ func v1DeletePaste(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	// Validate the deletion token of the paste
-	deletionToken := values["deletionToken"]
-	if deletionToken == "" {
+	// Validate the modification token of the paste
+	modificationToken := values["deletionToken"]
+	if modificationToken == "" {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
 		ctx.SetBodyString("missing 'deletionToken' field")
 		return
@@ -160,8 +162,8 @@ func v1DeletePaste(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	// Check if the deletion token is correct
-	if (config.Current.DeletionTokenMaster == "" || deletionToken != config.Current.DeletionTokenMaster) && !paste.CheckDeletionToken(deletionToken) {
+	// Check if the modification token is correct
+	if (config.Current.ModificationTokenMaster == "" || modificationToken != config.Current.ModificationTokenMaster) && !paste.CheckModificationToken(modificationToken) {
 		ctx.SetStatusCode(fasthttp.StatusForbidden)
 		ctx.SetBodyString("invalid deletion token")
 		return
