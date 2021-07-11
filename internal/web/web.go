@@ -10,6 +10,7 @@ import (
 	"github.com/lus/pasty/internal/static"
 	"github.com/lus/pasty/internal/storage"
 	v1 "github.com/lus/pasty/internal/web/controllers/v1"
+	v2 "github.com/lus/pasty/internal/web/controllers/v2"
 	"github.com/ulule/limiter/v3"
 	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
 	"github.com/ulule/limiter/v3/drivers/store/memory"
@@ -66,6 +67,18 @@ func Serve() error {
 				ctx.SetBody(jsonData)
 			})
 			v1.InitializePastesController(v1Route.Group("/pastes"), rateLimiterMiddleware)
+		}
+
+		v2Route := apiRoute.Group("/v2")
+		{
+			v2Route.GET("/info", func(ctx *fasthttp.RequestCtx) {
+				jsonData, _ := json.Marshal(map[string]interface{}{
+					"version":            static.Version,
+					"modificationTokens": config.Current.ModificationTokens,
+				})
+				ctx.SetBody(jsonData)
+			})
+			v2.InitializePastesController(v2Route.Group("/pastes"), rateLimiterMiddleware)
 		}
 	}
 

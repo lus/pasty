@@ -77,7 +77,7 @@ Pasty will be available at http://localhost:8080.
 | `PASTY_HASTEBIN_SUPPORT`          | `false`       | `bool`   | Defines whether or not the `POST /documents` endpoint should be enabled, as known from the hastebin servers                |
 | `PASTY_ID_LENGTH`                 | `6`           | `number` | Defines the length of the ID of a paste                                                                                    |
 | `PASTY_MODIFICATION_TOKENS`       | `true`        | `bool`   | Defines whether or not modification tokens should be generated                                                             |
-| `PASTY_MODIFICATION_TOKEN_MASTER` | ``            | `string` | Defines the master modification token which is authorized to modify every paste (even if modification tokens are disabled) |
+| `PASTY_MODIFICATION_TOKEN_MASTER` | `<empty>`     | `string` | Defines the master modification token which is authorized to modify every paste (even if modification tokens are disabled) |
 | `PASTY_MODIFICATION_TOKEN_LENGTH` | `12`          | `number` | Defines the length of the modification token of a paste                                                                    |
 | `PASTY_RATE_LIMIT`                | `30-M`        | `string` | Defines the rate limit of the API (see https://github.com/ulule/limiter#usage)                                             |
 | `PASTY_LENGTH_CAP`                | `50000`       | `number` | Defines the maximum amount of characters a paste is allowed to contain (a value `<= 0` means no limit)                     |
