@@ -93,7 +93,15 @@ func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
 
 // Save saves a paste
 func (driver *PostgresDriver) Save(paste *shared.Paste) error {
-	query := "INSERT INTO pastes VALUES ($1, $2, $3, $4, $5)"
+	query := `
+		INSERT INTO pastes (id, content, modificationToken, created, autoDelete)
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (id) DO UPDATE
+			SET content = excluded.token,
+				modificationToken = excluded.modificationToken,
+				created = excluded.created,
+				autoDelete = excluded.autoDelete
+	`
 
 	_, err := driver.pool.Exec(context.Background(), query, paste.ID, paste.Content, paste.ModificationToken, paste.Created, paste.AutoDelete)
 	return err

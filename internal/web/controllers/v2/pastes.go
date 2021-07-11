@@ -19,6 +19,7 @@ func InitializePastesController(group *router.Group, rateLimiterMiddleware *limi
 	// moms spaghetti
 	group.GET("/{id}", rateLimiterMiddleware.Handle(middlewareInjectPaste(endpointGetPaste)))
 	group.POST("/", rateLimiterMiddleware.Handle(endpointCreatePaste))
+	group.PATCH("/{id}", rateLimiterMiddleware.Handle(middlewareInjectPaste(middlewareValidateModificationToken(endpointModifyPaste))))
 	group.DELETE("/{id}", rateLimiterMiddleware.Handle(middlewareInjectPaste(middlewareValidateModificationToken(endpointDeletePaste))))
 }
 
@@ -161,6 +162,44 @@ func endpointCreatePaste(ctx *fasthttp.RequestCtx) {
 	}
 	ctx.SetStatusCode(fasthttp.StatusCreated)
 	ctx.SetBody(jsonData)
+}
+
+type endpointModifyPastePayload struct {
+	Content *string `json:"content"`
+}
+
+// endpointModifyPaste handles the 'PATCH /v2/pastes/{id}' endpoint
+func endpointModifyPaste(ctx *fasthttp.RequestCtx) {
+	// Read, parse and validate the request payload
+	payload := new(endpointModifyPastePayload)
+	if err := json.Unmarshal(ctx.PostBody(), payload); err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString(err.Error())
+		return
+	}
+	if payload.Content != nil && *payload.Content == "" {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetBodyString("missing paste content")
+		return
+	}
+	if payload.Content != nil && config.Current.LengthCap > 0 && len(*payload.Content) > config.Current.LengthCap {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetBodyString("too large paste content")
+		return
+	}
+
+	// Modify the paste itself
+	paste := ctx.UserValue("_paste").(*shared.Paste)
+	if payload.Content != nil {
+		paste.Content = *payload.Content
+	}
+
+	// Save the modified paste
+	if err := storage.Current.Save(paste); err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString(err.Error())
+		return
+	}
 }
 
 // endpointDeletePaste handles the 'DELETE /v2/pastes/{id}' endpoint
