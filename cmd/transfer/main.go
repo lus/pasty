@@ -56,6 +56,15 @@ func main() {
 			continue
 		}
 
+		// Move the content of the deletion token field to the modification field
+		if paste.DeletionToken != "" {
+			if paste.ModificationToken == "" {
+				paste.ModificationToken = paste.DeletionToken
+			}
+			paste.DeletionToken = ""
+			log.Println("[INFO] Paste " + id + " was a legacy one.")
+		}
+
 		// Save the paste
 		err = to.Save(paste)
 		if err != nil {

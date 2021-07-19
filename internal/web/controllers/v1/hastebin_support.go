@@ -50,11 +50,11 @@ func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
 		AutoDelete: config.Current.AutoDelete.Enabled,
 	}
 
-	// Set a deletion token
-	if config.Current.DeletionTokens {
-		paste.DeletionToken = utils.RandomString(config.Current.DeletionTokenLength)
+	// Set a modification token
+	if config.Current.ModificationTokens {
+		paste.ModificationToken = utils.RandomString(config.Current.ModificationTokenLength)
 
-		err = paste.HashDeletionToken()
+		err = paste.HashModificationToken()
 		if err != nil {
 			ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 			ctx.SetBodyString(err.Error())
