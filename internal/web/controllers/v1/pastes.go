@@ -37,11 +37,11 @@ func v1GetPaste(ctx *fasthttp.RequestCtx) {
 		ctx.SetBodyString("paste not found")
 		return
 	}
-	paste.DeletionToken = ""
-	paste.ModificationToken = ""
+	legacyPaste := legacyFromModern(paste)
+	legacyPaste.DeletionToken = ""
 
 	// Respond with the paste
-	jsonData, err := json.Marshal(paste)
+	jsonData, err := json.Marshal(legacyPaste)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 		ctx.SetBodyString(err.Error())
@@ -115,9 +115,8 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Respond with the paste
-	pasteCopy := *paste
+	pasteCopy := legacyFromModern(paste)
 	pasteCopy.DeletionToken = modificationToken
-	pasteCopy.ModificationToken = ""
 	jsonData, err := json.Marshal(pasteCopy)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)

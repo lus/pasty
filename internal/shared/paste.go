@@ -8,12 +8,13 @@ import (
 
 // Paste represents a saved paste
 type Paste struct {
-	ID                string `json:"id" bson:"_id"`
-	Content           string `json:"content" bson:"content"`
-	DeletionToken     string `json:"deletionToken,omitempty" bson:"deletionToken"` // Required for legacy paste storage support
-	ModificationToken string `json:"modificationToken,omitempty" bson:"modificationToken"`
-	Created           int64  `json:"created" bson:"created"`
-	AutoDelete        bool   `json:"autoDelete" bson:"autoDelete"`
+	ID                string                 `json:"id" bson:"_id"`
+	Content           string                 `json:"content" bson:"content"`
+	DeletionToken     string                 `json:"deletionToken,omitempty" bson:"deletionToken"` // Required for legacy paste storage support
+	ModificationToken string                 `json:"modificationToken,omitempty" bson:"modificationToken"`
+	Created           int64                  `json:"created" bson:"created"`
+	AutoDelete        bool                   `json:"autoDelete" bson:"autoDelete"`
+	Metadata          map[string]interface{} `json:"metadata" bson:"metadata"`
 }
 
 // HashModificationToken hashes the current modification token of a paste

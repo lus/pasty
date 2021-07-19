@@ -82,7 +82,7 @@ func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
 	row := driver.pool.QueryRow(context.Background(), query, id)
 
 	paste := new(shared.Paste)
-	if err := row.Scan(&paste.ID, &paste.Content, &paste.ModificationToken, &paste.Created, &paste.AutoDelete); err != nil {
+	if err := row.Scan(&paste.ID, &paste.Content, &paste.ModificationToken, &paste.Created, &paste.AutoDelete, &paste.Metadata); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
 		}
@@ -100,10 +100,11 @@ func (driver *PostgresDriver) Save(paste *shared.Paste) error {
 			SET content = excluded.token,
 				modificationToken = excluded.modificationToken,
 				created = excluded.created,
-				autoDelete = excluded.autoDelete
+				autoDelete = excluded.autoDelete,
+				metadata = excluded.metadata
 	`
 
-	_, err := driver.pool.Exec(context.Background(), query, paste.ID, paste.Content, paste.ModificationToken, paste.Created, paste.AutoDelete)
+	_, err := driver.pool.Exec(context.Background(), query, paste.ID, paste.Content, paste.ModificationToken, paste.Created, paste.AutoDelete, paste.Metadata)
 	return err
 }
 

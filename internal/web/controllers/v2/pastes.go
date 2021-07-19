@@ -40,6 +40,10 @@ func middlewareInjectPaste(next fasthttp.RequestHandler) fasthttp.RequestHandler
 			return
 		}
 
+		if paste.Metadata == nil {
+			paste.Metadata = map[string]interface{}{}
+		}
+
 		ctx.SetUserValue("_paste", paste)
 
 		next(ctx)
@@ -90,7 +94,8 @@ func endpointGetPaste(ctx *fasthttp.RequestCtx) {
 }
 
 type endpointCreatePastePayload struct {
-	Content string `json:"content"`
+	Content  string                 `json:"content"`
+	Metadata map[string]interface{} `json:"metadata"`
 }
 
 // endpointCreatePaste handles the 'POST /v2/pastes' endpoint
@@ -122,11 +127,15 @@ func endpointCreatePaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Prepare the paste object
+	if payload.Metadata == nil {
+		payload.Metadata = map[string]interface{}{}
+	}
 	paste := &shared.Paste{
 		ID:         id,
 		Content:    payload.Content,
 		Created:    time.Now().Unix(),
 		AutoDelete: config.Current.AutoDelete.Enabled,
+		Metadata:   payload.Metadata,
 	}
 
 	// Create a new modification token if enabled
@@ -165,7 +174,8 @@ func endpointCreatePaste(ctx *fasthttp.RequestCtx) {
 }
 
 type endpointModifyPastePayload struct {
-	Content *string `json:"content"`
+	Content  *string                `json:"content"`
+	Metadata map[string]interface{} `json:"metadata"`
 }
 
 // endpointModifyPaste handles the 'PATCH /v2/pastes/{id}' endpoint
@@ -192,6 +202,15 @@ func endpointModifyPaste(ctx *fasthttp.RequestCtx) {
 	paste := ctx.UserValue("_paste").(*shared.Paste)
 	if payload.Content != nil {
 		paste.Content = *payload.Content
+	}
+	if payload.Metadata != nil {
+		for key, value := range payload.Metadata {
+			if value == nil {
+				delete(paste.Metadata, key)
+				continue
+			}
+			paste.Metadata[key] = value
+		}
 	}
 
 	// Save the modified paste
