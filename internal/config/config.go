@@ -20,6 +20,7 @@ type Config struct {
 	RateLimit               string
 	LengthCap               int
 	AutoDelete              *AutoDeleteConfig
+	Reports                 *ReportConfig
 	File                    *FileConfig
 	Postgres                *PostgresConfig
 	MongoDB                 *MongoDBConfig
@@ -61,6 +62,13 @@ type S3Config struct {
 	Bucket          string
 }
 
+// ReportConfig represents the configuration specific for the report system
+type ReportConfig struct {
+	Reports            bool
+	ReportWebhook      string
+	ReportWebhookToken string
+}
+
 // Current holds the currently loaded config
 var Current *Config
 
@@ -82,6 +90,11 @@ func Load() {
 			Enabled:      env.MustBool("AUTODELETE", false),
 			Lifetime:     env.MustDuration("AUTODELETE_LIFETIME", 720*time.Hour),
 			TaskInterval: env.MustDuration("AUTODELETE_TASK_INTERVAL", 5*time.Minute),
+		},
+		Reports: &ReportConfig{
+			Reports:            env.MustBool("REPORTS", false),
+			ReportWebhook:      env.MustString("REPORT_WEBHOOK", ""),
+			ReportWebhookToken: env.MustString("REPORT_WEBHOOK_TOKEN", ""),
 		},
 		File: &FileConfig{
 			Path: env.MustString("STORAGE_FILE_PATH", "./data"),

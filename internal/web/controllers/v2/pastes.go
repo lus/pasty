@@ -7,6 +7,7 @@ import (
 
 	"github.com/fasthttp/router"
 	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/report"
 	"github.com/lus/pasty/internal/shared"
 	"github.com/lus/pasty/internal/storage"
 	"github.com/lus/pasty/internal/utils"
@@ -21,6 +22,10 @@ func InitializePastesController(group *router.Group, rateLimiterMiddleware *limi
 	group.POST("/", rateLimiterMiddleware.Handle(endpointCreatePaste))
 	group.PATCH("/{id}", rateLimiterMiddleware.Handle(middlewareInjectPaste(middlewareValidateModificationToken(endpointModifyPaste))))
 	group.DELETE("/{id}", rateLimiterMiddleware.Handle(middlewareInjectPaste(middlewareValidateModificationToken(endpointDeletePaste))))
+
+	if config.Current.Reports.Reports {
+		group.POST("/{id}/report", rateLimiterMiddleware.Handle(middlewareInjectPaste(endpointReportPaste)))
+	}
 }
 
 // middlewareInjectPaste retrieves and injects the paste with the specified ID
@@ -229,4 +234,43 @@ func endpointDeletePaste(ctx *fasthttp.RequestCtx) {
 		ctx.SetBodyString(err.Error())
 		return
 	}
+}
+
+type endpointReportPastePayload struct {
+	Reason string `json:"reason"`
+}
+
+func endpointReportPaste(ctx *fasthttp.RequestCtx) {
+	// Read, parse and validate the request payload
+	payload := new(endpointReportPastePayload)
+	if err := json.Unmarshal(ctx.PostBody(), payload); err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString(err.Error())
+		return
+	}
+	if payload.Reason == "" {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetBodyString("missing report reason")
+		return
+	}
+
+	request := &report.ReportRequest{
+		Paste:     ctx.UserValue("_paste").(*shared.Paste).ID,
+		Reason:    payload.Reason,
+		Timestamp: time.Now().Unix(),
+	}
+	response, err := report.SendReport(request)
+	if err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString(err.Error())
+		return
+	}
+
+	jsonData, err := json.Marshal(response)
+	if err != nil {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString(err.Error())
+		return
+	}
+	ctx.SetBody(jsonData)
 }

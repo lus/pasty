@@ -90,6 +90,16 @@ Pasty provides an intuitive system to automatically delete pastes after a specif
 | `PASTY_AUTODELETE_LIFETIME`      | `720h`        | `string` | Defines the duration a paste should live until it gets deleted                 |
 | `PASTY_AUTODELETE_TASK_INTERVAL` | `5m`          | `string` | Defines the interval in which the AutoDelete task should clean up the database |
 
+## Reports
+Pasty aims at being lightweight by default. This is why no fully-featured admin interface with an overview over all pastes and reports is included.
+However, pasty does include a way of abstract reports to allow frontends work with this information.
+If enabled, pasty makes a standardized request to the configured webhook URL if a paste is reported.
+| Environment Variable         | Default Value | Type     | Description                                                                                         |
+|------------------------------|---------------|----------|-----------------------------------------------------------------------------------------------------|
+| `PASTY_REPORTS`              | `false`       | `bool`   | Defines whether or not the report system should be enabled                                          |
+| `PASTY_REPORT_WEBHOOK`       | `<empty>`     | `string` | Defines the webhook URL that is called whenever a paste is reported                                 |
+| `PASTY_REPORT_WEBHOOK_TOKEN` | `<empty>`     | `string` | Defines the token that is sent in the `Authorization` header on every request to the report webhook |
+
 ## Storage types
 Pasty supports multiple storage types, defined using the `PASTY_STORAGE_TYPE` environment variable (use the value behind the corresponding title in this README).
 Every single one of them has its own configuration variables: 
