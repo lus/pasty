@@ -94,13 +94,13 @@ func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
 // Save saves a paste
 func (driver *PostgresDriver) Save(paste *shared.Paste) error {
 	query := `
-		INSERT INTO pastes (id, content, modificationToken, created, autoDelete)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO pastes (id, content, "modificationToken", created, "autoDelete", metadata)
+		VALUES ($1, $2, $3, $4, $5, $6)
 		ON CONFLICT (id) DO UPDATE
-			SET content = excluded.token,
-				modificationToken = excluded.modificationToken,
+			SET content = excluded.content,
+				"modificationToken" = excluded."modificationToken",
 				created = excluded.created,
-				autoDelete = excluded.autoDelete,
+				"autoDelete" = excluded."autoDelete",
 				metadata = excluded.metadata
 	`
 
