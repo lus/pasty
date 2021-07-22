@@ -26,6 +26,20 @@ In the folllowing, all endpoints that require an **admin token** are annotated w
 All endpoints that are accessible through the **admin and modification token** are annotated with `[PASTE_SPECIFIC]`.
 All endpoints that are accessible to everyone are annotated with `[UNSECURED]`.
 
+## The paste entity
+
+The central paste entity has the following fields:
+
+* `id` (string)
+* `content` (string)
+* `modificationToken` (string)
+    * The token used to authenticate with paste-specific secured endpoints; stored hashed and only returned on initial paste creation
+* `created` (int64; UNIX timestamp)
+* `autoDelete` (boolean)
+    * The AutoDelete feature works on a paste-specific basis (even if you turn it off, pastes created while it was on will still be automatically deleted)
+* `metadata` (key-value store)
+    * Different frontends may store simple key-value metadata pairs on pastes to enable specific functionality (for example clientside encryption)
+
 ## Endpoints
 
 ### [UNSECURED] Retrieve application information
@@ -89,6 +103,7 @@ POST /api/v2/pastes
 {
     "id": "paste_id",
     "content": "paste_content",
+    "modificationToken": "raw_modification_token",
     "created": 0000000000,
     "autoDelete": false,
     "metadata": {},
