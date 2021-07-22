@@ -7,6 +7,8 @@ Pasty is a fast and lightweight code pasting server
 > Instances using **PostgreSQL** are **not affected** as a corresponding SQL migration will run before the first startup.
 > If you however use **another storage driver** you may have to **update the entries** by hand or using a simple query, depending on your driver as I don't plan to ship migrations for every single storage driver.
 > It may be important to know that the **data migrator has been upgraded** too. This may serve as a **convenient workaround** (export data (field will be renamed) and import data with changed field names again).
+>
+> The old `deletionToken` field will be processed corresponding to these changes but I strongly recommend updating old pastes if possible.
 
 > Additionally, I changed the three `DELETION_TOKEN*`environment variables to their corresponding `MODIFICATION_TOKEN*` ones:
 > - `DELETION_TOKENS` -> `MODIFICATION_TOKENS`

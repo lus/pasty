@@ -65,6 +65,11 @@ func main() {
 			log.Println("[INFO] Paste " + id + " was a legacy one.")
 		}
 
+		// Initialize a new metadata map if the old one is null
+		if paste.Metadata == nil {
+			paste.Metadata = make(map[string]interface{})
+		}
+
 		// Save the paste
 		err = to.Save(paste)
 		if err != nil {
