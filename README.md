@@ -1,6 +1,23 @@
 # pasty
 Pasty is a fast and lightweight code pasting server
 
+## !!! Important deprecation notices !!!
+
+> This version of pasty uses a new field name for the so far called `deletionToken`: `modificationToken`.
+> Instances using **PostgreSQL** are **not affected** as a corresponding SQL migration will run before the first startup.
+> If you however use **another storage driver** you may have to **update the entries** by hand or using a simple query, depending on your driver as I don't plan to ship migrations for every single storage driver.
+> It may be important to know that the **data migrator has been upgraded** too. This may serve as a **convenient workaround** (export data (field will be renamed) and import data with changed field names again).
+>
+> The old `deletionToken` field will be processed corresponding to these changes but I strongly recommend updating old pastes if possible.
+
+> Additionally, I changed the three `DELETION_TOKEN*`environment variables to their corresponding `MODIFICATION_TOKEN*` ones:
+> - `DELETION_TOKENS` -> `MODIFICATION_TOKENS`
+> - `DELETION_TOKEN_MASTER` -> `MODIFICATION_TOKEN_MASTER`
+> - `DELETION_TOKEN_LENGTH` -> `MODIFICATION_TOKEN_LENGTH`
+>
+> Again, **the old ones will still work** because I do not want to jumble your configurations. However, **please consider updating** them to stay future-proof ^^.
+
+
 ## Support
 
 As pasty is an open source project on GitHub you can open an [issue](https://github.com/lus/pasty/issues) whenever you encounter a problem or feature request.
@@ -55,17 +72,17 @@ Pasty will be available at http://localhost:8080.
 ---
 
 ## General environment variables
-| Environment Variable          | Default Value | Type     | Description                                                                                                        |
-|-------------------------------|---------------|----------|--------------------------------------------------------------------------------------------------------------------|
-| `PASTY_WEB_ADDRESS`           | `:8080`       | `string` | Defines the address the web server listens to                                                                      |
-| `PASTY_STORAGE_TYPE`          | `file`        | `string` | Defines the storage type the pastes are saved to                                                                   |
-| `PASTY_HASTEBIN_SUPPORT`      | `false`       | `bool`   | Defines whether or not the `POST /documents` endpoint should be enabled, as known from the hastebin servers        |
-| `PASTY_ID_LENGTH`             | `6`           | `number` | Defines the length of the ID of a paste                                                                            |
-| `PASTY_DELETION_TOKENS`       | `true`        | `bool`   | Defines whether or not deletion tokens should be generated                                                         |
-| `PASTY_DELETION_TOKEN_MASTER` | `<empty>`     | `string` | Defines the master deletion token which is authorized to delete every paste (even if deletion tokens are disabled) |
-| `PASTY_DELETION_TOKEN_LENGTH` | `12`          | `number` | Defines the length of the deletion token of a paste                                                                |
-| `PASTY_RATE_LIMIT`            | `30-M`        | `string` | Defines the rate limit of the API (see https://github.com/ulule/limiter#usage)                                     |
-| `PASTY_LENGTH_CAP`            | `50000`       | `number` | Defines the maximum amount of characters a paste is allowed to contain (a value `<= 0` means no limit)             |
+| Environment Variable              | Default Value | Type     | Description                                                                                                                |
+|-----------------------------------|---------------|----------|----------------------------------------------------------------------------------------------------------------------------|
+| `PASTY_WEB_ADDRESS`               | `:8080`       | `string` | Defines the address the web server listens to                                                                              |
+| `PASTY_STORAGE_TYPE`              | `file`        | `string` | Defines the storage type the pastes are saved to                                                                           |
+| `PASTY_HASTEBIN_SUPPORT`          | `false`       | `bool`   | Defines whether or not the `POST /documents` endpoint should be enabled, as known from the hastebin servers                |
+| `PASTY_ID_LENGTH`                 | `6`           | `number` | Defines the length of the ID of a paste                                                                                    |
+| `PASTY_MODIFICATION_TOKENS`       | `true`        | `bool`   | Defines whether or not modification tokens should be generated                                                             |
+| `PASTY_MODIFICATION_TOKEN_MASTER` | `<empty>`     | `string` | Defines the master modification token which is authorized to modify every paste (even if modification tokens are disabled) |
+| `PASTY_MODIFICATION_TOKEN_LENGTH` | `12`          | `number` | Defines the length of the modification token of a paste                                                                    |
+| `PASTY_RATE_LIMIT`                | `30-M`        | `string` | Defines the rate limit of the API (see https://github.com/ulule/limiter#usage)                                             |
+| `PASTY_LENGTH_CAP`                | `50000`       | `number` | Defines the maximum amount of characters a paste is allowed to contain (a value `<= 0` means no limit)                     |
 
 ## AutoDelete
 Pasty provides an intuitive system to automatically delete pastes after a specific amount of time. You can configure it with the following variables:
@@ -74,6 +91,16 @@ Pasty provides an intuitive system to automatically delete pastes after a specif
 | `PASTY_AUTODELETE`               | `false`       | `bool`   | Defines whether or not the AutoDelete system should be enabled                 |
 | `PASTY_AUTODELETE_LIFETIME`      | `720h`        | `string` | Defines the duration a paste should live until it gets deleted                 |
 | `PASTY_AUTODELETE_TASK_INTERVAL` | `5m`          | `string` | Defines the interval in which the AutoDelete task should clean up the database |
+
+## Reports
+Pasty aims at being lightweight by default. This is why no fully-featured admin interface with an overview over all pastes and reports is included.
+However, pasty does include a way of abstract reports to allow frontends work with this information.
+If enabled, pasty makes a standardized request to the configured webhook URL if a paste is reported.
+| Environment Variable         | Default Value | Type     | Description                                                                                         |
+|------------------------------|---------------|----------|-----------------------------------------------------------------------------------------------------|
+| `PASTY_REPORTS`              | `false`       | `bool`   | Defines whether or not the report system should be enabled                                          |
+| `PASTY_REPORT_WEBHOOK`       | `<empty>`     | `string` | Defines the webhook URL that is called whenever a paste is reported                                 |
+| `PASTY_REPORT_WEBHOOK_TOKEN` | `<empty>`     | `string` | Defines the token that is sent in the `Authorization` header on every request to the report webhook |
 
 ## Storage types
 Pasty supports multiple storage types, defined using the `PASTY_STORAGE_TYPE` environment variable (use the value behind the corresponding title in this README).

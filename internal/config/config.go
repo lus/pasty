@@ -10,20 +10,21 @@ import (
 
 // Config represents the general application configuration structure
 type Config struct {
-	WebAddress          string
-	StorageType         shared.StorageType
-	HastebinSupport     bool
-	IDLength            int
-	DeletionTokens      bool
-	DeletionTokenMaster string
-	DeletionTokenLength int
-	RateLimit           string
-	LengthCap           int
-	AutoDelete          *AutoDeleteConfig
-	File                *FileConfig
-	Postgres            *PostgresConfig
-	MongoDB             *MongoDBConfig
-	S3                  *S3Config
+	WebAddress              string
+	StorageType             shared.StorageType
+	HastebinSupport         bool
+	IDLength                int
+	ModificationTokens      bool
+	ModificationTokenMaster string
+	ModificationTokenLength int
+	RateLimit               string
+	LengthCap               int
+	AutoDelete              *AutoDeleteConfig
+	Reports                 *ReportConfig
+	File                    *FileConfig
+	Postgres                *PostgresConfig
+	MongoDB                 *MongoDBConfig
+	S3                      *S3Config
 }
 
 // AutoDeleteConfig represents the configuration specific for the AutoDelete behaviour
@@ -61,6 +62,13 @@ type S3Config struct {
 	Bucket          string
 }
 
+// ReportConfig represents the configuration specific for the report system
+type ReportConfig struct {
+	Reports            bool
+	ReportWebhook      string
+	ReportWebhookToken string
+}
+
 // Current holds the currently loaded config
 var Current *Config
 
@@ -69,19 +77,24 @@ func Load() {
 	env.Load()
 
 	Current = &Config{
-		WebAddress:          env.MustString("WEB_ADDRESS", ":8080"),
-		StorageType:         shared.StorageType(strings.ToLower(env.MustString("STORAGE_TYPE", "file"))),
-		HastebinSupport:     env.MustBool("HASTEBIN_SUPPORT", false),
-		IDLength:            env.MustInt("ID_LENGTH", 6),
-		DeletionTokens:      env.MustBool("DELETION_TOKENS", true),
-		DeletionTokenMaster: env.MustString("DELETION_TOKEN_MASTER", ""),
-		DeletionTokenLength: env.MustInt("DELETION_TOKEN_LENGTH", 12),
-		RateLimit:           env.MustString("RATE_LIMIT", "30-M"),
-		LengthCap:           env.MustInt("LENGTH_CAP", 50_000),
+		WebAddress:              env.MustString("WEB_ADDRESS", ":8080"),
+		StorageType:             shared.StorageType(strings.ToLower(env.MustString("STORAGE_TYPE", "file"))),
+		HastebinSupport:         env.MustBool("HASTEBIN_SUPPORT", false),
+		IDLength:                env.MustInt("ID_LENGTH", 6),
+		ModificationTokens:      env.MustBool("MODIFICATION_TOKENS", env.MustBool("DELETION_TOKENS", true)),               // ---
+		ModificationTokenMaster: env.MustString("MODIFICATION_TOKEN_MASTER", env.MustString("DELETION_TOKEN_MASTER", "")), // - We don't want to destroy peoples old configuration
+		ModificationTokenLength: env.MustInt("MODIFICATION_TOKEN_LENGTH", env.MustInt("DELETION_TOKEN_LENGTH", 12)),       // ---
+		RateLimit:               env.MustString("RATE_LIMIT", "30-M"),
+		LengthCap:               env.MustInt("LENGTH_CAP", 50_000),
 		AutoDelete: &AutoDeleteConfig{
 			Enabled:      env.MustBool("AUTODELETE", false),
 			Lifetime:     env.MustDuration("AUTODELETE_LIFETIME", 720*time.Hour),
 			TaskInterval: env.MustDuration("AUTODELETE_TASK_INTERVAL", 5*time.Minute),
+		},
+		Reports: &ReportConfig{
+			Reports:            env.MustBool("REPORTS", false),
+			ReportWebhook:      env.MustString("REPORT_WEBHOOK", ""),
+			ReportWebhookToken: env.MustString("REPORT_WEBHOOK_TOKEN", ""),
 		},
 		File: &FileConfig{
 			Path: env.MustString("STORAGE_FILE_PATH", "./data"),

@@ -117,8 +117,9 @@ func (driver *MongoDBDriver) Save(paste *shared.Paste) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// Insert the paste object
-	_, err := collection.InsertOne(ctx, paste)
+	// Upsert the paste object
+	filter := bson.M{"_id": paste.ID}
+	_, err := collection.UpdateOne(ctx, filter, paste, options.Update().SetUpsert(true))
 	return err
 }
 
