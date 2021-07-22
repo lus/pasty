@@ -17,7 +17,7 @@ type ReportRequest struct {
 
 // ReportResponse represents a report response received from the report webhook
 type ReportResponse struct {
-	Message string
+	Message string `json:"message"`
 }
 
 // SendReport sends a report request to the report webhook

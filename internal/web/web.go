@@ -75,7 +75,7 @@ func Serve() error {
 				jsonData, _ := json.Marshal(map[string]interface{}{
 					"version":            static.Version,
 					"modificationTokens": config.Current.ModificationTokens,
-					"reports":            config.Current.Reports,
+					"reports":            config.Current.Reports.Reports,
 				})
 				ctx.SetBody(jsonData)
 			})
