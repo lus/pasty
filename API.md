@@ -91,7 +91,7 @@ POST /api/v2/pastes
 ```
 
 **Request:**
-```js
+```jsonc
 {
     "content": "paste_content", // Required
     "metadata": {}              // Optional
@@ -119,7 +119,7 @@ PATCH /api/v2/pastes/{paste_id}
 ```
 
 **Request:**
-```js
+```jsonc
 {
     "content": "new_paste_content", // Optional
     "metadata": {}                  // Optional
@@ -171,7 +171,7 @@ POST /api/v2/pastes/{paste_id}/report
 ```
 
 **Response:**
-```js
+```jsonc
 {
     "message": "message"    // An optional message to display to the reporting user
 }
