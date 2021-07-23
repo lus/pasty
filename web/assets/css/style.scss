@@ -7,6 +7,29 @@ html, body {
     color: #ffffff;
     font-family: 'Source Code Pro', monospace;
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+  
+::-webkit-scrollbar-track {
+    background: none;
+}
+  
+::-webkit-scrollbar-thumb {
+    background: #444444;
+    border-radius: 5px;
+}
+  
+::-webkit-scrollbar-thumb:hover {
+    background: #333333;
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: #222222;
+}
+
 .hidden {
     display: none;
 }
@@ -106,12 +129,13 @@ html, body {
         }
     }
     & #content {
+        box-sizing: border-box;
         padding: 20px;
         width: calc(100vw - 50px);
         & #code {
-            word-break: break-all;
-            white-space: pre-wrap;
+            white-space: pre;
             line-height: 20px;
+            overflow-x: auto;
         }
         & #input {
             height: 100%;

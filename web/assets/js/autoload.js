@@ -56,8 +56,7 @@ async function loadPaste() {
             : hljs.highlightAuto(CODE).value;
 
         // Display the line numbers
-        renderLineNumbers();
-        window.addEventListener("resize", renderLineNumbers);
+        lineNOsElement.innerHTML = CODE.split(/\n/).map((_, index) => `<span>${index + 1}</span>`).join('');
 
         // Set the PASTE_ID variable
         PASTE_ID = pasteID;
@@ -74,19 +73,6 @@ async function loadPaste() {
 }
 spinner.surround(loadPaste);
 
-function renderLineNumbers() {
-    lineNOsElement.innerHTML = CODE.split(/\n/).map((line, index) => {
-        let lineWidth = getTextWidth(line, "16px Source Code Pro");
-        let linesSpace = Math.ceil(lineWidth / codeElement.offsetWidth);
-
-        let result = `<span>${index+1}</span>`;
-        if (linesSpace > 1) {
-            result += "<span></span>".repeat(linesSpace - 1);
-        }
-        return result;
-    }).join("");
-}
-
 // 1:1 skid from https://stackoverflow.com/questions/7404366/how-do-i-insert-some-text-where-the-cursor-is
 function insertTextAtCursor(element, text) {
     let value = element.value, endIndex, range, doc = element.ownerDocument;
@@ -102,12 +88,4 @@ function insertTextAtCursor(element, text) {
         range.text = text;
         range.select();
     }
-}
-
-// Also a kind of skid
-function getTextWidth(text, font) {
-    let canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-    let context = canvas.getContext("2d");
-    context.font = font;
-    return context.measureText(text).width;
 }
