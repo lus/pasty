@@ -139,6 +139,7 @@ html, body {
 .container #content #code {
   word-break: break-all;
   white-space: pre-wrap;
+  line-height: 20px;
 }
 
 .container #content #input {
