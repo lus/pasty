@@ -155,7 +155,7 @@ html, body {
 
 .container #notifications {
   position: fixed;
-  bottom: 0;
+  bottom: 30px;
 }
 
 .container #notifications div {
