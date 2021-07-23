@@ -12,20 +12,20 @@ export function setupKeybinds() {
 
         // Define the DOM element of the pressed button
         let element = null;
-        switch (event.keyCode) {
-            case 81: {
+        switch (event.code) {
+            case "KeyQ": {
                 element = document.getElementById("btn_new");
                 break;
             }
-            case 83: {
+            case "KeyS": {
                 element = document.getElementById("btn_save");
                 break;
             }
-            case 88: {
+            case "KeyX": {
                 element = document.getElementById("btn_delete");
                 break;
             }
-            case 66: {
+            case "KeyB": {
                 element = document.getElementById("btn_copy");
                 break;
             }
@@ -62,14 +62,13 @@ export function setupButtons() {
             }
             const data = await response.json();
 
-            // Give the user the chance to copy the deletion token
-            if (data.deletionToken) {
-                prompt("The deletion token for your paste is:", data.deletionToken);
+            // Give the user the chance to copy the modification token
+            if (data.modificationToken) {
+                prompt("The modification token for your paste is:", data.modificationToken);
             }
 
             // Redirect the user to the paste page
             let address = location.protocol + "//" + location.host + "/" + data.id;
-            if (data.suggestedSyntaxType) address += "." + data.suggestedSyntaxType;
             location.replace(address);
         });
     });
@@ -77,12 +76,12 @@ export function setupButtons() {
     // Define the behavior of the 'delete' button
     document.getElementById("btn_delete").addEventListener("click", function () {
         spinner.surround(async function () {
-            // Ask the user for the deletion token
-            const deletionToken = prompt("Deletion Token:");
-            if (!deletionToken) return;
+            // Ask the user for the modification token
+            const modificationToken = prompt("Modification Token:");
+            if (!modificationToken) return;
 
             // Delete the paste
-            const response = await api.deletePaste(autoload.PASTE_ID, deletionToken);
+            const response = await api.deletePaste(autoload.PASTE_ID, modificationToken);
             const data = await response.text();
             if (!response.ok) {
                 notifications.error("Failed deleting the paste: <b>" + data + "</b>");
