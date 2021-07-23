@@ -173,9 +173,12 @@ POST /api/v2/pastes/{paste_id}/report
 **Response:**
 ```jsonc
 {
+    "success": true,        // Whether or not the report was received successfully (this is returned by the report webhook to allow custom errors)
     "message": "message"    // An optional message to display to the reporting user
 }
 ```
 
 **Notes:**
 * The endpoint is only available if the report system is enabled. Otherwise it will return a `404 Not Found` error.
+* The request for this endpoint is the exact same that will reach the webhook.
+* The response from this endpoint is the exact same that pasty expects from the webhook.
