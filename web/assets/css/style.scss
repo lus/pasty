@@ -54,22 +54,26 @@ html, body {
                 transform: translate3d(-50%, -50%, 0) rotate(360deg);
     }
 }
-#spinner {
-    -webkit-animation: .75s linear infinite spinner;
-            animation: .75s linear infinite spinner;
-    -webkit-animation-play-state: inherit;
-            animation-play-state: inherit;
-    border: solid 5px #ffffff;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
+#spinner-container {
     position: fixed;
     top: 130px;
     right: 20px;
-    -webkit-transform: translate3d(-50%, -50%, 0);
-            transform: translate3d(-50%, -50%, 0);
-    will-change: transform;
+    height: 50px;
+    width: 50px;
+    & .spinner {
+        -webkit-animation: .75s linear infinite spinner;
+            animation: .75s linear infinite spinner;
+        -webkit-animation-play-state: inherit;
+                animation-play-state: inherit;
+        border: solid 5px #ffffff;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        height: 100%;
+        width: 100%;
+        -webkit-transform: translate3d(-50%, -50%, 0);
+                transform: translate3d(-50%, -50%, 0);
+        will-change: transform;
+    }
 }
 
 .navigation {
@@ -140,25 +144,34 @@ html, body {
         & #input {
             height: 100%;
             width: 100%;
+            padding: 0;
             background-color: transparent;
             border: none;
             outline: none;
             color: inherit;
             resize: none;
-            font-size: 16px;
+            font: inherit;
+            line-height: 20px;
         }
     }
     & #notifications {
         position: fixed;
         bottom: 30px;
+        right: 0;
+        padding: 20px;
         & div {
-            width: 100vw;
-            padding: 10px 20px;
+            border-radius: 10px;
+            width: 500px;
+            margin-top: 20px;
+            padding: 20px 30px;
             &.error {
-                background-color: #ff3d3d;
+                background-color: #ff4d4d;
             }
             &.success {
                 background-color: #389b38;
+            }
+            &:first-child {
+                margin-top: 0;
             }
         }
     }
@@ -213,6 +226,15 @@ html, body {
         }
         & .meta #version {
             display: none;
+        }
+    }
+
+    .container #notifications {
+        padding: 0;
+        & div {
+            border-radius: 0;
+            width: 100vw;
+            box-sizing: border-box;
         }
     }
 
