@@ -17,6 +17,7 @@ type ReportRequest struct {
 
 // ReportResponse represents a report response received from the report webhook
 type ReportResponse struct {
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 

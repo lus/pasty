@@ -14,6 +14,8 @@ const BUTTON_EDIT_ELEMENT = document.getElementById("btn_edit");
 const BUTTON_DELETE_ELEMENT = document.getElementById("btn_delete");
 const BUTTON_COPY_ELEMENT = document.getElementById("btn_copy");
 
+const BUTTON_REPORT_ELEMENT = document.getElementById("btn_report");
+
 const BUTTONS_EDIT_ELEMENT = document.getElementById("buttons_edit");
 const BUTTON_EDIT_CANCEL_ELEMENT = document.getElementById("btn_edit_cancel");
 const BUTTON_EDIT_APPLY_ELEMENT = document.getElementById("btn_edit_apply");
@@ -24,8 +26,16 @@ let CODE;
 
 let EDIT_MODE = false;
 
+let API_INFORMATION = {
+    version: "error",
+    modificationTokens: false,
+    reports: false
+};
+
 // Initializes the state system
 export async function initialize() {
+    loadAPIInformation();
+
     setupButtonFunctionality();
     setupKeybinds();
 
@@ -60,6 +70,20 @@ export async function initialize() {
     updateButtonState();
 }
 
+// Loads the API information
+async function loadAPIInformation() {
+    // try to retrieve the API information
+    const response = await API.getAPIInformation();
+    if (response.ok) {
+        API_INFORMATION = await response.json();
+    } else {
+        Notifications.error("Failed loading API information: <b>" + await response.text() + "</b>");
+    }
+
+    // Display the API version
+    document.getElementById("version").innerText = API_INFORMATION.version;
+}
+
 // Sets the current persistent code to the code block, highlights it and updates the line numbers
 function updateCode() {
     CODE_ELEMENT.innerHTML = LANGUAGE
@@ -76,11 +100,19 @@ function updateButtonState() {
         BUTTON_EDIT_ELEMENT.removeAttribute("disabled");
         BUTTON_DELETE_ELEMENT.removeAttribute("disabled");
         BUTTON_COPY_ELEMENT.removeAttribute("disabled");
+
+        if (API_INFORMATION.reports) {
+            BUTTON_REPORT_ELEMENT.classList.remove("hidden");
+        }
     } else {
         BUTTON_SAVE_ELEMENT.removeAttribute("disabled");
         BUTTON_EDIT_ELEMENT.setAttribute("disabled", true);
         BUTTON_DELETE_ELEMENT.setAttribute("disabled", true);
         BUTTON_COPY_ELEMENT.setAttribute("disabled", true);
+
+        if (API_INFORMATION.reports) {
+            BUTTON_REPORT_ELEMENT.classList.add("hidden");
+        }
     }
 }
 
@@ -265,6 +297,29 @@ function setupButtonFunctionality() {
         updateCode();
         toggleEditMode();
         Notifications.success("Successfully edited paste.");
+    });
+
+    BUTTON_REPORT_ELEMENT.addEventListener("click", async () => {
+        // Ask the user for a reason
+        const reason = prompt("Reason:");
+        if (!reason) {
+            return;
+        }
+
+        // Try to report the paste
+        const response = await API.reportPaste(PASTE_ID, reason);
+        if (!response.ok) {
+            Notifications.error("Error while reporting paste: <b>" + await response.text() + "</b>");
+            return;
+        }
+
+        // Show the response message
+        const data = await response.json();
+        if (!data.success) {
+            Notifications.error("Error while reporting paste: <b>" + data.message + "</b>");
+            return;
+        }
+        Notifications.success(data.message);
     });
 }
 

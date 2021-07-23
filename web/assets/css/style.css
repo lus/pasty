@@ -78,6 +78,25 @@ html, body {
   will-change: transform;
 }
 
+#btn_report {
+  position: fixed;
+  bottom: 60px;
+  right: 30px;
+}
+
+#btn_report svg {
+  -webkit-transition: all 250ms;
+  transition: all 250ms;
+}
+
+#btn_report:hover {
+  cursor: pointer;
+}
+
+#btn_report:hover svg {
+  stroke: #2daa57;
+}
+
 .navigation {
   position: fixed;
   top: 0;

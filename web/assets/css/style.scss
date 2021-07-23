@@ -76,6 +76,21 @@ html, body {
     }
 }
 
+#btn_report {
+    position: fixed;
+    bottom: 60px;
+    right: 30px;
+    & svg {
+        transition: all 250ms;
+    }
+    &:hover {
+        cursor: pointer;
+        & svg {
+            stroke: #2daa57;
+        }
+    }
+}
+
 .navigation {
     position: fixed;
     top: 0;
