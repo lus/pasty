@@ -255,9 +255,8 @@ func endpointReportPaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	request := &report.ReportRequest{
-		Paste:     ctx.UserValue("_paste").(*shared.Paste).ID,
-		Reason:    payload.Reason,
-		Timestamp: time.Now().Unix(),
+		Paste:  ctx.UserValue("_paste").(*shared.Paste).ID,
+		Reason: payload.Reason,
 	}
 	response, err := report.SendReport(request)
 	if err != nil {

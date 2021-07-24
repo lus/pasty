@@ -180,5 +180,11 @@ POST /api/v2/pastes/{paste_id}/report
 
 **Notes:**
 * The endpoint is only available if the report system is enabled. Otherwise it will return a `404 Not Found` error.
-* The request for this endpoint is the exact same that will reach the webhook.
+* The request that will reach the report webhook looks like this:
+    ```json
+    {
+        "paste": "paste_id",
+        "reason": "reason"
+    }
+    ```
 * The response from this endpoint is the exact same that pasty expects from the webhook.

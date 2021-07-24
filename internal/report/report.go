@@ -10,9 +10,8 @@ import (
 
 // ReportRequest represents a report request sent to the report webhook
 type ReportRequest struct {
-	Paste     string `json:"paste"`
-	Reason    string `json:"reason"`
-	Timestamp int64  `json:"timestamp"`
+	Paste  string `json:"paste"`
+	Reason string `json:"reason"`
 }
 
 // ReportResponse represents a report response received from the report webhook
