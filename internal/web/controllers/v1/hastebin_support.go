@@ -52,7 +52,7 @@ func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
 
 	// Set a modification token
 	if config.Current.ModificationTokens {
-		paste.ModificationToken = utils.RandomString(config.Current.ModificationTokenLength)
+		paste.ModificationToken = utils.RandomString(config.Current.ModificationTokenCharacters, config.Current.ModificationTokenLength)
 
 		err = paste.HashModificationToken()
 		if err != nil {

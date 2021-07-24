@@ -95,7 +95,7 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 	// Set a modification token
 	modificationToken := ""
 	if config.Current.ModificationTokens {
-		modificationToken = utils.RandomString(config.Current.ModificationTokenLength)
+		modificationToken = utils.RandomString(config.Current.ModificationTokenCharacters, config.Current.ModificationTokenLength)
 		paste.ModificationToken = modificationToken
 
 		err = paste.HashModificationToken()

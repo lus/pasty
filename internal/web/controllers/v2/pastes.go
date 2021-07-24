@@ -146,7 +146,7 @@ func endpointCreatePaste(ctx *fasthttp.RequestCtx) {
 	// Create a new modification token if enabled
 	modificationToken := ""
 	if config.Current.ModificationTokens {
-		modificationToken = utils.RandomString(config.Current.ModificationTokenLength)
+		modificationToken = utils.RandomString(config.Current.ModificationTokenCharacters, config.Current.ModificationTokenLength)
 		paste.ModificationToken = modificationToken
 
 		err = paste.HashModificationToken()
