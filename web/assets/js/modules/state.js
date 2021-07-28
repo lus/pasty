@@ -68,6 +68,10 @@ export async function initialize() {
 
     // Update the state of the buttons to match the current state
     updateButtonState();
+
+    INPUT_ELEMENT.addEventListener("input", () => {
+        updateLineNumbers(INPUT_ELEMENT.value);
+    });
 }
 
 // Loads the API information
@@ -89,8 +93,15 @@ function updateCode() {
     CODE_ELEMENT.innerHTML = LANGUAGE
         ? hljs.highlight(LANGUAGE, CODE).value
         : hljs.highlightAuto(CODE).value;
+    updateLineNumbers(CODE);
+}
 
-    LINE_NUMBERS_ELEMENT.innerHTML = CODE.split(/\n/).map((_, index) => `<span>${index + 1}</span>`).join("");
+function updateLineNumbers(content) {
+    if (content == "") {
+        LINE_NUMBERS_ELEMENT.innerHTML = "<span>></span>";
+        return;
+    }
+    LINE_NUMBERS_ELEMENT.innerHTML = content.split(/\n/).map((_, index) => `<span>${index + 1}</span>`).join("");
 }
 
 // Updates the button state according to the current state
@@ -122,6 +133,7 @@ function toggleEditMode() {
         EDIT_MODE = false;
         INPUT_ELEMENT.classList.add("hidden");
         CODE_ELEMENT.classList.remove("hidden");
+        updateLineNumbers(CODE);
         Animation.animate(BUTTONS_EDIT_ELEMENT, "animate__fadeOutDown", "0.3s", () => {
             BUTTONS_EDIT_ELEMENT.classList.add("hidden");
             BUTTONS_DEFAULT_ELEMENT.classList.remove("hidden");
