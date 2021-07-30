@@ -124,7 +124,7 @@ func (driver *S3Driver) Cleanup() (int, error) {
 
 		// Delete the paste if it is expired
 		lifetime := config.Current.AutoDelete.Lifetime
-		if paste.AutoDelete && paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
+		if paste.Created+int64(lifetime.Seconds()) < time.Now().Unix() {
 			err = driver.Delete(id)
 			if err != nil {
 				return 0, err

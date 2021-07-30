@@ -7,7 +7,6 @@ type legacyPaste struct {
 	Content       string `json:"content"`
 	DeletionToken string `json:"deletionToken,omitempty"`
 	Created       int64  `json:"created"`
-	AutoDelete    bool   `json:"autoDelete"`
 }
 
 func legacyFromModern(paste *shared.Paste) *legacyPaste {
@@ -21,6 +20,5 @@ func legacyFromModern(paste *shared.Paste) *legacyPaste {
 		Content:       paste.Content,
 		DeletionToken: deletionToken,
 		Created:       paste.Created,
-		AutoDelete:    paste.AutoDelete,
 	}
 }

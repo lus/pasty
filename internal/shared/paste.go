@@ -13,7 +13,6 @@ type Paste struct {
 	DeletionToken     string                 `json:"deletionToken,omitempty" bson:"deletionToken"` // Required for legacy paste storage support
 	ModificationToken string                 `json:"modificationToken,omitempty" bson:"modificationToken"`
 	Created           int64                  `json:"created" bson:"created"`
-	AutoDelete        bool                   `json:"autoDelete" bson:"autoDelete"`
 	Metadata          map[string]interface{} `json:"metadata" bson:"metadata"`
 }
 

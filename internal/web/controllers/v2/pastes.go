@@ -136,11 +136,10 @@ func endpointCreatePaste(ctx *fasthttp.RequestCtx) {
 		payload.Metadata = map[string]interface{}{}
 	}
 	paste := &shared.Paste{
-		ID:         id,
-		Content:    payload.Content,
-		Created:    time.Now().Unix(),
-		AutoDelete: config.Current.AutoDelete.Enabled,
-		Metadata:   payload.Metadata,
+		ID:       id,
+		Content:  payload.Content,
+		Created:  time.Now().Unix(),
+		Metadata: payload.Metadata,
 	}
 
 	// Create a new modification token if enabled

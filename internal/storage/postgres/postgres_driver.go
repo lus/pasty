@@ -82,7 +82,7 @@ func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
 	row := driver.pool.QueryRow(context.Background(), query, id)
 
 	paste := new(shared.Paste)
-	if err := row.Scan(&paste.ID, &paste.Content, &paste.ModificationToken, &paste.Created, &paste.AutoDelete, &paste.Metadata); err != nil {
+	if err := row.Scan(&paste.ID, &paste.Content, &paste.ModificationToken, &paste.Created, &paste.Metadata); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
 		}
@@ -94,17 +94,16 @@ func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
 // Save saves a paste
 func (driver *PostgresDriver) Save(paste *shared.Paste) error {
 	query := `
-		INSERT INTO pastes (id, content, "modificationToken", created, "autoDelete", metadata)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO pastes (id, content, "modificationToken", created, metadata)
+		VALUES ($1, $2, $3, $4, $5)
 		ON CONFLICT (id) DO UPDATE
 			SET content = excluded.content,
 				"modificationToken" = excluded."modificationToken",
 				created = excluded.created,
-				"autoDelete" = excluded."autoDelete",
 				metadata = excluded.metadata
 	`
 
-	_, err := driver.pool.Exec(context.Background(), query, paste.ID, paste.Content, paste.ModificationToken, paste.Created, paste.AutoDelete, paste.Metadata)
+	_, err := driver.pool.Exec(context.Background(), query, paste.ID, paste.Content, paste.ModificationToken, paste.Created, paste.Metadata)
 	return err
 }
 
@@ -118,7 +117,7 @@ func (driver *PostgresDriver) Delete(id string) error {
 
 // Cleanup cleans up the expired pastes
 func (driver *PostgresDriver) Cleanup() (int, error) {
-	query := "DELETE FROM pastes WHERE autoDelete = true AND created < $2"
+	query := "DELETE FROM pastes WHERE created < $2"
 
 	tag, err := driver.pool.Exec(context.Background(), query, time.Now().Add(-config.Current.AutoDelete.Lifetime).Unix())
 	if err != nil {

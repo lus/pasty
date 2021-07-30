@@ -35,8 +35,6 @@ The central paste entity has the following fields:
 * `modificationToken` (string)
     * The token used to authenticate with paste-specific secured endpoints; stored hashed and only returned on initial paste creation
 * `created` (int64; UNIX timestamp)
-* `autoDelete` (boolean)
-    * The AutoDelete feature works on a paste-specific basis (even if you turn it off, pastes created while it was on will still be automatically deleted)
 * `metadata` (key-value store)
     * Different frontends may store simple key-value metadata pairs on pastes to enable specific functionality (for example clientside encryption)
 
@@ -94,7 +92,6 @@ none
     "id": "paste_id",
     "content": "paste_content",
     "created": 0000000000,
-    "autoDelete": false,
     "metadata": {},
 }
 ```
@@ -122,7 +119,6 @@ POST /api/v2/pastes
     "content": "paste_content",
     "modificationToken": "raw_modification_token",
     "created": 0000000000,
-    "autoDelete": false,
     "metadata": {},
 }
 ```
@@ -149,7 +145,6 @@ PATCH /api/v2/pastes/{paste_id}
     "id": "paste_id",
     "content": "new_paste_content",
     "created": 0000000000,
-    "autoDelete": false,
     "metadata": {},
 }
 ```

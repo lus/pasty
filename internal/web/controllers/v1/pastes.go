@@ -86,10 +86,9 @@ func v1PostPaste(ctx *fasthttp.RequestCtx) {
 
 	// Create the paste object
 	paste := &shared.Paste{
-		ID:         id,
-		Content:    values["content"],
-		Created:    time.Now().Unix(),
-		AutoDelete: config.Current.AutoDelete.Enabled,
+		ID:      id,
+		Content: values["content"],
+		Created: time.Now().Unix(),
 	}
 
 	// Set a modification token
