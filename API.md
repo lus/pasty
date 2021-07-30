@@ -1,5 +1,7 @@
 # API
 
+> **IMPORTANT:** Even though the API is defined pretty well, it may encounter breaking changes while on the `develop` branch!
+
 The REST API provided by pasty is the most important entrypoint when it comes to interacting with it. Basically everything, including the pasty frontend, is built on top of it.
 To make things easier for other developers who decide to develop something in connection to pasty, everything important about it is documented here.
 
