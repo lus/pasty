@@ -130,6 +130,10 @@ html, body {
   transition: all 250ms;
 }
 
+.navigation .button.active svg {
+  stroke: #2daa57;
+}
+
 .navigation .button:hover {
   cursor: pointer;
 }

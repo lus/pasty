@@ -40,6 +40,23 @@ The central paste entity has the following fields:
 * `metadata` (key-value store)
     * Different frontends may store simple key-value metadata pairs on pastes to enable specific functionality (for example clientside encryption)
 
+### Encryption
+
+The frontend pasty ships with implements an encryption option. This en- and decrypts pastes clientside and appends the HEX-encoded en-/decryption key to the paste URL (after a `#` because the so called **hash** is not sent to the server).
+If a paste is encrypted using this feature, its `metadata` field contains a field like this:
+
+```jsonc
+{
+    // --- omitted other entity field
+    "metadata": {
+        "pf_encryption": {
+            "alg": "AES-CBC",                           // The algorithm used to encrypt the paste (currently, only AES-CBC is used)
+            "iv": "54baa80cd8d8328dc4630f9316130f49"    // The HEX-encoded initialization vector of the AES-CBC encryption
+        }
+    }
+}
+```
+
 ## Endpoints
 
 ### [UNSECURED] Retrieve application information

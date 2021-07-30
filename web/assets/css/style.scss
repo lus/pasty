@@ -109,6 +109,9 @@ html, body {
         & svg {
             transition: all 250ms;
         }
+        &.active svg {
+            stroke: #2daa57;
+        }
         &:hover {
             cursor: pointer;
             & svg {

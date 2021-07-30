@@ -2,6 +2,7 @@ import * as API from "./api.js";
 import * as Notifications from "./notifications.js";
 import * as Spinner from "./spinner.js";
 import * as Animation from "./animation.js";
+import * as Encryption from "./encryption.js";
 
 const CODE_ELEMENT = document.getElementById("code");
 const LINE_NUMBERS_ELEMENT = document.getElementById("linenos");
@@ -20,9 +21,14 @@ const BUTTONS_EDIT_ELEMENT = document.getElementById("buttons_edit");
 const BUTTON_EDIT_CANCEL_ELEMENT = document.getElementById("btn_edit_cancel");
 const BUTTON_EDIT_APPLY_ELEMENT = document.getElementById("btn_edit_apply");
 
+const BUTTON_TOGGLE_ENCRYPTION_ELEMENT = document.getElementById("btn_toggle_encryption");
+
 let PASTE_ID;
 let LANGUAGE;
 let CODE;
+
+let ENCRYPTION_KEY;
+let ENCRYPTION_IV;
 
 let EDIT_MODE = false;
 
@@ -38,6 +44,11 @@ export async function initialize() {
 
     setupButtonFunctionality();
     setupKeybinds();
+
+    // Enable encryption if enabled from last session
+    if (localStorage.getItem("encryption") === "true") {
+        BUTTON_TOGGLE_ENCRYPTION_ELEMENT.classList.add("active");
+    }
 
     if (location.pathname !== "/") {
         // Extract the paste data (ID and language)
@@ -56,7 +67,26 @@ export async function initialize() {
         // Set the persistent paste data
         PASTE_ID = pasteID;
         LANGUAGE = language;
-        CODE = (await response.json()).content;
+
+        // Decode the response and decrypt the content if needed
+        const json = await response.json();
+        CODE = json.content;
+        if (json.metadata.pf_encryption) {
+            ENCRYPTION_KEY = location.hash.replace("#", "");
+            while (ENCRYPTION_KEY.length == 0) {
+                ENCRYPTION_KEY = prompt("Your decryption key:");
+            }
+
+            try {
+                 CODE = await Encryption.decrypt(ENCRYPTION_KEY, json.metadata.pf_encryption.iv, CODE);
+                 ENCRYPTION_IV = json.metadata.pf_encryption.iv;
+            } catch (error) {
+                console.log(error);
+                Notifications.error("Could not decrrypt paste; make sure the decryption key is correct.");
+                setTimeout(() => location.replace(location.protocol + "//" + location.host), 3000);
+                return;
+            }
+        }
 
         // Fill the code block with the just received data
         updateCode();
@@ -231,8 +261,24 @@ function setupButtonFunctionality() {
                 return;
             }
 
+            // Encrypt the paste if needed
+            let value = INPUT_ELEMENT.value;
+            let metadata;
+            let key;
+            if (BUTTON_TOGGLE_ENCRYPTION_ELEMENT.classList.contains("active")) {
+                const encrypted = await Encryption.encrypt(await Encryption.generateEncryptionData(), value);
+                value = encrypted.result;
+                metadata = {
+                    pf_encryption: {
+                        alg: "AES-CBC",
+                        iv: encrypted.iv
+                    }
+                };
+                key = encrypted.key;
+            }
+
             // Try to create the paste
-            const response = await API.createPaste(INPUT_ELEMENT.value);
+            const response = await API.createPaste(value, metadata);
             if (!response.ok) {
                 Notifications.error("Error while creating paste: <b>" + await response.text() + "</b>");
                 return;
@@ -245,7 +291,7 @@ function setupButtonFunctionality() {
             }
 
             // Redirect the user to his newly created paste
-            location.replace(location.protocol + "//" + location.host + "/" + data.id);
+            location.replace(location.protocol + "//" + location.host + "/" + data.id + (key ? "#" + key : ""));
         });
     });
     
@@ -297,8 +343,15 @@ function setupButtonFunctionality() {
             return;
         }
 
+        // Re-encrypt the paste data if needed
+        let value = INPUT_ELEMENT.value;
+        if (ENCRYPTION_KEY && ENCRYPTION_IV) {
+            const encrypted = await Encryption.encrypt(await Encryption.encryptionDataFromHex(ENCRYPTION_KEY, ENCRYPTION_IV), value);
+            value = encrypted.result;
+        }
+
         // Try to edit the paste
-        const response = await API.editPaste(PASTE_ID, modificationToken, INPUT_ELEMENT.value);
+        const response = await API.editPaste(PASTE_ID, modificationToken, value);
         if (!response.ok) {
             Notifications.error("Error while editing paste: <b>" + await response.text() + "</b>");
             return;
@@ -309,6 +362,11 @@ function setupButtonFunctionality() {
         updateCode();
         toggleEditMode();
         Notifications.success("Successfully edited paste.");
+    });
+
+    BUTTON_TOGGLE_ENCRYPTION_ELEMENT.addEventListener("click", () => {
+        const active = BUTTON_TOGGLE_ENCRYPTION_ELEMENT.classList.toggle("active");
+        localStorage.setItem("encryption", active);
     });
 
     BUTTON_REPORT_ELEMENT.addEventListener("click", async () => {
