@@ -367,6 +367,7 @@ function setupButtonFunctionality() {
     BUTTON_TOGGLE_ENCRYPTION_ELEMENT.addEventListener("click", () => {
         const active = BUTTON_TOGGLE_ENCRYPTION_ELEMENT.classList.toggle("active");
         localStorage.setItem("encryption", active);
+        Notifications.success((active ? "Enabled" : "Disabled") + " automatic paste encryption.");
     });
 
     BUTTON_REPORT_ELEMENT.addEventListener("click", async () => {

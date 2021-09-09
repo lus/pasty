@@ -250,6 +250,7 @@ html, body {
     .container #notifications {
         padding: 0;
         & div {
+            margin: 0;
             border-radius: 0;
             width: 100vw;
             box-sizing: border-box;
