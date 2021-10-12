@@ -6,6 +6,27 @@ html, body {
     background-color: #000000;
     color: #ffffff;
     font-family: 'Source Code Pro', monospace;
+
+    // Enables embeded mode (iframes).
+    &.embeded {
+        // Hide navbar.
+        .navigation {
+            display: none;
+        }
+        // Align content with top of the frame.
+        .container {
+            margin: 0;
+        }
+        // Adjust paddings to have more space.
+        #content, #linenos {
+            padding-top: 10px;
+        }
+        // Make footer smaller to further increase
+        // content real estate.
+        #footer {
+            font-size: 0.8em;
+        }
+    }
 }
 
 ::-webkit-scrollbar {
@@ -14,7 +35,7 @@ html, body {
 }
   
 ::-webkit-scrollbar-track {
-    background: none;
+    background: #000000;
 }
   
 ::-webkit-scrollbar-thumb {
