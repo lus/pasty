@@ -7,8 +7,8 @@ html, body {
     color: #ffffff;
     font-family: 'Source Code Pro', monospace;
 
-    // Enables embeded mode (iframes).
-    &.embeded {
+    // Enables embedded mode (iframes).
+    &.embedded {
         // Hide navbar.
         .navigation {
             display: none;

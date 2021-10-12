@@ -6,16 +6,16 @@ html, body {
   color: #ffffff;
   font-family: "Source Code Pro", monospace;
 }
-html.embeded .navigation, body.embeded .navigation {
+html.embedded .navigation, body.embedded .navigation {
   display: none;
 }
-html.embeded .container, body.embeded .container {
+html.embedded .container, body.embedded .container {
   margin: 0;
 }
-html.embeded #content, html.embeded #linenos, body.embeded #content, body.embeded #linenos {
+html.embedded #content, html.embedded #linenos, body.embedded #content, body.embedded #linenos {
   padding-top: 10px;
 }
-html.embeded #footer, body.embeded #footer {
+html.embedded #footer, body.embedded #footer {
   font-size: 0.8em;
 }
 
