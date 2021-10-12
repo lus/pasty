@@ -45,10 +45,10 @@ export async function initialize() {
     setupButtonFunctionality();
     setupKeybinds();
 
-    // When embeded inside an iframe, add "embeded"
+    // When embedded inside an iframe, add "embedded"
     // class to body element.
     if (window != window.parent) {
-        document.body.classList += " embeded";
+        document.body.classList += " embedded";
     }
 
     // Enable encryption if enabled from last session
