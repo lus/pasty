@@ -7,13 +7,30 @@ html, body {
   font-family: 'Source Code Pro', monospace;
 }
 
+html.embedded .navigation, body.embedded .navigation {
+  display: none;
+}
+
+html.embedded .container, body.embedded .container {
+  margin: 0;
+}
+
+html.embedded #content, html.embedded #linenos, body.embedded #content, body.embedded #linenos {
+  padding-top: 10px;
+  min-height: calc(100vh - 50px);
+}
+
+html.embedded #footer, body.embedded #footer {
+  font-size: 0.8em;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: none;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {

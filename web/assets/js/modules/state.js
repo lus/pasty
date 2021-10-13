@@ -45,6 +45,12 @@ export async function initialize() {
     setupButtonFunctionality();
     setupKeybinds();
 
+    // When embedded inside an iframe, add "embedded"
+    // class to body element.
+    if (window != window.parent) {
+        document.body.classList += " embedded";
+    }
+
     // Enable encryption if enabled from last session
     if (localStorage.getItem("encryption") === "true") {
         BUTTON_TOGGLE_ENCRYPTION_ELEMENT.classList.add("active");

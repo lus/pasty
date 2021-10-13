@@ -6,6 +6,21 @@ html, body {
     background-color: #000000;
     color: #ffffff;
     font-family: 'Source Code Pro', monospace;
+    &.embedded {
+        .navigation {
+            display: none;
+        }
+        .container {
+            margin: 0;
+        }
+        #content, #linenos {
+            padding-top: 10px;
+            min-height: calc(100vh - 50px);
+        }
+        #footer {
+            font-size: 0.8em;
+        }
+    }
 }
 
 ::-webkit-scrollbar {
@@ -14,7 +29,7 @@ html, body {
 }
   
 ::-webkit-scrollbar-track {
-    background: none;
+    background: #000000;
 }
   
 ::-webkit-scrollbar-thumb {
