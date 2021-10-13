@@ -6,23 +6,17 @@ html, body {
     background-color: #000000;
     color: #ffffff;
     font-family: 'Source Code Pro', monospace;
-
-    // Enables embedded mode (iframes).
     &.embedded {
-        // Hide navbar.
         .navigation {
             display: none;
         }
-        // Align content with top of the frame.
         .container {
             margin: 0;
         }
-        // Adjust paddings to have more space.
         #content, #linenos {
             padding-top: 10px;
+            min-height: calc(100vh - 50px);
         }
-        // Make footer smaller to further increase
-        // content real estate.
         #footer {
             font-size: 0.8em;
         }

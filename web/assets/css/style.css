@@ -4,17 +4,22 @@ html, body {
   padding: 0;
   background-color: #000000;
   color: #ffffff;
-  font-family: "Source Code Pro", monospace;
+  font-family: 'Source Code Pro', monospace;
 }
+
 html.embedded .navigation, body.embedded .navigation {
   display: none;
 }
+
 html.embedded .container, body.embedded .container {
   margin: 0;
 }
+
 html.embedded #content, html.embedded #linenos, body.embedded #content, body.embedded #linenos {
   padding-top: 10px;
+  min-height: calc(100vh - 50px);
 }
+
 html.embedded #footer, body.embedded #footer {
   font-size: 0.8em;
 }
@@ -55,6 +60,7 @@ html.embedded #footer, body.embedded #footer {
     transform: translate3d(-50%, -50%, 0) rotate(360deg);
   }
 }
+
 @keyframes spinner {
   0% {
     -webkit-transform: translate3d(-50%, -50%, 0) rotate(0deg);
@@ -65,6 +71,7 @@ html.embedded #footer, body.embedded #footer {
     transform: translate3d(-50%, -50%, 0) rotate(360deg);
   }
 }
+
 #spinner-container {
   position: fixed;
   top: 130px;
@@ -72,9 +79,10 @@ html.embedded #footer, body.embedded #footer {
   height: 50px;
   width: 50px;
 }
+
 #spinner-container .spinner {
-  -webkit-animation: 0.75s linear infinite spinner;
-  animation: 0.75s linear infinite spinner;
+  -webkit-animation: .75s linear infinite spinner;
+  animation: .75s linear infinite spinner;
   -webkit-animation-play-state: inherit;
   animation-play-state: inherit;
   border: solid 5px #ffffff;
@@ -92,12 +100,16 @@ html.embedded #footer, body.embedded #footer {
   bottom: 60px;
   right: 30px;
 }
+
 #btn_report svg {
+  -webkit-transition: all 250ms;
   transition: all 250ms;
 }
+
 #btn_report:hover {
   cursor: pointer;
 }
+
 #btn_report:hover svg {
   stroke: #2daa57;
 }
@@ -106,34 +118,51 @@ html.embedded #footer, body.embedded #footer {
   position: fixed;
   top: 0;
   width: calc(100vw - 80px);
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   padding: 0 40px;
   background-color: #222222;
 }
+
 .navigation .button {
   padding: 10px 20px;
   background-color: transparent;
   border: none;
   outline: none;
 }
+
 .navigation .button svg {
+  -webkit-transition: all 250ms;
   transition: all 250ms;
 }
+
 .navigation .button.active svg {
   stroke: #2daa57;
 }
+
 .navigation .button:hover {
   cursor: pointer;
 }
+
 .navigation .button:hover svg {
   stroke: #2daa57;
 }
+
 .navigation .button:disabled svg {
   stroke: #5a5a5a;
 }
+
 .navigation .button:disabled:hover {
   cursor: initial;
   color: initial;
@@ -141,9 +170,15 @@ html.embedded #footer, body.embedded #footer {
 
 .container {
   margin-top: 60px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
 }
+
 .container #linenos {
   padding: 20px 0;
   width: 50px;
@@ -151,25 +186,31 @@ html.embedded #footer, body.embedded #footer {
   background-color: #111111;
   color: #bebebe;
 }
+
 .container #linenos span {
   display: block;
   width: 100%;
   height: 20px;
   text-align: center;
 }
+
 .container #linenos span:last-child {
   margin-bottom: 25px;
 }
+
 .container #content {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   padding: 20px;
   width: calc(100vw - 50px);
 }
+
 .container #content #code {
   white-space: pre;
   line-height: 20px;
   overflow-x: auto;
 }
+
 .container #content #input {
   height: 100%;
   width: 100%;
@@ -182,24 +223,29 @@ html.embedded #footer, body.embedded #footer {
   font: inherit;
   line-height: 20px;
 }
+
 .container #notifications {
   position: fixed;
   bottom: 30px;
   right: 0;
   padding: 20px;
 }
+
 .container #notifications div {
   border-radius: 10px;
   width: 500px;
   margin-top: 20px;
   padding: 20px 30px;
 }
+
 .container #notifications div.error {
   background-color: #ff4d4d;
 }
+
 .container #notifications div.success {
   background-color: #389b38;
 }
+
 .container #notifications div:first-child {
   margin-top: 0;
 }
@@ -211,28 +257,43 @@ html.embedded #footer, body.embedded #footer {
   width: 100%;
   background-color: #222222;
 }
+
 #footer #flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   margin: 0 80px 0 60px;
 }
+
 #footer div {
   display: inline-block;
 }
+
 #footer a {
   display: inline-block;
   text-decoration: none;
   color: #ffffff;
   padding: 5px 20px;
   height: 100%;
+  -webkit-transition: all 200ms;
   transition: all 200ms;
 }
+
 #footer a:hover {
   background-color: #333333;
   color: #2daa57;
 }
+
 #footer #version {
   display: inline-block;
   margin-left: 10px;
@@ -255,7 +316,6 @@ html.embedded #footer, body.embedded #footer {
   .navigation .meta #version {
     display: none;
   }
-
   .container #notifications {
     padding: 0;
   }
@@ -263,9 +323,9 @@ html.embedded #footer, body.embedded #footer {
     margin: 0;
     border-radius: 0;
     width: 100vw;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
   }
-
   #footer #flex {
     margin: 0 0 0 25px;
   }
@@ -276,14 +336,15 @@ html.embedded #footer, body.embedded #footer {
     padding: 5px 15px;
   }
 }
+
 @media only screen and (max-width: 500px) {
   #footer #flex {
     margin: 0;
-    justify-content: space-around;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
   }
   #footer .version-container {
     display: none;
   }
 }
-
 /*# sourceMappingURL=style.css.map */
