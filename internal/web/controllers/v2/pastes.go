@@ -19,7 +19,7 @@ import (
 func InitializePastesController(group *router.Group, rateLimiterMiddleware *limitFasthttp.Middleware) {
 	// moms spaghetti
 	group.GET("/{id}", rateLimiterMiddleware.Handle(middlewareInjectPaste(endpointGetPaste)))
-	group.POST("/", rateLimiterMiddleware.Handle(endpointCreatePaste))
+	group.POST("", rateLimiterMiddleware.Handle(endpointCreatePaste))
 	group.PATCH("/{id}", rateLimiterMiddleware.Handle(middlewareInjectPaste(middlewareValidateModificationToken(endpointModifyPaste))))
 	group.DELETE("/{id}", rateLimiterMiddleware.Handle(middlewareInjectPaste(middlewareValidateModificationToken(endpointDeletePaste))))
 
