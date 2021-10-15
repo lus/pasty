@@ -9,7 +9,7 @@ export async function getPaste(pasteID) {
 }
 
 export async function createPaste(content, metadata) {
-    return fetch(API_BASE_URL + "/pastes/", {
+    return fetch(API_BASE_URL + "/pastes", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
