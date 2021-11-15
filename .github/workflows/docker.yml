@@ -45,6 +45,6 @@ jobs:
           builder: ${{ steps.docker_buildx.outputs.name }}
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.TAG }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.TAG }}, ${{ env.REGISTRY }}/${{ github.repository }}:${{ COMMIT_HASH }}
           build-args:
             PASTY_VERSION=${{ env.BRANCH }}-${{ env.COMMIT_HASH }}
