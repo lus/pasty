@@ -119,7 +119,7 @@ func (driver *MongoDBDriver) Save(paste *shared.Paste) error {
 
 	// Upsert the paste object
 	filter := bson.M{"_id": paste.ID}
-	_, err := collection.UpdateOne(ctx, filter, paste, options.Update().SetUpsert(true))
+	_, err := collection.UpdateOne(ctx, filter, bson.M{"$set": paste,}, options.Update().SetUpsert(true))
 	return err
 }
 
