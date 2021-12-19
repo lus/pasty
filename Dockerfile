@@ -22,4 +22,5 @@ FROM alpine:latest
 WORKDIR /root
 COPY --from=build /app/pasty .
 COPY web ./web/
+EXPOSE 8080
 CMD ["./pasty"]
