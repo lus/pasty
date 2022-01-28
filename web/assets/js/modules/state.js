@@ -324,13 +324,11 @@ function setupButtonFunctionality() {
     });
 
     BUTTON_COPY_ELEMENT.addEventListener("click", async () => {
-        // Ask for clipboard permissions
-        if (!(await askForClipboardPermission())) {
-            Notifications.error("Clipboard permission denied.");
+        if (!navigator.clipboard) {
+            Notifications.error("Clipboard API not supported by your browser.");
             return;
         }
 
-        // Copy the current code
         await navigator.clipboard.writeText(CODE);
         Notifications.success("Successfully copied the code.");
     });
@@ -398,18 +396,6 @@ function setupButtonFunctionality() {
         }
         Notifications.success(data.message);
     });
-}
-
-// Asks for clipboard write permission
-async function askForClipboardPermission() {
-    try {
-        const state = await navigator.permissions.query({
-            name: "clipboard-write"
-        });
-        return state.state === "granted" || state.state === "prompt";
-    } catch (error) {
-        return false;
-    }
 }
 
 // 1:1 skid from https://stackoverflow.com/questions/7404366/how-do-i-insert-some-text-where-the-cursor-is
