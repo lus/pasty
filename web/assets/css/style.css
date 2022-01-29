@@ -250,6 +250,22 @@ html.embedded #footer, body.embedded #footer {
   margin-top: 0;
 }
 
+.container #lifetime_container {
+  position: fixed;
+  right: 30px;
+  top: 90px;
+  padding: 10px 15px;
+  background-color: #222222;
+  border-radius: 10px;
+}
+
+.container #lifetime_container #lifetime {
+  background-color: #111111;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
 #footer {
   position: fixed;
   bottom: 0;

@@ -3,10 +3,13 @@ import * as Notifications from "./notifications.js";
 import * as Spinner from "./spinner.js";
 import * as Animation from "./animation.js";
 import * as Encryption from "./encryption.js";
+import * as Duration from "./duration.js";
 
 const CODE_ELEMENT = document.getElementById("code");
 const LINE_NUMBERS_ELEMENT = document.getElementById("linenos");
 const INPUT_ELEMENT = document.getElementById("input");
+
+const LIFETIME_CONTAINER_ELEMENT = document.getElementById("lifetime_container");
 
 const BUTTONS_DEFAULT_ELEMENT = document.getElementById("buttons_default");
 const BUTTON_NEW_ELEMENT = document.getElementById("btn_new");
@@ -34,6 +37,7 @@ let EDIT_MODE = false;
 
 let API_INFORMATION = {
     version: "error",
+    pasteLifetime: -1,
     modificationTokens: false,
     reports: false
 };
@@ -100,6 +104,7 @@ export async function initialize() {
         // Give the user the opportunity to paste his code
         INPUT_ELEMENT.classList.remove("hidden");
         INPUT_ELEMENT.focus();
+        LIFETIME_CONTAINER_ELEMENT.classList.remove("hidden");
     }
 
     // Update the state of the buttons to match the current state
@@ -122,6 +127,9 @@ async function loadAPIInformation() {
 
     // Display the API version
     document.getElementById("version").innerText = API_INFORMATION.version;
+
+    // Display the paste lifetime
+    document.getElementById("lifetime").innerText = Duration.format(API_INFORMATION.pasteLifetime);
 }
 
 // Sets the current persistent code to the code block, highlights it and updates the line numbers
@@ -168,6 +176,7 @@ function toggleEditMode() {
     if (EDIT_MODE) {
         EDIT_MODE = false;
         INPUT_ELEMENT.classList.add("hidden");
+        LIFETIME_CONTAINER_ELEMENT.classList.add("hidden");
         CODE_ELEMENT.classList.remove("hidden");
         updateLineNumbers(CODE);
         Animation.animate(BUTTONS_EDIT_ELEMENT, "animate__fadeOutDown", "0.3s", () => {
@@ -178,6 +187,7 @@ function toggleEditMode() {
     } else {
         EDIT_MODE = true;
         CODE_ELEMENT.classList.add("hidden");
+        LIFETIME_CONTAINER_ELEMENT.classList.remove("hidden");
         INPUT_ELEMENT.classList.remove("hidden");
         INPUT_ELEMENT.value = CODE;
         INPUT_ELEMENT.focus();
