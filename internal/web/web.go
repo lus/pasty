@@ -106,7 +106,7 @@ func Serve() error {
 func frontendHandler() fasthttp.RequestHandler {
 	// Create the file server
 	fs := &fasthttp.FS{
-		Root:          "./web",
+		Root:          static.TempFrontendPath,
 		IndexNames:    []string{"index.html"},
 		CacheDuration: 0,
 	}
