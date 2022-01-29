@@ -71,11 +71,16 @@ func Serve() error {
 
 		v2Route := apiRoute.Group("/v2")
 		{
+			pasteLifetime := int64(-1)
+			if config.Current.AutoDelete.Enabled {
+				pasteLifetime = config.Current.AutoDelete.Lifetime.Milliseconds()
+			}
 			v2Route.GET("/info", func(ctx *fasthttp.RequestCtx) {
 				jsonData, _ := json.Marshal(map[string]interface{}{
 					"version":            static.Version,
 					"modificationTokens": config.Current.ModificationTokens,
 					"reports":            config.Current.Reports.Reports,
+					"pasteLifetime":      pasteLifetime,
 				})
 				ctx.SetBody(jsonData)
 			})

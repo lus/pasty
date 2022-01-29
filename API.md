@@ -69,10 +69,11 @@ GET /api/v2/info
 none
 
 **Response:**
-```json
+```jsonc
 {
     "modificationTokens": true,
     "reports": true,
+    "pasteLifetime": -1,        // The configured AutoDelete paste lifetime; -1 if AutoDelete is disabled
     "version": "dev"
 }
 ```
@@ -94,7 +95,7 @@ none
     "id": "paste_id",
     "content": "paste_content",
     "created": 0000000000,
-    "metadata": {},
+    "metadata": {}
 }
 ```
 
@@ -121,7 +122,7 @@ POST /api/v2/pastes
     "content": "paste_content",
     "modificationToken": "raw_modification_token",
     "created": 0000000000,
-    "metadata": {},
+    "metadata": {}
 }
 ```
 
@@ -147,7 +148,7 @@ PATCH /api/v2/pastes/{paste_id}
     "id": "paste_id",
     "content": "new_paste_content",
     "created": 0000000000,
-    "metadata": {},
+    "metadata": {}
 }
 ```
 
