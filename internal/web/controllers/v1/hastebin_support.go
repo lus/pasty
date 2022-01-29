@@ -23,15 +23,10 @@ func HastebinSupportHandler(ctx *fasthttp.RequestCtx) {
 
 	// Define the paste content
 	var content string
-	switch string(ctx.Request.Header.ContentType()) {
-	case "text/plain":
-		content = string(ctx.PostBody())
-	case "multipart/form-data":
+	if string(ctx.Request.Header.ContentType()) == "multipart/form-data" {
 		content = string(ctx.FormValue("data"))
-	default:
-		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBodyString("invalid content type")
-		return
+	} else {
+		content = string(ctx.PostBody())
 	}
 
 	// Acquire the paste ID
