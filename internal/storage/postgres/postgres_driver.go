@@ -117,7 +117,7 @@ func (driver *PostgresDriver) Delete(id string) error {
 
 // Cleanup cleans up the expired pastes
 func (driver *PostgresDriver) Cleanup() (int, error) {
-	query := "DELETE FROM pastes WHERE created < $2"
+	query := "DELETE FROM pastes WHERE created < $1"
 
 	tag, err := driver.pool.Exec(context.Background(), query, time.Now().Add(-config.Current.AutoDelete.Lifetime).Unix())
 	if err != nil {
