@@ -11,6 +11,9 @@ const INPUT_ELEMENT = document.getElementById("input");
 
 const LIFETIME_CONTAINER_ELEMENT = document.getElementById("lifetime_container");
 
+const CHARACTER_AMOUNT_ELEMENT = document.getElementById("characters");
+const LINES_AMOUNT_ELEMENT = document.getElementById("lines");
+
 const BUTTONS_DEFAULT_ELEMENT = document.getElementById("buttons_default");
 const BUTTON_NEW_ELEMENT = document.getElementById("btn_new");
 const BUTTON_SAVE_ELEMENT = document.getElementById("btn_save");
@@ -112,6 +115,7 @@ export async function initialize() {
 
     INPUT_ELEMENT.addEventListener("input", () => {
         updateLineNumbers(INPUT_ELEMENT.value);
+
         if (BUTTON_SAVE_ELEMENT.hasAttribute("disabled") && INPUT_ELEMENT.value.length > 0) {
             BUTTON_SAVE_ELEMENT.removeAttribute("disabled");
         }
@@ -147,6 +151,9 @@ function updateCode() {
 }
 
 function updateLineNumbers(content) {
+    CHARACTER_AMOUNT_ELEMENT.innerText = content.length;
+    LINES_AMOUNT_ELEMENT.innerText = content.split(/\n/).length;
+
     if (content == "") {
         LINE_NUMBERS_ELEMENT.innerHTML = "<span>></span>";
         return;

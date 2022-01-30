@@ -266,6 +266,21 @@ html.embedded #footer, body.embedded #footer {
   border-radius: 10px;
 }
 
+.container #content_length_container {
+  position: fixed;
+  right: 30px;
+  bottom: 60px;
+  padding: 10px 15px;
+  background-color: #222222;
+  border-radius: 10px;
+}
+
+.container #content_length_container span {
+  background-color: #111111;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
 #footer {
   position: fixed;
   bottom: 0;
