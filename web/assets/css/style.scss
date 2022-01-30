@@ -313,6 +313,12 @@ html, body {
     }
 }
 
+@media only screen and (max-width: 400px) {
+    #btn_copy, #lifetime_container, #content_length_container {
+        display: none;
+    }
+}
+
 @media only screen and (max-width: 500px) {
     #footer {
         & #flex {
