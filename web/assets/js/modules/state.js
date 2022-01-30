@@ -92,7 +92,7 @@ export async function initialize() {
                  ENCRYPTION_IV = json.metadata.pf_encryption.iv;
             } catch (error) {
                 console.log(error);
-                Notifications.error("Could not decrrypt paste; make sure the decryption key is correct.");
+                Notifications.error("Could not decrypt paste; make sure the decryption key is correct.");
                 setTimeout(() => location.replace(location.protocol + "//" + location.host), 3000);
                 return;
             }
@@ -112,6 +112,12 @@ export async function initialize() {
 
     INPUT_ELEMENT.addEventListener("input", () => {
         updateLineNumbers(INPUT_ELEMENT.value);
+        if (BUTTON_SAVE_ELEMENT.hasAttribute("disabled") && INPUT_ELEMENT.value.length > 0) {
+            BUTTON_SAVE_ELEMENT.removeAttribute("disabled");
+        }
+        if (!BUTTON_SAVE_ELEMENT.hasAttribute("disabled") && INPUT_ELEMENT.value.length == 0) {
+            BUTTON_SAVE_ELEMENT.setAttribute("disabled", true);
+        }
     });
 }
 
@@ -160,7 +166,6 @@ function updateButtonState() {
             BUTTON_REPORT_ELEMENT.classList.remove("hidden");
         }
     } else {
-        BUTTON_SAVE_ELEMENT.removeAttribute("disabled");
         BUTTON_EDIT_ELEMENT.setAttribute("disabled", true);
         BUTTON_DELETE_ELEMENT.setAttribute("disabled", true);
         BUTTON_COPY_ELEMENT.setAttribute("disabled", true);
