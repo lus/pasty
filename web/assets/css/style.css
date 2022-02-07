@@ -229,6 +229,7 @@ html.embedded #footer, body.embedded #footer {
   bottom: 30px;
   right: 0;
   padding: 20px;
+  z-index: 1;
 }
 
 .container #notifications div {
