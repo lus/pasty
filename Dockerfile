@@ -18,7 +18,7 @@ RUN go build \
         ./cmd/pasty/main.go
 
 # Run the application in an empty alpine environment
-FROM alpine:latest
+FROM gcr.io/distroless/base:latest
 WORKDIR /root
 COPY --from=build /app/pasty .
 COPY web ./web/
