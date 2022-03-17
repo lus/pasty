@@ -11,13 +11,14 @@ RUN go mod download
 # Build the application
 ARG PASTY_VERSION=unset-debug
 COPY . .
+ENV CGO_ENABLED=0
 RUN go build \
         -o pasty \
         -ldflags "\
             -X github.com/lus/pasty/internal/static.Version=$PASTY_VERSION" \
         ./cmd/pasty/main.go
 
-# Run the application in an empty alpine environment
+# Run the application on distroless
 FROM gcr.io/distroless/base:latest
 WORKDIR /root
 COPY --from=build /app/pasty .
