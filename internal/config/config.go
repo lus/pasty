@@ -84,12 +84,12 @@ func Load() {
 		HastebinSupport:             env.MustBool("HASTEBIN_SUPPORT", false),
 		IDLength:                    env.MustInt("ID_LENGTH", 6),
 		IDCharacters:                env.MustString("ID_CHARACTERS", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
-		ModificationTokens:          env.MustBool("MODIFICATION_TOKENS", env.MustBool("DELETION_TOKENS", true)),               // ---
-		ModificationTokenMaster:     env.MustString("MODIFICATION_TOKEN_MASTER", env.MustString("DELETION_TOKEN_MASTER", "")), // - We don't want to destroy peoples old configuration
-		ModificationTokenLength:     env.MustInt("MODIFICATION_TOKEN_LENGTH", env.MustInt("DELETION_TOKEN_LENGTH", 12)),       // ---
+		ModificationTokens:          env.MustBool("MODIFICATION_TOKENS", true),
+		ModificationTokenMaster:     env.MustString("MODIFICATION_TOKEN_MASTER", ""),
+		ModificationTokenLength:     env.MustInt("MODIFICATION_TOKEN_LENGTH", 12),
 		ModificationTokenCharacters: env.MustString("MODIFICATION_TOKEN_CHARACTERS", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
 		RateLimit:                   env.MustString("RATE_LIMIT", "30-M"),
-		LengthCap:                   env.MustInt("LENGTH_CAP", 50_000),
+		LengthCap:                   env.MustInt("LENGTH_CAP", 50000),
 		AutoDelete: &AutoDeleteConfig{
 			Enabled:      env.MustBool("AUTODELETE", false),
 			Lifetime:     env.MustDuration("AUTODELETE_LIFETIME", 720*time.Hour),
