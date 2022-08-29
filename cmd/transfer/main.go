@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/lus/pasty/internal/config"
-	"github.com/lus/pasty/internal/shared"
 	"github.com/lus/pasty/internal/storage"
 )
 
@@ -20,7 +19,7 @@ func main() {
 	config.Load()
 
 	// Create and initialize the first (from) driver
-	from, err := storage.GetDriver(shared.StorageType(os.Args[1]))
+	from, err := storage.GetDriver(storage.Type(os.Args[1]))
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +29,7 @@ func main() {
 	}
 
 	// Create and initialize the second (to) driver
-	to, err := storage.GetDriver(shared.StorageType(os.Args[2]))
+	to, err := storage.GetDriver(storage.Type(os.Args[2]))
 	if err != nil {
 		panic(err)
 	}

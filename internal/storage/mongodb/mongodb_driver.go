@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/lus/pasty/internal/config"
-	"github.com/lus/pasty/internal/shared"
+	"github.com/lus/pasty/internal/paste"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -65,7 +65,7 @@ func (driver *MongoDBDriver) ListIDs() ([]string, error) {
 	}
 
 	// Decode all paste documents
-	var pasteSlice []shared.Paste
+	var pasteSlice []paste.Paste
 	err = result.All(ctx, &pasteSlice)
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (driver *MongoDBDriver) ListIDs() ([]string, error) {
 }
 
 // Get loads a paste
-func (driver *MongoDBDriver) Get(id string) (*shared.Paste, error) {
+func (driver *MongoDBDriver) Get(id string) (*paste.Paste, error) {
 	// Define the collection to use for this database operation
 	collection := driver.client.Database(driver.database).Collection(driver.collection)
 
@@ -100,7 +100,7 @@ func (driver *MongoDBDriver) Get(id string) (*shared.Paste, error) {
 	}
 
 	// Return the retrieved paste object
-	paste := new(shared.Paste)
+	paste := new(paste.Paste)
 	err = result.Decode(paste)
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func (driver *MongoDBDriver) Get(id string) (*shared.Paste, error) {
 }
 
 // Save saves a paste
-func (driver *MongoDBDriver) Save(paste *shared.Paste) error {
+func (driver *MongoDBDriver) Save(paste *paste.Paste) error {
 	// Define the collection to use for this database operation
 	collection := driver.client.Database(driver.database).Collection(driver.collection)
 

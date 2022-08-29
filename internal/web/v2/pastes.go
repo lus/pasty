@@ -7,8 +7,8 @@ import (
 
 	"github.com/fasthttp/router"
 	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/paste"
 	"github.com/lus/pasty/internal/report"
-	"github.com/lus/pasty/internal/shared"
 	"github.com/lus/pasty/internal/storage"
 	"github.com/lus/pasty/internal/utils"
 	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
@@ -58,7 +58,7 @@ func middlewareInjectPaste(next fasthttp.RequestHandler) fasthttp.RequestHandler
 // middlewareValidateModificationToken extracts and validates a given modification token for an injected paste
 func middlewareValidateModificationToken(next fasthttp.RequestHandler) fasthttp.RequestHandler {
 	return func(ctx *fasthttp.RequestCtx) {
-		paste := ctx.UserValue("_paste").(*shared.Paste)
+		paste := ctx.UserValue("_paste").(*paste.Paste)
 
 		authHeaderSplit := strings.SplitN(string(ctx.Request.Header.Peek("Authorization")), " ", 2)
 		if len(authHeaderSplit) < 2 || authHeaderSplit[0] != "Bearer" {
@@ -85,8 +85,7 @@ func middlewareValidateModificationToken(next fasthttp.RequestHandler) fasthttp.
 
 // endpointGetPaste handles the 'GET /v2/pastes/{id}' endpoint
 func endpointGetPaste(ctx *fasthttp.RequestCtx) {
-	paste := ctx.UserValue("_paste").(*shared.Paste)
-	paste.DeletionToken = ""
+	paste := ctx.UserValue("_paste").(*paste.Paste)
 	paste.ModificationToken = ""
 
 	jsonData, err := json.Marshal(paste)
@@ -135,7 +134,7 @@ func endpointCreatePaste(ctx *fasthttp.RequestCtx) {
 	if payload.Metadata == nil {
 		payload.Metadata = map[string]interface{}{}
 	}
-	paste := &shared.Paste{
+	paste := &paste.Paste{
 		ID:       id,
 		Content:  payload.Content,
 		Created:  time.Now().Unix(),
@@ -203,7 +202,7 @@ func endpointModifyPaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Modify the paste itself
-	paste := ctx.UserValue("_paste").(*shared.Paste)
+	paste := ctx.UserValue("_paste").(*paste.Paste)
 	if payload.Content != nil {
 		paste.Content = *payload.Content
 	}
@@ -227,7 +226,7 @@ func endpointModifyPaste(ctx *fasthttp.RequestCtx) {
 
 // endpointDeletePaste handles the 'DELETE /v2/pastes/{id}' endpoint
 func endpointDeletePaste(ctx *fasthttp.RequestCtx) {
-	paste := ctx.UserValue("_paste").(*shared.Paste)
+	paste := ctx.UserValue("_paste").(*paste.Paste)
 	if err := storage.Current.Delete(paste.ID); err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 		ctx.SetBodyString(err.Error())
@@ -254,7 +253,7 @@ func endpointReportPaste(ctx *fasthttp.RequestCtx) {
 	}
 
 	request := &report.ReportRequest{
-		Paste:  ctx.UserValue("_paste").(*shared.Paste).ID,
+		Paste:  ctx.UserValue("_paste").(*paste.Paste).ID,
 		Reason: payload.Reason,
 	}
 	response, err := report.SendReport(request)

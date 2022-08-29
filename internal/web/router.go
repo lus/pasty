@@ -9,8 +9,7 @@ import (
 	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/static"
 	"github.com/lus/pasty/internal/storage"
-	v1 "github.com/lus/pasty/internal/web/controllers/v1"
-	v2 "github.com/lus/pasty/internal/web/controllers/v2"
+	v2 "github.com/lus/pasty/internal/web/v2"
 	"github.com/ulule/limiter/v3"
 	limitFasthttp "github.com/ulule/limiter/v3/drivers/middleware/fasthttp"
 	"github.com/ulule/limiter/v3/drivers/store/memory"
@@ -57,18 +56,6 @@ func Serve() error {
 	// Route the API endpoints
 	apiRoute := router.Group("/api")
 	{
-		v1Route := apiRoute.Group("/v1")
-		{
-			v1Route.GET("/info", func(ctx *fasthttp.RequestCtx) {
-				jsonData, _ := json.Marshal(map[string]interface{}{
-					"version":        static.Version,
-					"deletionTokens": config.Current.ModificationTokens,
-				})
-				ctx.SetBody(jsonData)
-			})
-			v1.InitializePastesController(v1Route.Group("/pastes"), rateLimiterMiddleware)
-		}
-
 		v2Route := apiRoute.Group("/v2")
 		{
 			pasteLifetime := int64(-1)
@@ -90,7 +77,7 @@ func Serve() error {
 
 	// Route the hastebin documents route if hastebin support is enabled
 	if config.Current.HastebinSupport {
-		router.POST("/documents", rateLimiterMiddleware.Handle(v1.HastebinSupportHandler))
+		// TODO: Reimplement hastebin support
 	}
 
 	// Serve the web resources

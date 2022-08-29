@@ -12,7 +12,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/johejo/golang-migrate-extra/source/iofs"
 	"github.com/lus/pasty/internal/config"
-	"github.com/lus/pasty/internal/shared"
+	"github.com/lus/pasty/internal/paste"
 )
 
 //go:embed migrations/*.sql
@@ -76,12 +76,12 @@ func (driver *PostgresDriver) ListIDs() ([]string, error) {
 }
 
 // Get loads a paste
-func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
+func (driver *PostgresDriver) Get(id string) (*paste.Paste, error) {
 	query := "SELECT * FROM pastes WHERE id = $1"
 
 	row := driver.pool.QueryRow(context.Background(), query, id)
 
-	paste := new(shared.Paste)
+	paste := new(paste.Paste)
 	if err := row.Scan(&paste.ID, &paste.Content, &paste.ModificationToken, &paste.Created, &paste.Metadata); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
@@ -92,7 +92,7 @@ func (driver *PostgresDriver) Get(id string) (*shared.Paste, error) {
 }
 
 // Save saves a paste
-func (driver *PostgresDriver) Save(paste *shared.Paste) error {
+func (driver *PostgresDriver) Save(paste *paste.Paste) error {
 	query := `
 		INSERT INTO pastes (id, content, "modificationToken", created, metadata)
 		VALUES ($1, $2, $3, $4, $5)

@@ -5,13 +5,12 @@ import (
 	"time"
 
 	"github.com/lus/pasty/internal/env"
-	"github.com/lus/pasty/internal/shared"
 )
 
 // Config represents the general application configuration structure
 type Config struct {
 	WebAddress                  string
-	StorageType                 shared.StorageType
+	StorageType                 string
 	HastebinSupport             bool
 	IDLength                    int
 	IDCharacters                string
@@ -80,7 +79,7 @@ func Load() {
 
 	Current = &Config{
 		WebAddress:                  env.MustString("WEB_ADDRESS", ":8080"),
-		StorageType:                 shared.StorageType(strings.ToLower(env.MustString("STORAGE_TYPE", "file"))),
+		StorageType:                 strings.ToLower(env.MustString("STORAGE_TYPE", "file")),
 		HastebinSupport:             env.MustBool("HASTEBIN_SUPPORT", false),
 		IDLength:                    env.MustInt("ID_LENGTH", 6),
 		IDCharacters:                env.MustString("ID_CHARACTERS", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),

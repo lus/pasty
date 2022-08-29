@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/lus/pasty/internal/config"
-	"github.com/lus/pasty/internal/shared"
+	"github.com/lus/pasty/internal/paste"
 )
 
 // FileDriver represents the file storage driver
@@ -35,7 +35,7 @@ func (driver *FileDriver) ListIDs() ([]string, error) {
 	var ids []string
 
 	// Fill the IDs slice
-	err := filepath.Walk(driver.filePath, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(driver.filePath, func(_ string, info os.FileInfo, err error) error {
 		// Check if a walking error occurred
 		if err != nil {
 			return err
@@ -65,7 +65,7 @@ func (driver *FileDriver) ListIDs() ([]string, error) {
 }
 
 // Get loads a paste
-func (driver *FileDriver) Get(id string) (*shared.Paste, error) {
+func (driver *FileDriver) Get(id string) (*paste.Paste, error) {
 	// Read the file
 	id = base64.StdEncoding.EncodeToString([]byte(id))
 	data, err := ioutil.ReadFile(filepath.Join(driver.filePath, id+".json"))
@@ -77,7 +77,7 @@ func (driver *FileDriver) Get(id string) (*shared.Paste, error) {
 	}
 
 	// Unmarshal the file into a paste
-	paste := new(shared.Paste)
+	paste := new(paste.Paste)
 	err = json.Unmarshal(data, &paste)
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (driver *FileDriver) Get(id string) (*shared.Paste, error) {
 }
 
 // Save saves a paste
-func (driver *FileDriver) Save(paste *shared.Paste) error {
+func (driver *FileDriver) Save(paste *paste.Paste) error {
 	// Marshal the paste
 	jsonBytes, err := json.Marshal(paste)
 	if err != nil {

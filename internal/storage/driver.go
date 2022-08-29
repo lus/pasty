@@ -2,9 +2,10 @@ package storage
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/lus/pasty/internal/config"
-	"github.com/lus/pasty/internal/shared"
+	"github.com/lus/pasty/internal/paste"
 	"github.com/lus/pasty/internal/storage/file"
 	"github.com/lus/pasty/internal/storage/mongodb"
 	"github.com/lus/pasty/internal/storage/postgres"
@@ -19,8 +20,8 @@ type Driver interface {
 	Initialize() error
 	Terminate() error
 	ListIDs() ([]string, error)
-	Get(id string) (*shared.Paste, error)
-	Save(paste *shared.Paste) error
+	Get(id string) (*paste.Paste, error)
+	Save(paste *paste.Paste) error
 	Delete(id string) error
 	Cleanup() (int, error)
 }
@@ -43,15 +44,15 @@ func Load() error {
 }
 
 // GetDriver returns the driver with the given type if it exists
-func GetDriver(storageType shared.StorageType) (Driver, error) {
-	switch storageType {
-	case shared.StorageTypeFile:
+func GetDriver(storageType string) (Driver, error) {
+	switch strings.TrimSpace(strings.ToLower(storageType)) {
+	case "file":
 		return new(file.FileDriver), nil
-	case shared.StorageTypePostgres:
+	case "postgres":
 		return new(postgres.PostgresDriver), nil
-	case shared.StorageTypeMongoDB:
+	case "mongodb":
 		return new(mongodb.MongoDBDriver), nil
-	case shared.StorageTypeS3:
+	case "s3":
 		return new(s3.S3Driver), nil
 	default:
 		return nil, fmt.Errorf("invalid storage type '%s'", storageType)

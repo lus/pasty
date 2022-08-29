@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/lus/pasty/internal/config"
-	"github.com/lus/pasty/internal/shared"
+	"github.com/lus/pasty/internal/paste"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
@@ -59,7 +59,7 @@ func (driver *S3Driver) ListIDs() ([]string, error) {
 }
 
 // Get loads a paste
-func (driver *S3Driver) Get(id string) (*shared.Paste, error) {
+func (driver *S3Driver) Get(id string) (*paste.Paste, error) {
 	// Read the object
 	object, err := driver.client.GetObject(context.Background(), driver.bucket, id+".json", minio.GetObjectOptions{})
 	if err != nil {
@@ -74,7 +74,7 @@ func (driver *S3Driver) Get(id string) (*shared.Paste, error) {
 	}
 
 	// Unmarshal the object into a paste
-	paste := new(shared.Paste)
+	paste := new(paste.Paste)
 	err = json.Unmarshal(data, &paste)
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (driver *S3Driver) Get(id string) (*shared.Paste, error) {
 }
 
 // Save saves a paste
-func (driver *S3Driver) Save(paste *shared.Paste) error {
+func (driver *S3Driver) Save(paste *paste.Paste) error {
 	// Marshal the paste
 	jsonBytes, err := json.Marshal(paste)
 	if err != nil {
