@@ -14,7 +14,7 @@ COPY . .
 RUN go build \
         -o pasty \
         -ldflags "\
-            -X github.com/lus/pasty/internal/static.Version=$PASTY_VERSION" \
+            -X github.com/c2bot/pastys/internal/static.Version=$PASTY_VERSION" \
         ./cmd/pasty/main.go
 
 # Run the application in an empty alpine environment
