@@ -1,4 +1,4 @@
-module github.com/lus/pasty
+module github.com/c2bot/pastys
 
 go 1.16
 
