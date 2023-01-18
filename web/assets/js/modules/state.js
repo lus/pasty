@@ -215,7 +215,7 @@ function toggleEditMode() {
 function setupKeybinds() {
     window.addEventListener("keydown", (event) => {
         // All keybinds in the default button set include the CTRL key
-        if ((EDIT_MODE && !event.ctrlKey && event.code !== "Escape") || (!EDIT_MODE && !event.ctrlKey)) {
+        if ((EDIT_MODE && !event.ctrlKey && !event.metaKey && event.code !== "Escape") || (!EDIT_MODE && !event.ctrlKey && !event.metaKey)) {
             return;
         }
 
