@@ -1,23 +1,29 @@
 module github.com/lus/pasty
 
-go 1.16
+go 1.20
 
 require (
-	github.com/alexedwards/argon2id v0.0.0-20200802152012-2464efd3196b
-	github.com/fasthttp/router v1.2.4
-	github.com/go-stack/stack v1.8.1 // indirect
-	github.com/golang-migrate/migrate/v4 v4.14.2-0.20201125065321-a53e6fc42574
-	github.com/golang/snappy v0.0.4 // indirect
-	github.com/jackc/pgx/v4 v4.11.0
-	github.com/johejo/golang-migrate-extra v0.0.0-20210217013041-51a992e50d16
-	github.com/joho/godotenv v1.3.0
-	github.com/klauspost/compress v1.15.1 // indirect
-	github.com/minio/minio-go/v7 v7.0.5
-	github.com/ulule/limiter/v3 v3.5.0
-	github.com/valyala/fasthttp v1.16.0
-	github.com/xdg-go/scram v1.1.1 // indirect
-	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	go.mongodb.org/mongo-driver v1.8.4
-	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+	github.com/alexedwards/argon2id v0.0.0-20230305115115-4b3c3280a736
+	github.com/go-chi/chi/v5 v5.0.8
+	github.com/golang-migrate/migrate/v4 v4.16.1
+	github.com/jackc/pgx/v5 v5.3.1
+	github.com/joho/godotenv v1.5.1
+	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/rs/zerolog v1.29.1
+)
+
+require (
+	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/puddle/v2 v2.2.0 // indirect
+	github.com/lib/pq v1.10.9 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
+	go.uber.org/atomic v1.11.0 // indirect
+	golang.org/x/crypto v0.9.0 // indirect
+	golang.org/x/sync v0.2.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
 )

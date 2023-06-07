@@ -1,22 +1,6 @@
 # pasty
-Pasty is a fast and lightweight code pasting server
 
-## !!! Important deprecation notices !!!
-
-> This version of pasty uses a new field name for the so far called `deletionToken`: `modificationToken`.
-> Instances using **PostgreSQL** are **not affected** as a corresponding SQL migration will run before the first startup.
-> If you however use **another storage driver** you may have to **update the entries** by hand or using a simple query, depending on your driver as I don't plan to ship migrations for every single storage driver.
-> It may be important to know that the **data migrator has been upgraded** too. This may serve as a **convenient workaround** (export data (field will be renamed) and import data with changed field names again).
->
-> The old `deletionToken` field will be processed corresponding to these changes but I strongly recommend updating old pastes if possible.
-
-> Additionally, I changed the three `DELETION_TOKEN*`environment variables to their corresponding `MODIFICATION_TOKEN*` ones:
-> - `DELETION_TOKENS` -> `MODIFICATION_TOKENS`
-> - `DELETION_TOKEN_MASTER` -> `MODIFICATION_TOKEN_MASTER`
-> - `DELETION_TOKEN_LENGTH` -> `MODIFICATION_TOKEN_LENGTH`
->
-> Again, **the old ones will still work** because I do not want to jumble your configurations. However, **please consider updating** them to stay future-proof ^^.
-
+pasty is a fast and lightweight code pasting server.
 
 ## Support
 

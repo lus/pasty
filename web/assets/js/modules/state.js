@@ -64,20 +64,20 @@ export async function initialize() {
     }
 
     if (location.pathname !== "/") {
-        // Extract the paste data (ID and language)
+        // Extract the pastes data (ID and language)
         const split = location.pathname.replace("/", "").split(".");
         const pasteID = split[0];
         const language = split[1];
 
-        // Try to retrieve the paste data from the API
+        // Try to retrieve the pastes data from the API
         const response = await API.getPaste(pasteID);
         if (!response.ok) {
-            Notifications.error("Could not load paste: <b>" + await response.text() + "</b>");
+            Notifications.error("Could not load pastes: <b>" + await response.text() + "</b>");
             setTimeout(() => location.replace(location.protocol + "//" + location.host), 3000);
             return;
         }
 
-        // Set the persistent paste data
+        // Set the persistent pastes data
         PASTE_ID = pasteID;
         LANGUAGE = language;
 
@@ -95,7 +95,7 @@ export async function initialize() {
                  ENCRYPTION_IV = json.metadata.pf_encryption.iv;
             } catch (error) {
                 console.log(error);
-                Notifications.error("Could not decrypt paste; make sure the decryption key is correct.");
+                Notifications.error("Could not decrypt pastes; make sure the decryption key is correct.");
                 setTimeout(() => location.replace(location.protocol + "//" + location.host), 3000);
                 return;
             }
@@ -104,7 +104,7 @@ export async function initialize() {
         // Fill the code block with the just received data
         updateCode();
     } else {
-        // Give the user the opportunity to paste his code
+        // Give the user the opportunity to pastes his code
         INPUT_ELEMENT.classList.remove("hidden");
         INPUT_ELEMENT.focus();
         LIFETIME_CONTAINER_ELEMENT.classList.remove("hidden");
@@ -138,7 +138,7 @@ async function loadAPIInformation() {
     // Display the API version
     document.getElementById("version").innerText = API_INFORMATION.version;
 
-    // Display the paste lifetime
+    // Display the pastes lifetime
     document.getElementById("lifetime").innerText = Duration.format(API_INFORMATION.pasteLifetime);
 }
 
@@ -289,7 +289,7 @@ function setupButtonFunctionality() {
                 return;
             }
 
-            // Encrypt the paste if needed
+            // Encrypt the pastes if needed
             let value = INPUT_ELEMENT.value;
             let metadata;
             let key;
@@ -305,20 +305,20 @@ function setupButtonFunctionality() {
                 key = encrypted.key;
             }
 
-            // Try to create the paste
+            // Try to create the pastes
             const response = await API.createPaste(value, metadata);
             if (!response.ok) {
-                Notifications.error("Error while creating paste: <b>" + await response.text() + "</b>");
+                Notifications.error("Error while creating pastes: <b>" + await response.text() + "</b>");
                 return;
             }
             const data = await response.json();
 
             // Display the modification token if provided
             if (data.modificationToken) {
-                prompt("The modification token for your paste is:", data.modificationToken);
+                prompt("The modification token for your pastes is:", data.modificationToken);
             }
 
-            // Redirect the user to his newly created paste
+            // Redirect the user to his newly created pastes
             location.replace(location.protocol + "//" + location.host + "/" + data.id + (key ? "#" + key : ""));
         });
     });
@@ -333,10 +333,10 @@ function setupButtonFunctionality() {
                 return;
             }
 
-            // Try to delete the paste
+            // Try to delete the pastes
             const response = await API.deletePaste(PASTE_ID, modificationToken);
             if (!response.ok) {
-                Notifications.error("Error while deleting paste: <b>" + await response.text() + "</b>");
+                Notifications.error("Error while deleting pastes: <b>" + await response.text() + "</b>");
                 return;
             }
 
@@ -369,17 +369,17 @@ function setupButtonFunctionality() {
             return;
         }
 
-        // Re-encrypt the paste data if needed
+        // Re-encrypt the pastes data if needed
         let value = INPUT_ELEMENT.value;
         if (ENCRYPTION_KEY && ENCRYPTION_IV) {
             const encrypted = await Encryption.encrypt(await Encryption.encryptionDataFromHex(ENCRYPTION_KEY, ENCRYPTION_IV), value);
             value = encrypted.result;
         }
 
-        // Try to edit the paste
+        // Try to edit the pastes
         const response = await API.editPaste(PASTE_ID, modificationToken, value);
         if (!response.ok) {
-            Notifications.error("Error while editing paste: <b>" + await response.text() + "</b>");
+            Notifications.error("Error while editing pastes: <b>" + await response.text() + "</b>");
             return;
         }
 
@@ -387,13 +387,13 @@ function setupButtonFunctionality() {
         CODE = INPUT_ELEMENT.value;
         updateCode();
         toggleEditMode();
-        Notifications.success("Successfully edited paste.");
+        Notifications.success("Successfully edited pastes.");
     });
 
     BUTTON_TOGGLE_ENCRYPTION_ELEMENT.addEventListener("click", () => {
         const active = BUTTON_TOGGLE_ENCRYPTION_ELEMENT.classList.toggle("active");
         localStorage.setItem("encryption", active);
-        Notifications.success((active ? "Enabled" : "Disabled") + " automatic paste encryption.");
+        Notifications.success((active ? "Enabled" : "Disabled") + " automatic pastes encryption.");
     });
 
     BUTTON_REPORT_ELEMENT.addEventListener("click", async () => {
@@ -403,17 +403,17 @@ function setupButtonFunctionality() {
             return;
         }
 
-        // Try to report the paste
+        // Try to report the pastes
         const response = await API.reportPaste(PASTE_ID, reason);
         if (!response.ok) {
-            Notifications.error("Error while reporting paste: <b>" + await response.text() + "</b>");
+            Notifications.error("Error while reporting pastes: <b>" + await response.text() + "</b>");
             return;
         }
 
         // Show the response message
         const data = await response.json();
         if (!data.success) {
-            Notifications.error("Error while reporting paste: <b>" + data.message + "</b>");
+            Notifications.error("Error while reporting pastes: <b>" + data.message + "</b>");
             return;
         }
         Notifications.success(data.message);
