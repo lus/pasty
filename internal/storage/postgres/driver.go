@@ -8,7 +8,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/pastes"
 	"github.com/lus/pasty/internal/storage"
 	"github.com/rs/zerolog/log"
@@ -18,14 +17,21 @@ import (
 var migrations embed.FS
 
 type Driver struct {
+	dsn      string
 	connPool *pgxpool.Pool
 	pastes   *pasteRepository
 }
 
 var _ storage.Driver = (*Driver)(nil)
 
-func (driver *Driver) Initialize(ctx context.Context, cfg *config.Config) error {
-	pool, err := pgxpool.New(ctx, cfg.Postgres.DSN)
+func New(dsn string) *Driver {
+	return &Driver{
+		dsn: dsn,
+	}
+}
+
+func (driver *Driver) Initialize(ctx context.Context) error {
+	pool, err := pgxpool.New(ctx, driver.dsn)
 	if err != nil {
 		return err
 	}
@@ -36,7 +42,7 @@ func (driver *Driver) Initialize(ctx context.Context, cfg *config.Config) error 
 		pool.Close()
 		return err
 	}
-	migrator, err := migrate.NewWithSourceInstance("iofs", source, cfg.Postgres.DSN)
+	migrator, err := migrate.NewWithSourceInstance("iofs", source, driver.dsn)
 	if err != nil {
 		pool.Close()
 		return err

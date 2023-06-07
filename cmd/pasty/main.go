@@ -45,7 +45,7 @@ func main() {
 	var driver storage.Driver
 	switch strings.TrimSpace(strings.ToLower(cfg.StorageDriver)) {
 	case "postgres":
-		driver = new(postgres.Driver)
+		driver = postgres.New(cfg.Postgres.DSN)
 		break
 	default:
 		log.Fatal().Str("driver_name", cfg.StorageDriver).Msg("An invalid storage driver name was given.")
@@ -54,7 +54,7 @@ func main() {
 
 	// Initialize the configured storage driver
 	log.Info().Str("driver_name", cfg.StorageDriver).Msg("Initializing the storage driver...")
-	if err := driver.Initialize(context.Background(), cfg); err != nil {
+	if err := driver.Initialize(context.Background()); err != nil {
 		log.Fatal().Err(err).Str("driver_name", cfg.StorageDriver).Msg("The storage driver could not be initialized.")
 		return
 	}

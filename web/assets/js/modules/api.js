@@ -1,4 +1,4 @@
-const API_BASE_URL = location.protocol + "//" + location.host + "/api/v2";
+const API_BASE_URL = location.protocol + "//" + location.host + "/web/v2";
 
 export async function getAPIInformation() {
     return fetch(API_BASE_URL + "/info");
