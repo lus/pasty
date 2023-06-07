@@ -18,14 +18,15 @@ import (
 //go:embed migrations/*.sql
 var migrations embed.FS
 
-// PostgresDriver represents the Postgres storage driver
-type PostgresDriver struct {
-	pool *pgxpool.Pool
+// Driver represents the Postgres storage driver
+type Driver struct {
+	pool               *pgxpool.Pool
+	autoDeleteLifetime time.Duration
 }
 
 // Initialize initializes the Postgres storage driver
-func (driver *PostgresDriver) Initialize() error {
-	pool, err := pgxpool.Connect(context.Background(), config.Current.Postgres.DSN)
+func (driver *Driver) Initialize(ctx context.Context, cfg *config.Config) error {
+	pool, err := pgxpool.Connect(ctx, cfg.Postgres.DSN)
 	if err != nil {
 		return err
 	}
@@ -35,7 +36,7 @@ func (driver *PostgresDriver) Initialize() error {
 		return err
 	}
 
-	migrator, err := migrate.NewWithSourceInstance("iofs", source, config.Current.Postgres.DSN)
+	migrator, err := migrate.NewWithSourceInstance("iofs", source, cfg.Postgres.DSN)
 	if err != nil {
 		return err
 	}
@@ -45,17 +46,18 @@ func (driver *PostgresDriver) Initialize() error {
 	}
 
 	driver.pool = pool
+	driver.autoDeleteLifetime = cfg.AutoDelete.Lifetime
 	return nil
 }
 
-// Terminate terminates the Postgres storage driver
-func (driver *PostgresDriver) Terminate() error {
+// Close terminates the Postgres storage driver
+func (driver *Driver) Close() error {
 	driver.pool.Close()
 	return nil
 }
 
 // ListIDs returns a list of all existing paste IDs
-func (driver *PostgresDriver) ListIDs() ([]string, error) {
+func (driver *Driver) ListIDs() ([]string, error) {
 	query := "SELECT id FROM pastes"
 
 	rows, err := driver.pool.Query(context.Background(), query)
@@ -76,7 +78,7 @@ func (driver *PostgresDriver) ListIDs() ([]string, error) {
 }
 
 // Get loads a paste
-func (driver *PostgresDriver) Get(id string) (*paste.Paste, error) {
+func (driver *Driver) Get(id string) (*paste.Paste, error) {
 	query := "SELECT * FROM pastes WHERE id = $1"
 
 	row := driver.pool.QueryRow(context.Background(), query, id)
@@ -92,7 +94,7 @@ func (driver *PostgresDriver) Get(id string) (*paste.Paste, error) {
 }
 
 // Save saves a paste
-func (driver *PostgresDriver) Save(paste *paste.Paste) error {
+func (driver *Driver) Save(paste *paste.Paste) error {
 	query := `
 		INSERT INTO pastes (id, content, "modificationToken", created, metadata)
 		VALUES ($1, $2, $3, $4, $5)
@@ -108,7 +110,7 @@ func (driver *PostgresDriver) Save(paste *paste.Paste) error {
 }
 
 // Delete deletes a paste
-func (driver *PostgresDriver) Delete(id string) error {
+func (driver *Driver) Delete(id string) error {
 	query := "DELETE FROM pastes WHERE id = $1"
 
 	_, err := driver.pool.Exec(context.Background(), query, id)
@@ -116,10 +118,10 @@ func (driver *PostgresDriver) Delete(id string) error {
 }
 
 // Cleanup cleans up the expired pastes
-func (driver *PostgresDriver) Cleanup() (int, error) {
+func (driver *Driver) Cleanup() (int, error) {
 	query := "DELETE FROM pastes WHERE created < $1"
 
-	tag, err := driver.pool.Exec(context.Background(), query, time.Now().Add(-config.Current.AutoDelete.Lifetime).Unix())
+	tag, err := driver.pool.Exec(context.Background(), query, time.Now().Add(-driver.autoDeleteLifetime).Unix())
 	if err != nil {
 		return 0, err
 	}

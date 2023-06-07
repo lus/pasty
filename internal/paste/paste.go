@@ -23,7 +23,7 @@ func (paste *Paste) HashModificationToken() error {
 	return nil
 }
 
-// CheckModificationToken checks whether or not the given modification token is correct
+// CheckModificationToken checks whether the given modification token is correct
 func (paste *Paste) CheckModificationToken(modificationToken string) bool {
 	match, err := argon2id.ComparePasswordAndHash(modificationToken, paste.ModificationToken)
 	return err == nil && match
