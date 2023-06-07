@@ -5,10 +5,12 @@ import (
 	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/meta"
 	"github.com/lus/pasty/internal/storage"
+	"github.com/lus/pasty/internal/storage/postgres"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"os"
 	"os/signal"
+	"strings"
 )
 
 func main() {
@@ -39,12 +41,18 @@ func main() {
 		zerolog.SetGlobalLevel(level)
 	}
 
-	// Initialize the configured storage driver
-	driver, ok := storage.ResolveDriver(cfg.StorageDriver)
-	if !ok {
+	// Determine the correct storage driver to use
+	var driver storage.Driver
+	switch strings.TrimSpace(strings.ToLower(cfg.StorageDriver)) {
+	case "postgres":
+		driver = new(postgres.Driver)
+		break
+	default:
 		log.Fatal().Str("driver_name", cfg.StorageDriver).Msg("An invalid storage driver name was given.")
 		return
 	}
+
+	// Initialize the configured storage driver
 	log.Info().Str("driver_name", cfg.StorageDriver).Msg("Initializing the storage driver...")
 	if err := driver.Initialize(context.Background(), cfg); err != nil {
 		log.Fatal().Err(err).Str("driver_name", cfg.StorageDriver).Msg("The storage driver could not be initialized.")

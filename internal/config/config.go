@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// Config represents the general application configuration
 type Config struct {
 	LogLevel                    string            `default:"info" split_words:"true"`
 	WebAddress                  string            `default:":8080" split_words:"true"`
@@ -25,26 +24,22 @@ type Config struct {
 	Postgres                    *PostgresConfig
 }
 
-// AutoDeleteConfig represents the configuration specific for the AutoDelete behaviour
 type AutoDeleteConfig struct {
 	Enabled      bool          `default:"false"`
 	Lifetime     time.Duration `default:"720h"`
 	TaskInterval time.Duration `default:"5m" split_words:"true"`
 }
 
-// ReportConfig represents the configuration specific for the report system
 type ReportConfig struct {
 	Enabled      bool   `default:"false" split_words:"true"`
 	WebhookURL   string `split_words:"true"`
 	WebhookToken string `split_words:"true"`
 }
 
-// PostgresConfig represents the configuration specific for the Postgres storage driver
 type PostgresConfig struct {
 	DSN string `default:"postgres://pasty:pasty@localhost/pasty"`
 }
 
-// Load loads the current config from environment variables and an optional .env file
 func Load() (*Config, error) {
 	_ = godotenv.Overload()
 	cfg := new(Config)
