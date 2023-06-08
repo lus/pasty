@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/go-chi/chi/v5"
+	"github.com/lus/pasty/internal/pastes"
 	"github.com/lus/pasty/internal/storage"
 	"net/http"
 )
@@ -39,8 +40,18 @@ type Server struct {
 func (server *Server) Start() error {
 	router := chi.NewRouter()
 
-	// Serve the web frontend
+	// Register the web frontend handler
 	router.Get("/*", frontendHandler(router.NotFoundHandler()))
+
+	// Register the raw paste handler
+	router.With(server.v2MiddlewareInjectPaste).Get("/{paste_id}/raw", func(writer http.ResponseWriter, request *http.Request) {
+		paste, ok := request.Context().Value("paste").(*pastes.Paste)
+		if !ok {
+			writeString(writer, http.StatusInternalServerError, "missing paste object")
+			return
+		}
+		_, _ = writer.Write([]byte(paste.Content))
+	})
 
 	// Register the paste API endpoints
 	router.Get("/api/*", router.NotFoundHandler())
