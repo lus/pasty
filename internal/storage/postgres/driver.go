@@ -54,7 +54,6 @@ func (driver *Driver) Initialize(ctx context.Context) error {
 		pool.Close()
 		return err
 	}
-	log.Info().Msg("Successfully performed PostgreSQL database migrations.")
 
 	driver.connPool = pool
 	driver.pastes = &pasteRepository{

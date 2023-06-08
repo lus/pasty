@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/jetbrains+all,go
 # Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains+all,go
 
@@ -114,6 +113,4 @@ modules.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,go
 
-web/*.gz
-data/
 .env

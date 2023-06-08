@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"github.com/go-chi/chi/v5"
 	"github.com/lus/pasty/internal/pastes"
 	"github.com/lus/pasty/internal/storage"
@@ -35,6 +36,8 @@ type Server struct {
 
 	// The administration tokens.
 	AdminTokens []string
+
+	httpServer *http.Server
 }
 
 func (server *Server) Start() error {
@@ -60,5 +63,18 @@ func (server *Server) Start() error {
 	router.With(server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Patch("/api/v2/pastes/{paste_id}", server.v2EndpointModifyPaste)
 	router.Delete("/api/v2/pastes/{paste_id}", server.v2EndpointDeletePaste)
 
-	return http.ListenAndServe(server.Address, router)
+	// Start the HTTP server
+	server.httpServer = &http.Server{
+		Addr:    server.Address,
+		Handler: router,
+	}
+	return server.httpServer.ListenAndServe()
+}
+
+func (server *Server) Shutdown(ctx context.Context) error {
+	if err := server.httpServer.Shutdown(ctx); err != nil {
+		return err
+	}
+	server.httpServer = nil
+	return nil
 }

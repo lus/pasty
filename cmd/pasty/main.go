@@ -2,12 +2,15 @@ package main
 
 import (
 	"context"
+	"errors"
 	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/meta"
 	"github.com/lus/pasty/internal/storage"
 	"github.com/lus/pasty/internal/storage/postgres"
+	"github.com/lus/pasty/internal/web"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"net/http"
 	"os"
 	"os/signal"
 	"strings"
@@ -62,6 +65,32 @@ func main() {
 		log.Info().Msg("Shutting down the storage driver...")
 		if err := driver.Close(); err != nil {
 			log.Err(err).Str("driver_name", cfg.StorageDriver).Msg("Could not shut down the storage driver.")
+		}
+	}()
+
+	// Start the web server
+	log.Info().Str("address", cfg.WebAddress).Msg("Starting the web server...")
+	webServer := &web.Server{
+		Address:                   cfg.WebAddress,
+		Storage:                   driver,
+		HastebinSupport:           cfg.HastebinSupport,
+		PasteIDLength:             cfg.IDLength,
+		PasteIDCharset:            cfg.IDCharacters,
+		PasteLengthCap:            cfg.LengthCap,
+		ModificationTokensEnabled: cfg.ModificationTokens,
+		ModificationTokenLength:   cfg.ModificationTokenLength,
+		ModificationTokenCharset:  cfg.ModificationTokenCharacters,
+		AdminTokens:               []string{cfg.ModificationTokenMaster},
+	}
+	go func() {
+		if err := webServer.Start(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatal().Err(err).Msg("Could not start the web server.")
+		}
+	}()
+	defer func() {
+		log.Info().Msg("Shutting down the web server...")
+		if err := webServer.Shutdown(context.Background()); err != nil {
+			log.Err(err).Msg("Could not shut down the web server.")
 		}
 	}()
 
