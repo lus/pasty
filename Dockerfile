@@ -22,6 +22,6 @@ RUN go build \
 FROM gcr.io/distroless/base:latest
 WORKDIR /root
 COPY --from=build /app/pasty .
-COPY web ./web/
+COPY internal/web/web ./web/
 EXPOSE 8080
 CMD ["./pasty"]

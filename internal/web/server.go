@@ -39,7 +39,11 @@ type Server struct {
 func (server *Server) Start() error {
 	router := chi.NewRouter()
 
+	// Serve the web frontend
+	router.Get("/*", frontendHandler(router.NotFoundHandler()))
+
 	// Register the paste API endpoints
+	router.Get("/api/*", router.NotFoundHandler())
 	router.With(server.v2MiddlewareInjectPaste).Get("/api/v2/pastes/{paste_id}", server.v2EndpointGetPaste)
 	router.Post("/api/v2/pastes", server.v2EndpointCreatePaste)
 	router.With(server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Patch("/api/v2/pastes/{paste_id}", server.v2EndpointModifyPaste)
