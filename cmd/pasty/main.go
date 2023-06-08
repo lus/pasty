@@ -70,6 +70,10 @@ func main() {
 
 	// Start the web server
 	log.Info().Str("address", cfg.WebAddress).Msg("Starting the web server...")
+	var adminTokens []string
+	if cfg.ModificationTokenMaster != "" {
+		adminTokens = []string{cfg.ModificationTokenMaster}
+	}
 	webServer := &web.Server{
 		Address:                   cfg.WebAddress,
 		Storage:                   driver,
@@ -80,7 +84,7 @@ func main() {
 		ModificationTokensEnabled: cfg.ModificationTokens,
 		ModificationTokenLength:   cfg.ModificationTokenLength,
 		ModificationTokenCharset:  cfg.ModificationTokenCharacters,
-		AdminTokens:               []string{cfg.ModificationTokenMaster},
+		AdminTokens:               adminTokens,
 	}
 	go func() {
 		if err := webServer.Start(); err != nil && !errors.Is(err, http.ErrServerClosed) {

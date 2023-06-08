@@ -3,6 +3,7 @@ package web
 import (
 	"context"
 	"github.com/go-chi/chi/v5"
+	"github.com/lus/pasty/internal/meta"
 	"github.com/lus/pasty/internal/pastes"
 	"github.com/lus/pasty/internal/storage"
 	"net/http"
@@ -61,7 +62,15 @@ func (server *Server) Start() error {
 	router.With(server.v2MiddlewareInjectPaste).Get("/api/v2/pastes/{paste_id}", server.v2EndpointGetPaste)
 	router.Post("/api/v2/pastes", server.v2EndpointCreatePaste)
 	router.With(server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Patch("/api/v2/pastes/{paste_id}", server.v2EndpointModifyPaste)
-	router.Delete("/api/v2/pastes/{paste_id}", server.v2EndpointDeletePaste)
+	router.With(server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Delete("/api/v2/pastes/{paste_id}", server.v2EndpointDeletePaste)
+	router.Get("/api/v2/info", func(writer http.ResponseWriter, request *http.Request) {
+		writeJSONOrErr(writer, http.StatusOK, map[string]any{
+			"version":            meta.Version,
+			"modificationTokens": server.ModificationTokensEnabled,
+			"reports":            false, // TODO: Return report state
+			"pasteLifetime":      -1,    // TODO: Return paste lifetime
+		})
+	})
 
 	// Start the HTTP server
 	server.httpServer = &http.Server{

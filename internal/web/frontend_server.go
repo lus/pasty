@@ -59,7 +59,7 @@ func frontendHandler(notFoundHandler http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		writer.Header().Set("Content-Type", mime.TypeByExtension(fileInfo.Name()))
+		writer.Header().Set("Content-Type", mime.TypeByExtension(filepath.Ext(fileInfo.Name())))
 		writer.Header().Set("Content-Length", strconv.Itoa(len(content)))
 		_, _ = writer.Write(content)
 	}

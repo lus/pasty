@@ -6,6 +6,7 @@ const devEnvironmentName = "dev"
 
 var (
 	Environment = devEnvironmentName
+	Version     = "dev"
 )
 
 func IsProdEnvironment() bool {
