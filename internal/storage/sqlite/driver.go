@@ -1,70 +1,83 @@
-package postgres
+package sqlite
 
 import (
 	"context"
+	"database/sql"
 	"embed"
 	"errors"
 	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	"github.com/golang-migrate/migrate/v4/database/sqlite"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/lus/pasty/internal/pastes"
 	"github.com/lus/pasty/internal/storage"
 	"github.com/rs/zerolog/log"
+	_ "modernc.org/sqlite"
 )
 
 //go:embed migrations/*.sql
 var migrations embed.FS
 
 type Driver struct {
-	dsn      string
-	connPool *pgxpool.Pool
+	filePath string
+	connPool *sql.DB
 	pastes   *pasteRepository
 }
 
 var _ storage.Driver = (*Driver)(nil)
 
-func New(dsn string) *Driver {
+func New(filePath string) *Driver {
 	return &Driver{
-		dsn: dsn,
+		filePath: filePath,
 	}
 }
 
 func (driver *Driver) Initialize(ctx context.Context) error {
-	pool, err := pgxpool.New(ctx, driver.dsn)
+	db, err := sql.Open("sqlite", driver.filePath)
 	if err != nil {
+		return err
+	}
+	if err := db.PingContext(ctx); err != nil {
 		return err
 	}
 
-	log.Info().Msg("Performing PostgreSQL database migrations...")
+	log.Info().Msg("Performing SQLite database migrations...")
 	source, err := iofs.New(migrations, "migrations")
 	if err != nil {
-		pool.Close()
-		return err
-	}
-	migrator, err := migrate.NewWithSourceInstance("iofs", source, driver.dsn)
-	if err != nil {
-		pool.Close()
+		_ = db.Close()
 		return err
 	}
 	defer func() {
-		_, _ = migrator.Close()
+		_ = source.Close()
 	}()
+	migrateDriver, err := sqlite.WithInstance(db, &sqlite.Config{
+		MigrationsTable: sqlite.DefaultMigrationsTable,
+		DatabaseName:    driver.filePath,
+		NoTxWrap:        false,
+	})
+	if err != nil {
+		_ = db.Close()
+		return err
+	}
+	migrator, err := migrate.NewWithInstance("iofs", source, "sqlite", migrateDriver)
+	if err != nil {
+		_ = db.Close()
+		return err
+	}
 	if err := migrator.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
-		pool.Close()
+		_ = db.Close()
 		return err
 	}
 
-	driver.connPool = pool
+	driver.connPool = db
 	driver.pastes = &pasteRepository{
-		connPool: pool,
+		connPool: db,
 	}
 	return nil
 }
 
 func (driver *Driver) Close() error {
 	driver.pastes = nil
-	driver.connPool.Close()
+	_ = driver.connPool.Close()
 	driver.connPool = nil
 	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/lus/pasty/internal/meta"
 	"github.com/lus/pasty/internal/storage"
 	"github.com/lus/pasty/internal/storage/postgres"
+	"github.com/lus/pasty/internal/storage/sqlite"
 	"github.com/lus/pasty/internal/web"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -49,6 +50,9 @@ func main() {
 	switch strings.TrimSpace(strings.ToLower(cfg.StorageDriver)) {
 	case "postgres":
 		driver = postgres.New(cfg.Postgres.DSN)
+		break
+	case "sqlite":
+		driver = sqlite.New(cfg.SQLite.File)
 		break
 	default:
 		log.Fatal().Str("driver_name", cfg.StorageDriver).Msg("An invalid storage driver name was given.")

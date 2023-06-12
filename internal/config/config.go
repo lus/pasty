@@ -22,6 +22,7 @@ type Config struct {
 	AutoDelete                  *AutoDeleteConfig `split_words:"true"`
 	Reports                     *ReportConfig
 	Postgres                    *PostgresConfig
+	SQLite                      *SQLiteConfig
 }
 
 type AutoDeleteConfig struct {
@@ -38,6 +39,10 @@ type ReportConfig struct {
 
 type PostgresConfig struct {
 	DSN string `default:"postgres://pasty:pasty@localhost/pasty"`
+}
+
+type SQLiteConfig struct {
+	File string `default:":memory:"`
 }
 
 func Load() (*Config, error) {

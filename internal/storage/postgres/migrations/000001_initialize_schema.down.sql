@@ -1,5 +1,5 @@
 begin;
 
-drop table if exists "pastes";
+drop table "pastes";
 
 commit;

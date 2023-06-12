@@ -1,6 +1,6 @@
 begin;
 
-create table if not exists "pastes" (
+create table "pastes" (
     "id" text not null,
     "content" text not null,
     "deletionToken" text not null,

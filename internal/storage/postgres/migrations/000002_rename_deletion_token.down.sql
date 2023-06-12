@@ -1,5 +1,5 @@
 begin;
 
-alter table if exists "pastes" rename column "modificationToken" to "deletionToken";
+alter table "pastes" rename column "modificationToken" to "deletionToken";
 
 commit;
