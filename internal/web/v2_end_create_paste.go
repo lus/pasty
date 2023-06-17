@@ -18,12 +18,12 @@ func (server *Server) v2EndpointCreatePaste(writer http.ResponseWriter, request 
 	// Read, parse and validate the request payload
 	body, err := io.ReadAll(request.Body)
 	if err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 	payload := new(v2EndpointCreatePastePayload)
 	if err := json.Unmarshal(body, payload); err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 	if payload.Content == "" {
@@ -37,7 +37,7 @@ func (server *Server) v2EndpointCreatePaste(writer http.ResponseWriter, request 
 
 	id, err := pastes.GenerateID(request.Context(), server.Storage.Pastes(), server.PasteIDCharset, server.PasteIDLength)
 	if err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 
@@ -54,17 +54,17 @@ func (server *Server) v2EndpointCreatePaste(writer http.ResponseWriter, request 
 		paste.ModificationToken = modificationToken
 
 		if err := paste.HashModificationToken(); err != nil {
-			writeErr(writer, err)
+			writeErr(request, writer, err)
 			return
 		}
 	}
 
 	if err := server.Storage.Pastes().Upsert(request.Context(), paste); err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 
 	cpy := *paste
 	cpy.ModificationToken = modificationToken
-	writeJSONOrErr(writer, http.StatusCreated, cpy)
+	writeJSONOrErr(request, writer, http.StatusCreated, cpy)
 }

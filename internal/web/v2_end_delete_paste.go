@@ -13,6 +13,7 @@ func (server *Server) v2EndpointDeletePaste(writer http.ResponseWriter, request 
 	}
 
 	if err := server.Storage.Pastes().DeleteByID(request.Context(), paste.ID); err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 	}
+	writer.WriteHeader(http.StatusOK)
 }

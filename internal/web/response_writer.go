@@ -2,10 +2,12 @@ package web
 
 import (
 	"encoding/json"
+	"github.com/lus/pasty/pkg/chizerolog"
 	"net/http"
 )
 
-func writeErr(writer http.ResponseWriter, err error) {
+func writeErr(request *http.Request, writer http.ResponseWriter, err error) {
+	chizerolog.InjectError(request, err)
 	writeString(writer, http.StatusInternalServerError, err.Error())
 }
 
@@ -26,8 +28,8 @@ func writeJSON(writer http.ResponseWriter, status int, value any) error {
 	return nil
 }
 
-func writeJSONOrErr(writer http.ResponseWriter, status int, value any) {
+func writeJSONOrErr(request *http.Request, writer http.ResponseWriter, status int, value any) {
 	if err := writeJSON(writer, status, value); err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 	}
 }

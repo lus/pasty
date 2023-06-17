@@ -31,7 +31,7 @@ func frontendHandler(notFoundHandler http.HandlerFunc) http.HandlerFunc {
 				}
 				return
 			}
-			writeErr(writer, err)
+			writeErr(request, writer, err)
 			return
 		}
 		defer func() {
@@ -40,7 +40,7 @@ func frontendHandler(notFoundHandler http.HandlerFunc) http.HandlerFunc {
 
 		fileInfo, err := file.Stat()
 		if err != nil {
-			writeErr(writer, err)
+			writeErr(request, writer, err)
 			return
 		}
 
@@ -55,7 +55,7 @@ func frontendHandler(notFoundHandler http.HandlerFunc) http.HandlerFunc {
 
 		content, err := io.ReadAll(file)
 		if err != nil {
-			writeErr(writer, err)
+			writeErr(request, writer, err)
 			return
 		}
 
@@ -65,10 +65,10 @@ func frontendHandler(notFoundHandler http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func serveIndexFile(writer http.ResponseWriter, _ *http.Request) {
+func serveIndexFile(writer http.ResponseWriter, request *http.Request) {
 	indexFile, err := frontend.ReadFile("frontend/index.html")
 	if err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 	writer.Header().Set("Content-Type", "text/html")

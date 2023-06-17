@@ -22,12 +22,12 @@ func (server *Server) v2EndpointModifyPaste(writer http.ResponseWriter, request 
 	// Read, parse and validate the request payload
 	body, err := io.ReadAll(request.Body)
 	if err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 	payload := new(v2EndpointModifyPastePayload)
 	if err := json.Unmarshal(body, payload); err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 	if payload.Content != nil && *payload.Content == "" {
@@ -55,6 +55,6 @@ func (server *Server) v2EndpointModifyPaste(writer http.ResponseWriter, request 
 
 	// Save the modified paste
 	if err := server.Storage.Pastes().Upsert(request.Context(), paste); err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 	}
 }

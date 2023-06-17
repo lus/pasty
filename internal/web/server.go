@@ -7,6 +7,7 @@ import (
 	"github.com/lus/pasty/internal/pastes"
 	"github.com/lus/pasty/internal/reports"
 	"github.com/lus/pasty/internal/storage"
+	"github.com/lus/pasty/pkg/chizerolog"
 	"net/http"
 )
 
@@ -49,6 +50,9 @@ type Server struct {
 func (server *Server) Start() error {
 	router := chi.NewRouter()
 
+	router.Use(chizerolog.Logger)
+	router.Use(chizerolog.Recover)
+
 	// Register the web frontend handler
 	router.Get("/*", frontendHandler(router.NotFoundHandler()))
 
@@ -72,7 +76,7 @@ func (server *Server) Start() error {
 		router.With(server.v2MiddlewareInjectPaste).Post("/api/v2/pastes/{paste_id}/report", server.v2EndpointReportPaste)
 	}
 	router.Get("/api/v2/info", func(writer http.ResponseWriter, request *http.Request) {
-		writeJSONOrErr(writer, http.StatusOK, map[string]any{
+		writeJSONOrErr(request, writer, http.StatusOK, map[string]any{
 			"version":            meta.Version,
 			"modificationTokens": server.ModificationTokensEnabled,
 			"reports":            server.ReportClient != nil,

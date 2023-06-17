@@ -22,12 +22,12 @@ func (server *Server) v2EndpointReportPaste(writer http.ResponseWriter, request 
 	// Read, parse and validate the request payload
 	body, err := io.ReadAll(request.Body)
 	if err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 	payload := new(v2EndpointReportPastePayload)
 	if err := json.Unmarshal(body, payload); err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
 	if payload.Reason == "" {
@@ -41,8 +41,8 @@ func (server *Server) v2EndpointReportPaste(writer http.ResponseWriter, request 
 	}
 	response, err := server.ReportClient.Send(report)
 	if err != nil {
-		writeErr(writer, err)
+		writeErr(request, writer, err)
 		return
 	}
-	writeJSONOrErr(writer, http.StatusOK, response)
+	writeJSONOrErr(request, writer, http.StatusOK, response)
 }

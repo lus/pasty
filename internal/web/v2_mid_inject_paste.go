@@ -17,10 +17,7 @@ func (server *Server) v2MiddlewareInjectPaste(next http.Handler) http.Handler {
 
 		paste, err := server.Storage.Pastes().FindByID(request.Context(), pasteID)
 		if err != nil {
-			if pasteID == "" {
-				writeErr(writer, err)
-				return
-			}
+			writeErr(request, writer, err)
 		}
 		if paste == nil {
 			writeString(writer, http.StatusNotFound, "paste not found")
