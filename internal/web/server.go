@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/lus/pasty/internal/meta"
 	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/reports"
 	"github.com/lus/pasty/internal/storage"
 	"net/http"
 )
@@ -15,6 +16,10 @@ type Server struct {
 
 	// The storage driver to use.
 	Storage storage.Driver
+
+	// The report client to use to send reports.
+	// If this is set to nil, the report system will be considered deactivated.
+	ReportClient *reports.Client
 
 	// Whether the Hastebin support should be enabled.
 	// If this is set to 'false', the Hastebin specific endpoints will not be registered.
@@ -63,12 +68,15 @@ func (server *Server) Start() error {
 	router.Post("/api/v2/pastes", server.v2EndpointCreatePaste)
 	router.With(server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Patch("/api/v2/pastes/{paste_id}", server.v2EndpointModifyPaste)
 	router.With(server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Delete("/api/v2/pastes/{paste_id}", server.v2EndpointDeletePaste)
+	if server.ReportClient != nil {
+		router.With(server.v2MiddlewareInjectPaste).Post("/api/v2/pastes/{paste_id}/report", server.v2EndpointReportPaste)
+	}
 	router.Get("/api/v2/info", func(writer http.ResponseWriter, request *http.Request) {
 		writeJSONOrErr(writer, http.StatusOK, map[string]any{
 			"version":            meta.Version,
 			"modificationTokens": server.ModificationTokensEnabled,
-			"reports":            false, // TODO: Return report state
-			"pasteLifetime":      -1,    // TODO: Return paste lifetime
+			"reports":            server.ReportClient != nil,
+			"pasteLifetime":      -1, // TODO: Return paste lifetime
 		})
 	})
 

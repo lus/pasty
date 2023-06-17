@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/meta"
+	"github.com/lus/pasty/internal/reports"
 	"github.com/lus/pasty/internal/storage"
 	"github.com/lus/pasty/internal/storage/postgres"
 	"github.com/lus/pasty/internal/storage/sqlite"
@@ -74,10 +75,6 @@ func main() {
 
 	// Start the web server
 	log.Info().Str("address", cfg.WebAddress).Msg("Starting the web server...")
-	var adminTokens []string
-	if cfg.ModificationTokenMaster != "" {
-		adminTokens = []string{cfg.ModificationTokenMaster}
-	}
 	webServer := &web.Server{
 		Address:                   cfg.WebAddress,
 		Storage:                   driver,
@@ -88,7 +85,15 @@ func main() {
 		ModificationTokensEnabled: cfg.ModificationTokens,
 		ModificationTokenLength:   cfg.ModificationTokenLength,
 		ModificationTokenCharset:  cfg.ModificationTokenCharacters,
-		AdminTokens:               adminTokens,
+	}
+	if cfg.Reports.Enabled {
+		webServer.ReportClient = &reports.Client{
+			WebhookURL:   cfg.Reports.WebhookURL,
+			WebhookToken: cfg.Reports.WebhookToken,
+		}
+	}
+	if cfg.ModificationTokenMaster != "" {
+		webServer.AdminTokens = []string{cfg.ModificationTokenMaster}
 	}
 	go func() {
 		if err := webServer.Start(); err != nil && !errors.Is(err, http.ErrServerClosed) {
