@@ -91,7 +91,7 @@ func main() {
 		PasteIDLength:             cfg.PasteIDLength,
 		PasteIDCharset:            cfg.PasteIDCharset,
 		PasteLengthCap:            cfg.PasteLengthCap,
-		ModificationTokensEnabled: cfg.ModificationTokens,
+		ModificationTokensEnabled: cfg.ModificationTokensEnabled,
 		ModificationTokenLength:   cfg.ModificationTokenLength,
 		ModificationTokenCharset:  cfg.ModificationTokenCharset,
 	}

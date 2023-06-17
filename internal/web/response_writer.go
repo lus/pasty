@@ -4,14 +4,19 @@ import (
 	"encoding/json"
 	"github.com/lus/pasty/pkg/chizerolog"
 	"net/http"
+	"strconv"
 )
 
 func writeErr(request *http.Request, writer http.ResponseWriter, err error) {
 	chizerolog.InjectError(request, err)
+	writer.Header().Set("Content-Type", "text/plain")
+	writer.Header().Set("Content-Length", strconv.Itoa(len(err.Error())))
 	writeString(writer, http.StatusInternalServerError, err.Error())
 }
 
 func writeString(writer http.ResponseWriter, status int, value string) {
+	writer.Header().Set("Content-Type", "text/plain")
+	writer.Header().Set("Content-Length", strconv.Itoa(len(value)))
 	writer.WriteHeader(status)
 	writer.Write([]byte(value))
 }
@@ -22,6 +27,8 @@ func writeJSON(writer http.ResponseWriter, status int, value any) error {
 		return err
 	}
 
+	writer.Header().Set("Content-Type", "application/json")
+	writer.Header().Set("Content-Length", strconv.Itoa(len(jsonData)))
 	writer.WriteHeader(status)
 	writer.Write(jsonData)
 

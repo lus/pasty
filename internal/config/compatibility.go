@@ -22,19 +22,19 @@ var removedKeys = []string{
 }
 
 var keyRedirects = map[string][]string{
-	"PASTY_ADDRESS":                    {"PASTY_WEB_ADDRESS"},
-	"PASTY_STORAGE_DRIVER":             {"PASTY_STORAGE_TYPE"},
-	"PASTY_POSTGRES_DSN":               {"PASTY_STORAGE_POSTGRES_DSN"},
-	"PASTY_PASTE_ID_LENGTH":            {"PASTY_ID_LENGTH"},
-	"PASTY_PASTE_ID_CHARSET":           {"PASTY_ID_CHARACTERS"},
-	"PASTY_PASTE_LENGTH_CAP":           {"PASTY_LENGTH_CAP"},
-	"PASTY_REPORTS_ENABLED":            {"PASTY_REPORTS_ENABLED"},
-	"PASTY_REPORTS_WEBHOOK_URL":        {"PASTY_REPORT_WEBHOOK"},
-	"PASTY_REPORTS_WEBHOOK_TOKEN":      {"PASTY_REPORT_WEBHOOK_TOKEN"},
-	"PASTY_MODIFICATION_TOKEN_CHARSET": {"PASTY_MODIFICATION_TOKEN_CHARACTERS"},
-	"PASTY_MODIFICATION_TOKENS":        {"PASTY_DELETION_TOKENS"},
-	"PASTY_MODIFICATION_TOKEN_MASTER":  {"PASTY_DELETION_TOKEN_MASTER"},
-	"PASTY_MODIFICATION_TOKEN_LENGTH":  {"PASTY_DELETION_TOKEN_LENGTH"},
+	"PASTY_ADDRESS":                     {"PASTY_WEB_ADDRESS"},
+	"PASTY_STORAGE_DRIVER":              {"PASTY_STORAGE_TYPE"},
+	"PASTY_POSTGRES_DSN":                {"PASTY_STORAGE_POSTGRES_DSN"},
+	"PASTY_PASTE_ID_LENGTH":             {"PASTY_ID_LENGTH"},
+	"PASTY_PASTE_ID_CHARSET":            {"PASTY_ID_CHARACTERS"},
+	"PASTY_PASTE_LENGTH_CAP":            {"PASTY_LENGTH_CAP"},
+	"PASTY_REPORTS_ENABLED":             {"PASTY_REPORTS_ENABLED"},
+	"PASTY_REPORTS_WEBHOOK_URL":         {"PASTY_REPORT_WEBHOOK"},
+	"PASTY_REPORTS_WEBHOOK_TOKEN":       {"PASTY_REPORT_WEBHOOK_TOKEN"},
+	"PASTY_MODIFICATION_TOKENS_ENABLED": {"PASTY_MODIFICATION_TOKENS", "PASTY_DELETION_TOKENS"},
+	"PASTY_MODIFICATION_TOKEN_CHARSET":  {"PASTY_MODIFICATION_TOKEN_CHARACTERS"},
+	"PASTY_MODIFICATION_TOKEN_MASTER":   {"PASTY_DELETION_TOKEN_MASTER"},
+	"PASTY_MODIFICATION_TOKEN_LENGTH":   {"PASTY_DELETION_TOKEN_LENGTH"},
 }
 
 // Compatibility runs several compatibility measurements.
@@ -55,7 +55,7 @@ func Compatibility() {
 					if err := os.Setenv(newKey, os.Getenv(oldKey)); err != nil {
 						continue
 					}
-					log.Warn().Msgf("You have set the '%s' environment variable. This variable has been renamed to '%s'. The value has been propagated, but please consider changing your configuration to avoid further complications.", oldKey, newKey)
+					log.Warn().Msgf("You have set the '%s' environment variable. This variable has been renamed to '%s'. The value has been propagated, but please consider adjusting your configuration to avoid further complications.", oldKey, newKey)
 					break
 				}
 			}
