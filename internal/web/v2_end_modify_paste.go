@@ -20,6 +20,9 @@ func (server *Server) v2EndpointModifyPaste(writer http.ResponseWriter, request 
 	}
 
 	// Read, parse and validate the request payload
+	if !accept(writer, request, "application/json") {
+		return
+	}
 	body, err := io.ReadAll(request.Body)
 	if err != nil {
 		writeErr(request, writer, err)

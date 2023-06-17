@@ -16,6 +16,9 @@ type v2EndpointCreatePastePayload struct {
 
 func (server *Server) v2EndpointCreatePaste(writer http.ResponseWriter, request *http.Request) {
 	// Read, parse and validate the request payload
+	if !accept(writer, request, "application/json") {
+		return
+	}
 	body, err := io.ReadAll(request.Body)
 	if err != nil {
 		writeErr(request, writer, err)
