@@ -7,6 +7,7 @@ import (
 	"github.com/lus/pasty/internal/pastes"
 	"github.com/lus/pasty/internal/reports"
 	"github.com/lus/pasty/internal/storage"
+	"github.com/lus/pasty/pkg/chiimplicitok"
 	"github.com/lus/pasty/pkg/chizerolog"
 	"net/http"
 )
@@ -52,6 +53,7 @@ func (server *Server) Start() error {
 
 	router.Use(chizerolog.Logger)
 	router.Use(chizerolog.Recover)
+	router.Use(chiimplicitok.Middleware)
 
 	// Register the web frontend handler
 	router.Get("/*", frontendHandler(router.NotFoundHandler()))
