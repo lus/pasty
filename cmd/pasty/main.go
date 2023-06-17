@@ -132,8 +132,16 @@ func main() {
 		}
 	}()
 
-	// Wait for an interrupt signal
-	log.Info().Msg("The application has been started. Use Ctrl+C to shut it down.")
+	if !cfg.ConsoleCommandsEnabled {
+		log.Info().Msg("The application has been started. Use Ctrl+C to shut it down.")
+	} else {
+		log.Info().Msg("The application has been started and listens to console commands. Use Ctrl+C or 'stop' to shut it down.")
+		go (&consoleCommandRouter{
+			Config:  cfg,
+			Storage: driver,
+		}).Listen()
+	}
+
 	shutdownChan := make(chan os.Signal, 1)
 	signal.Notify(shutdownChan, os.Interrupt)
 	<-shutdownChan

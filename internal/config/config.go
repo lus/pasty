@@ -18,6 +18,7 @@ type Config struct {
 	ModificationTokenCharset  string `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
 	RateLimit                 string `default:"30-M" split_words:"true"`
 	PasteLengthCap            int    `default:"50000" split_words:"true"`
+	ConsoleCommandsEnabled    bool   `default:"true" split_words:"true"`
 	Cleanup                   *CleanupConfig
 	Reports                   *ReportConfig
 	Postgres                  *PostgresConfig
