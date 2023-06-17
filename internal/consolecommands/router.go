@@ -1,4 +1,4 @@
-package main
+package consolecommands
 
 import (
 	"bufio"
@@ -14,12 +14,12 @@ import (
 
 var whitespaceRegex = regexp.MustCompile("\\s+")
 
-type consoleCommandRouter struct {
+type Router struct {
 	Config  *config.Config
 	Storage storage.Driver
 }
 
-func (router *consoleCommandRouter) Listen() {
+func (router *Router) Listen() {
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("> ")

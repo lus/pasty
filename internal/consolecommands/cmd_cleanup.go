@@ -1,4 +1,4 @@
-package main
+package consolecommands
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (router *consoleCommandRouter) Cleanup(args []string) {
+func (router *Router) Cleanup(args []string) {
 	if len(args) == 0 {
 		fmt.Println("Expected 1 argument.")
 		return

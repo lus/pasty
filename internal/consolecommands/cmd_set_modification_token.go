@@ -1,11 +1,11 @@
-package main
+package consolecommands
 
 import (
 	"context"
 	"fmt"
 )
 
-func (router *consoleCommandRouter) SetModificationToken(args []string) {
+func (router *Router) SetModificationToken(args []string) {
 	if len(args) < 2 {
 		fmt.Println("Expected 2 arguments.")
 		return

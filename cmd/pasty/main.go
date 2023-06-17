@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/lus/pasty/internal/cleanup"
 	"github.com/lus/pasty/internal/config"
+	"github.com/lus/pasty/internal/consolecommands"
 	"github.com/lus/pasty/internal/meta"
 	"github.com/lus/pasty/internal/reports"
 	"github.com/lus/pasty/internal/storage"
@@ -132,16 +133,18 @@ func main() {
 		}
 	}()
 
+	// Listen to console commands if enabled
 	if !cfg.ConsoleCommandsEnabled {
 		log.Info().Msg("The application has been started. Use Ctrl+C to shut it down.")
 	} else {
 		log.Info().Msg("The application has been started and listens to console commands. Use Ctrl+C or 'stop' to shut it down.")
-		go (&consoleCommandRouter{
+		go (&consolecommands.Router{
 			Config:  cfg,
 			Storage: driver,
 		}).Listen()
 	}
 
+	// Wait for an interrupt signal
 	shutdownChan := make(chan os.Signal, 1)
 	signal.Notify(shutdownChan, os.Interrupt)
 	<-shutdownChan

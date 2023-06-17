@@ -1,11 +1,11 @@
-package main
+package consolecommands
 
 import (
 	"context"
 	"fmt"
 )
 
-func (router *consoleCommandRouter) Delete(args []string) {
+func (router *Router) Delete(args []string) {
 	if len(args) == 0 {
 		fmt.Println("Expected 1 argument.")
 		return
