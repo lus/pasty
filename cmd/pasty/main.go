@@ -56,6 +56,15 @@ func main() {
 	case "sqlite":
 		driver = sqlite.New(cfg.SQLite.File)
 		break
+	case "file":
+		// TODO: Readme notice
+		log.Fatal().Msg("You have configured the legacy 'file' storage driver. This storage driver has been removed in favor of PostgreSQL and SQLite, but the latter one may be a seamless alternative for you. Head over to the projects README for more information.")
+		break
+	case "mongodb":
+	case "s3":
+		// TODO: Readme notice
+		log.Fatal().Msg("You have configured a legacy storage driver. This storage driver has been removed in favor of PostgreSQL and SQLite, but the migration process is well-documented. Head over to the projects README for more information.")
+		break
 	default:
 		log.Fatal().Str("driver_name", cfg.StorageDriver).Msg("An invalid storage driver name was given.")
 		return
