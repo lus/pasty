@@ -2,7 +2,10 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/lus/pasty/internal/maps"
 	"github.com/lus/pasty/internal/pastes"
+	"github.com/lus/pasty/internal/static"
 	"io"
 	"net/http"
 )
@@ -36,6 +39,10 @@ func (server *Server) v2EndpointModifyPaste(writer http.ResponseWriter, request 
 	}
 	if payload.Content != nil && server.PasteLengthCap > 0 && len(*payload.Content) > server.PasteLengthCap {
 		writeString(writer, http.StatusBadRequest, "too large paste content")
+		return
+	}
+	if payload.Metadata != nil && maps.ExceedsDimensions(payload.Metadata, static.MaxMetadataWidth, static.MaxMetadataDepth) {
+		writeString(writer, http.StatusBadRequest, fmt.Sprintf("metadata exceeds maximum dimensions (max. width: %d; max. depth: %d)", static.MaxMetadataWidth, static.MaxMetadataDepth))
 		return
 	}
 
