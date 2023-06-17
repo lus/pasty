@@ -3,6 +3,7 @@ package web
 import (
 	"context"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/lus/pasty/internal/meta"
 	"github.com/lus/pasty/internal/pastes"
 	"github.com/lus/pasty/internal/reports"
@@ -67,11 +68,11 @@ func (server *Server) Start() error {
 	// Register the paste API endpoints
 	router.Get("/api/*", router.NotFoundHandler())
 	router.With(server.v2MiddlewareInjectPaste).Get("/api/v2/pastes/{paste_id}", server.v2EndpointGetPaste)
-	router.Post("/api/v2/pastes", server.v2EndpointCreatePaste)
-	router.With(server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Patch("/api/v2/pastes/{paste_id}", server.v2EndpointModifyPaste)
+	router.With(middleware.AllowContentType("application/json")).Post("/api/v2/pastes", server.v2EndpointCreatePaste)
+	router.With(middleware.AllowContentType("application/json"), server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Patch("/api/v2/pastes/{paste_id}", server.v2EndpointModifyPaste)
 	router.With(server.v2MiddlewareInjectPaste, server.v2MiddlewareAuthorize).Delete("/api/v2/pastes/{paste_id}", server.v2EndpointDeletePaste)
 	if server.ReportClient != nil {
-		router.With(server.v2MiddlewareInjectPaste).Post("/api/v2/pastes/{paste_id}/report", server.v2EndpointReportPaste)
+		router.With(middleware.AllowContentType("application/json"), server.v2MiddlewareInjectPaste).Post("/api/v2/pastes/{paste_id}/report", server.v2EndpointReportPaste)
 	}
 	router.Get("/api/v2/info", func(writer http.ResponseWriter, request *http.Request) {
 		writeJSONOrErr(request, writer, http.StatusOK, map[string]any{
