@@ -46,6 +46,10 @@ func main() {
 		zerolog.SetGlobalLevel(level)
 	}
 
+	// Run the configuration compatibility layer
+	// TODO: Remove this at a later state
+	configCompatibilityLayer(cfg)
+
 	// Determine the correct storage driver to use
 	var driver storage.Driver
 	switch strings.TrimSpace(strings.ToLower(cfg.StorageDriver)) {
@@ -112,4 +116,11 @@ func main() {
 	shutdownChan := make(chan os.Signal, 1)
 	signal.Notify(shutdownChan, os.Interrupt)
 	<-shutdownChan
+}
+
+func configCompatibilityLayer(cfg *config.Config) {
+	// Print a notice if the (now removed) Hastebin support has been enabled
+	if cfg.HastebinSupport {
+		log.Warn().Msg("You have enabled the legacy 'Hastebin support' feature. This feature has been removed.")
+	}
 }

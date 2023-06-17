@@ -10,7 +10,7 @@ type Config struct {
 	LogLevel                    string            `default:"info" split_words:"true"`
 	WebAddress                  string            `default:":8080" split_words:"true"`
 	StorageDriver               string            `default:"sqlite" split_words:"true"`
-	HastebinSupport             bool              `default:"false" split_words:"true"`
+	HastebinSupport             bool              `default:"false" split_words:"true"` // TODO: Legacy
 	IDLength                    int               `default:"6" split_words:"true"`
 	IDCharacters                string            `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
 	ModificationTokens          bool              `default:"true" split_words:"true"`
