@@ -16,7 +16,7 @@ func Middleware(next http.Handler) http.Handler {
 			}
 		}()
 
-		next.ServeHTTP(writer, request)
+		next.ServeHTTP(proxy, request)
 	}
 	return http.HandlerFunc(fn)
 }

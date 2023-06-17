@@ -29,6 +29,7 @@ func main() {
 	}
 
 	// Load the configuration
+	config.Compatibility()
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatal().Err(err).Msg("Could not load the configuration.")
@@ -45,10 +46,6 @@ func main() {
 		}
 		zerolog.SetGlobalLevel(level)
 	}
-
-	// Run the configuration compatibility layer
-	// TODO: Remove this at a later state
-	configCompatibilityLayer(cfg)
 
 	// Determine the correct storage driver to use
 	var driver storage.Driver
@@ -78,17 +75,16 @@ func main() {
 	}()
 
 	// Start the web server
-	log.Info().Str("address", cfg.WebAddress).Msg("Starting the web server...")
+	log.Info().Str("address", cfg.Address).Msg("Starting the web server...")
 	webServer := &web.Server{
-		Address:                   cfg.WebAddress,
+		Address:                   cfg.Address,
 		Storage:                   driver,
-		HastebinSupport:           cfg.HastebinSupport,
-		PasteIDLength:             cfg.IDLength,
-		PasteIDCharset:            cfg.IDCharacters,
-		PasteLengthCap:            cfg.LengthCap,
+		PasteIDLength:             cfg.PasteIDLength,
+		PasteIDCharset:            cfg.PasteIDCharset,
+		PasteLengthCap:            cfg.PasteLengthCap,
 		ModificationTokensEnabled: cfg.ModificationTokens,
 		ModificationTokenLength:   cfg.ModificationTokenLength,
-		ModificationTokenCharset:  cfg.ModificationTokenCharacters,
+		ModificationTokenCharset:  cfg.ModificationTokenCharset,
 	}
 	if cfg.Reports.Enabled {
 		webServer.ReportClient = &reports.Client{
@@ -116,11 +112,4 @@ func main() {
 	shutdownChan := make(chan os.Signal, 1)
 	signal.Notify(shutdownChan, os.Interrupt)
 	<-shutdownChan
-}
-
-func configCompatibilityLayer(cfg *config.Config) {
-	// Print a notice if the (now removed) Hastebin support has been enabled
-	if cfg.HastebinSupport {
-		log.Warn().Msg("You have enabled the legacy 'Hastebin support' feature. This feature has been removed.")
-	}
 }

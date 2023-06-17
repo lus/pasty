@@ -23,10 +23,6 @@ type Server struct {
 	// If this is set to nil, the report system will be considered deactivated.
 	ReportClient *reports.Client
 
-	// Whether the Hastebin support should be enabled.
-	// If this is set to 'false', the Hastebin specific endpoints will not be registered.
-	HastebinSupport bool
-
 	// The length of newly generated paste IDs.
 	PasteIDLength int
 	// The charset to use when generating new paste IDs.

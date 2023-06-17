@@ -7,22 +7,21 @@ import (
 )
 
 type Config struct {
-	LogLevel                    string            `default:"info" split_words:"true"`
-	WebAddress                  string            `default:":8080" split_words:"true"`
-	StorageDriver               string            `default:"sqlite" split_words:"true"`
-	HastebinSupport             bool              `default:"false" split_words:"true"` // TODO: Legacy
-	IDLength                    int               `default:"6" split_words:"true"`
-	IDCharacters                string            `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
-	ModificationTokens          bool              `default:"true" split_words:"true"`
-	ModificationTokenMaster     string            `split_words:"true"`
-	ModificationTokenLength     int               `default:"12" split_words:"true"`
-	ModificationTokenCharacters string            `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
-	RateLimit                   string            `default:"30-M" split_words:"true"`
-	LengthCap                   int               `default:"50000" split_words:"true"`
-	AutoDelete                  *AutoDeleteConfig `split_words:"true"`
-	Reports                     *ReportConfig
-	Postgres                    *PostgresConfig
-	SQLite                      *SQLiteConfig
+	LogLevel                 string            `default:"info" split_words:"true"`
+	Address                  string            `default:":8080" split_words:"true"`
+	StorageDriver            string            `default:"sqlite" split_words:"true"`
+	PasteIDLength            int               `default:"6" split_words:"true"`
+	PasteIDCharset           string            `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
+	ModificationTokens       bool              `default:"true" split_words:"true"`
+	ModificationTokenMaster  string            `split_words:"true"`
+	ModificationTokenLength  int               `default:"12" split_words:"true"`
+	ModificationTokenCharset string            `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
+	RateLimit                string            `default:"30-M" split_words:"true"`
+	PasteLengthCap           int               `default:"50000" split_words:"true"`
+	AutoDelete               *AutoDeleteConfig `split_words:"true"`
+	Reports                  *ReportConfig
+	Postgres                 *PostgresConfig
+	SQLite                   *SQLiteConfig
 }
 
 type AutoDeleteConfig struct {
