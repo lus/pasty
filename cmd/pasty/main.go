@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/lus/pasty/internal/cleanup"
 	"github.com/lus/pasty/internal/config"
 	"github.com/lus/pasty/internal/meta"
 	"github.com/lus/pasty/internal/reports"
@@ -82,6 +83,21 @@ func main() {
 			log.Err(err).Str("driver_name", cfg.StorageDriver).Msg("Could not shut down the storage driver.")
 		}
 	}()
+
+	// Schedule the cleanup task if configured
+	if cfg.Cleanup.Enabled {
+		task := &cleanup.Task{
+			Interval:    cfg.Cleanup.TaskInterval,
+			MaxPasteAge: cfg.Cleanup.PasteLifetime,
+			Repository:  driver.Pastes(),
+		}
+		log.Info().Msg("Scheduling the cleanup task...")
+		task.Start()
+		defer func() {
+			log.Info().Msg("Shutting down the cleanup task...")
+			task.Stop()
+		}()
+	}
 
 	// Start the web server
 	log.Info().Str("address", cfg.Address).Msg("Starting the web server...")

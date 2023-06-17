@@ -7,27 +7,27 @@ import (
 )
 
 type Config struct {
-	LogLevel                  string            `default:"info" split_words:"true"`
-	Address                   string            `default:":8080" split_words:"true"`
-	StorageDriver             string            `default:"sqlite" split_words:"true"`
-	PasteIDLength             int               `default:"6" split_words:"true"`
-	PasteIDCharset            string            `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
-	ModificationTokensEnabled bool              `default:"true" split_words:"true"`
-	ModificationTokenMaster   string            `split_words:"true"`
-	ModificationTokenLength   int               `default:"12" split_words:"true"`
-	ModificationTokenCharset  string            `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
-	RateLimit                 string            `default:"30-M" split_words:"true"`
-	PasteLengthCap            int               `default:"50000" split_words:"true"`
-	AutoDelete                *AutoDeleteConfig `split_words:"true"`
+	LogLevel                  string `default:"info" split_words:"true"`
+	Address                   string `default:":8080" split_words:"true"`
+	StorageDriver             string `default:"sqlite" split_words:"true"`
+	PasteIDLength             int    `default:"6" split_words:"true"`
+	PasteIDCharset            string `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
+	ModificationTokensEnabled bool   `default:"true" split_words:"true"`
+	ModificationTokenMaster   string `split_words:"true"`
+	ModificationTokenLength   int    `default:"12" split_words:"true"`
+	ModificationTokenCharset  string `default:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" split_words:"true"`
+	RateLimit                 string `default:"30-M" split_words:"true"`
+	PasteLengthCap            int    `default:"50000" split_words:"true"`
+	Cleanup                   *CleanupConfig
 	Reports                   *ReportConfig
 	Postgres                  *PostgresConfig
 	SQLite                    *SQLiteConfig
 }
 
-type AutoDeleteConfig struct {
-	Enabled      bool          `default:"false"`
-	Lifetime     time.Duration `default:"720h"`
-	TaskInterval time.Duration `default:"5m" split_words:"true"`
+type CleanupConfig struct {
+	Enabled       bool          `default:"false"`
+	PasteLifetime time.Duration `default:"720h" split_words:"true"`
+	TaskInterval  time.Duration `default:"5m" split_words:"true"`
 }
 
 type ReportConfig struct {
